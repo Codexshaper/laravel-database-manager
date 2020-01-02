@@ -70,10 +70,10 @@ class RecordController extends Controller
                             // $value = json_encode($values);
 
                             if (count($values) > 1) {
+                                $value = $values;
                                 if (!Driver::isMongoDB()) {
                                     $value = is_array($values) ? json_encode($values) : $values;
                                 }
-                                $value = $values;
                             } else if (count($values) == 1) {
                                 $value = $values[0];
                             }

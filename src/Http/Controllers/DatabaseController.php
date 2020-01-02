@@ -170,50 +170,174 @@ class DatabaseController extends Controller
         return response()->json(['success' => false]);
     }
 
-    public function createObject($table)
+    public function updateTemplates($templates)
     {
-        if (($response = DBM::isLoggedIn()) !== true) {
-            return $response;
-        }
+        if (is_array($templates) && count($templates) > 0) {
 
-        if (($response = DBM::authorize('database.create')) !== true) {
-            return $response;
-        }
+            foreach ($templates as $field) {
 
-        if (!is_array($table)) {
-            $table = json_decode($table, true);
-        }
+                if ($template = DBM::Template()->where('old_name', $field['oldName'])->first()) {
 
-        $tableName = $table['name'];
+                    $template->name           = $field['name'];
+                    $template->old_name       = $field['name'];
+                    $template->type           = $field['type']['name'];
+                    $template->length         = $field['length'];
+                    $template->index          = $field['index'];
+                    $template->default        = $field['default'];
+                    $template->notnull        = $field['notnull'];
+                    $template->unsigned       = $field['unsigned'];
+                    $template->auto_increment = $field['autoincrement'];
+
+                    $template->update();
+                }
+            }
+        }
+    }
+
+    public function updateMongoDbTable($table)
+    {
+        $tableName = $table['oldName'];
+        $newName   = $table['name'];
         $columns   = $table['columns'];
 
-        $object               = DBM::Object();
-        $object->name         = $tableName;
-        $object->slug         = Str::slug($tableName);
-        $object->display_name = ucfirst($tableName);
-        if ($object->save()) {
-            foreach ($columns as $column) {
-                $columnType = $column['type'];
-
-                $field                = DBM::Field();
-                $field->dbm_object_id = $object->id;
-                $field->name          = $column['name'];
-                $field->display_name  = strtoupper($column['name']);
-                $field->type          = static::getInputType($columnType['name']);
-                $field->required      = true;
-                $field->create        = false;
-                $field->read          = false;
-                $field->edit          = false;
-                $field->delete        = false;
-                $field->order         = $column['order'];
-                $field->save();
+        if ($collection = DBM_Collection::where('name', $tableName)->first()) {
+            if ($tableName != $newName) {
+                $collection->name     = $newName;
+                $collection->old_name = $newName;
+                $collection->update();
             }
-
-            return true;
+        } else {
+            $collection           = new DBM_Collection;
+            $collection->name     = $newName;
+            $collection->old_name = $newName;
+            $collection->save();
         }
 
-        return false;
+        if ($collection) {
 
+            $id         = $collection->_id;
+            $fieldNames = (!empty($collection->fields)) ? $collection->fields->pluck('old_name')->toArray() : [];
+
+            foreach ($columns as $column) {
+
+                if (in_array($column['oldName'], $fieldNames)) {
+
+                    $collection_field = CollectionField::where('old_name', $column['oldName'])->first();
+
+                    $collection_field->name     = $column['name'];
+                    $collection_field->old_name = $column['oldName'];
+                    $collection_field->type     = $column['type']['name'];
+                    $collection_field->update();
+                    $fieldNames = array_values(array_diff($fieldNames, [$column['oldName']]));
+                } else {
+
+                    $collection_field = new CollectionField;
+
+                    $collection_field->dbm_collection_id = $id;
+                    $collection_field->name              = $column['name'];
+                    $collection_field->old_name          = $column['name'];
+                    $collection_field->type              = $column['type']['name'];
+                    $collection_field->index             = '';
+                    $collection_field->extra             = [];
+
+                    $collection_field->save();
+                }
+            }
+
+            if (count($fieldNames) > 0) {
+                foreach ($fieldNames as $fieldName) {
+                    $field = CollectionField::where([
+                        'dbm_collection_id' => $id,
+                        'name'              => $fieldName])->first();
+                    $field->delete();
+                }
+            }
+
+        }
+    }
+
+    public function updateCrudFields($table)
+    {
+        $tableName = $table['oldName'];
+        $newName   = $table['name'];
+        $columns   = $table['columns'];
+
+        if ($tableName != $newName) {
+
+            DBM::Object()->where('slug', Str::slug($tableName))->update([
+                'name'         => $newName,
+                'slug'         => Str::slug($newName),
+                'display_name' => ucfirst($newName),
+            ]);
+
+            $tableName = $newName;
+        }
+
+        if ($object = DBM::Object()::where('slug', Str::slug($tableName))->first()) {
+
+            $fieldNames = $object->fields->pluck('name')->toArray();
+            // $relationshipItems = [];
+
+            foreach ($columns as $column) {
+
+                $columnType = $column['type'];
+
+                if (in_array($column['oldName'], $fieldNames)) {
+
+                    $field = DBM::Field()->where([
+                        'dbm_object_id' => $object->id,
+                        'name'          => $column['oldName'],
+                    ])->first();
+
+                    $field->name = $column['name'];
+                    if ($column['oldName'] != $column['name']) {
+                        $field->display_name = ucfirst($column['name']);
+                    }
+                    $field->order = $column['order'];
+                    $field->update();
+
+                    $fieldNames = array_values(array_diff($fieldNames, [$column['oldName']]));
+                } else {
+
+                    if (DBM::Field()->where([
+                        'dbm_object_id' => $object->id,
+                        'name'          => $column['name']])->first()) {
+                        return response()->json([
+                            'success' => false,
+                            'errors'  => ["Field name must be unique. " . $column['name'] . " are duplicate"],
+                        ], 400);
+                    }
+
+                    $field                = DBM::Field();
+                    $field->dbm_object_id = $object->id;
+                    $field->name          = $column['name'];
+                    $field->display_name  = ucfirst($column['name']);
+                    $field->type          = static::getInputType($columnType['name']);
+                    $field->order         = $column['order'];
+
+                    if ($column['autoincrement'] == true) {
+                        $field->create = false;
+                        $field->read   = false;
+                        $field->edit   = false;
+                        $field->delete = false;
+                    }
+
+                    $field->save();
+                }
+
+            }
+
+            if (count($fieldNames) > 0) {
+                foreach ($fieldNames as $fieldName) {
+                    $field = DBM::Field()->where([
+                        'dbm_object_id' => $object->id,
+                        'name'          => $fieldName])->first();
+                    if ($field->type != 'relationship') {
+                        $field->delete();
+                    }
+                }
+            }
+        }
     }
 
     public function update(Request $request)
@@ -232,172 +356,24 @@ class DatabaseController extends Controller
 
             $tableName = $table['oldName'];
             $newName   = $table['name'];
-            $columns   = $table['columns'];
 
             try
             {
                 // Update Template
-                if (is_array($request->templates) && count($request->templates) > 0) {
-
-                    foreach ($request->templates as $field) {
-
-                        if ($template = DBM::Template()->where('old_name', $field['oldName'])->first()) {
-
-                            $template->name           = $field['name'];
-                            $template->old_name       = $field['name'];
-                            $template->type           = $field['type']['name'];
-                            $template->length         = $field['length'];
-                            $template->index          = $field['index'];
-                            $template->default        = $field['default'];
-                            $template->notnull        = $field['notnull'];
-                            $template->unsigned       = $field['unsigned'];
-                            $template->auto_increment = $field['autoincrement'];
-
-                            $template->update();
-                        }
-                    }
-                }
+                $this->updateTemplates($request->templates);
 
                 if (Table::exists($tableName)) {
 
                     if (Driver::isMongoDB()) {
 
-                        if ($collection = DBM_Collection::where('name', $tableName)->first()) {
-                            if ($tableName != $newName) {
-                                $collection->name     = $newName;
-                                $collection->old_name = $newName;
-                                $collection->update();
-                            }
-                        } else {
-                            $collection           = new DBM_Collection;
-                            $collection->name     = $newName;
-                            $collection->old_name = $newName;
-                            $collection->save();
-                        }
-
-                        if ($collection) {
-
-                            $id         = $collection->_id;
-                            $fieldNames = (!empty($collection->fields)) ? $collection->fields->pluck('old_name')->toArray() : [];
-
-                            foreach ($columns as $column) {
-
-                                if (in_array($column['oldName'], $fieldNames)) {
-
-                                    $collection_field = CollectionField::where('old_name', $column['oldName'])->first();
-
-                                    $collection_field->name     = $column['name'];
-                                    $collection_field->old_name = $column['oldName'];
-                                    $collection_field->type     = $column['type']['name'];
-                                    $collection_field->update();
-                                    $fieldNames = array_values(array_diff($fieldNames, [$column['oldName']]));
-                                } else {
-
-                                    $collection_field = new CollectionField;
-
-                                    $collection_field->dbm_collection_id = $id;
-                                    $collection_field->name              = $column['name'];
-                                    $collection_field->old_name          = $column['name'];
-                                    $collection_field->type              = $column['type']['name'];
-                                    $collection_field->index             = '';
-                                    $collection_field->extra             = [];
-
-                                    $collection_field->save();
-                                }
-                            }
-
-                            if (count($fieldNames) > 0) {
-                                foreach ($fieldNames as $fieldName) {
-                                    $field = CollectionField::where([
-                                        'dbm_collection_id' => $id,
-                                        'name'              => $fieldName])->first();
-                                    $field->delete();
-                                }
-                            }
-
-                        }
+                        $this->updateMongoDbTable($table);
                     }
 
                     // Update Database
                     Table::update($request->table);
 
                     // Update Crud fields
-                    if ($tableName != $newName) {
-
-                        DBM::Object()->where('slug', Str::slug($tableName))->update([
-                            'name'         => $newName,
-                            'slug'         => Str::slug($newName),
-                            'display_name' => ucfirst($newName),
-                        ]);
-
-                        $tableName = $newName;
-                    }
-
-                    if ($object = DBM::Object()::where('slug', Str::slug($tableName))->first()) {
-
-                        $fieldNames = $object->fields->pluck('name')->toArray();
-                        // $relationshipItems = [];
-
-                        foreach ($columns as $column) {
-
-                            $columnType = $column['type'];
-
-                            if (in_array($column['oldName'], $fieldNames)) {
-
-                                $field = DBM::Field()->where([
-                                    'dbm_object_id' => $object->id,
-                                    'name'          => $column['oldName'],
-                                ])->first();
-
-                                $field->name = $column['name'];
-                                if ($column['oldName'] != $column['name']) {
-                                    $field->display_name = ucfirst($column['name']);
-                                }
-                                $field->order = $column['order'];
-                                $field->update();
-
-                                $fieldNames = array_values(array_diff($fieldNames, [$column['oldName']]));
-                            } else {
-
-                                if (DBM::Field()->where([
-                                    'dbm_object_id' => $object->id,
-                                    'name'          => $column['name']])->first()) {
-                                    return response()->json([
-                                        'success' => false,
-                                        'errors'  => ["Field name must be unique. " . $column['name'] . " are duplicate"],
-                                    ], 400);
-                                }
-
-                                $field                = DBM::Field();
-                                $field->dbm_object_id = $object->id;
-                                $field->name          = $column['name'];
-                                $field->display_name  = ucfirst($column['name']);
-                                $field->type          = static::getInputType($columnType['name']);
-                                $field->order         = $column['order'];
-
-                                if ($column['autoincrement'] == true) {
-                                    $field->create = false;
-                                    $field->read   = false;
-                                    $field->edit   = false;
-                                    $field->delete = false;
-                                }
-
-                                $field->save();
-                            }
-
-                        }
-
-                        if (count($fieldNames) > 0) {
-                            foreach ($fieldNames as $fieldName) {
-                                $field = DBM::Field()->where([
-                                    'dbm_object_id' => $object->id,
-                                    'name'          => $fieldName])->first();
-                                if ($field->type != 'relationship') {
-                                    $field->delete();
-                                }
-                            }
-                        }
-                    }
+                    $this->updateCrudFields($table);
 
                     return response()->json(['success' => true]);
                 }

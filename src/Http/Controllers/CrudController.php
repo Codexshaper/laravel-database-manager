@@ -95,9 +95,9 @@ class CrudController extends Controller
 
                         $model         = $namespace . '\\' . $modelName;
                         $object->model = $model;
+                    } else {
+                        $model = $object->model;
                     }
-
-                    $model = $object->model;
 
                     $fields = $object->fields()->orderBy('order', 'ASC')->get();
                 } else {
