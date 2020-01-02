@@ -167,6 +167,66 @@ class CrudController extends Controller
         return response()->json(['success' => false]);
     }
 
+    public function storeOrUpdate(Request $request)
+    {
+        if ($request->ajax()) {
+
+            $table      = $request->object;
+            $columns    = $request->fields;
+            $permission = $request->isCrudExists ? 'update' : 'create';
+
+            if (($response = DBM::authorize('crud.' . $permission)) !== true) {
+                return $response;
+            }
+
+            if (($response = $this->checkModel($table)) !== true) {
+                return $response;
+            }
+
+            if (!class_exists($table['controller'])) {
+                \DBM::makeController($table['controller']);
+            }
+
+            try
+            {
+                if ($object = $this->addOrUpdateObject($table)) {
+                    foreach ($columns as $column) {
+                        $this->addOrUpdateField($column, $object);
+                    }
+
+                    return response()->json([
+                        'success' => true,
+                        'object'  => $request->object,
+                        'fields'  => $request->fields,
+                    ]);
+                }
+
+            } catch (\Exception $e) {
+                return $this->generateError([$e->getMessage()]);
+            }
+        }
+
+        return response()->json(['success' => false]);
+    }
+
+    public function checkModel($table)
+    {
+        if (empty($table['model'])) {
+            return $this->generateError(["Model Must be provided"]);
+        }
+
+        if ($table['makeModel'] && !class_exists($table['model'])) {
+            \DBM::makeModel($table['model'], $table['name']);
+        }
+
+        if (!$table['makeModel'] && !class_exists($table['model'])) {
+            $error = "Create model {$table['model']} first or checked create model option";
+            return $this->generateError([$error]);
+        }
+
+        return true;
+    }
+
     public function addOrUpdateObject($table)
     {
         $object = DBM::Object()->where('name', $table['name'])->first();
@@ -223,69 +283,6 @@ class CrudController extends Controller
         $field->settings      = json_decode($column['settings']);
 
         $field->{$action}();
-    }
-
-    public function checkModel($table)
-    {
-        if ($table['model'] == '' || $table['model'] == null) {
-            return $this->generateError(["Model Must be provided"]);
-        }
-
-        if ($table['makeModel'] == true && !class_exists($table['model'])) {
-            \DBM::makeModel($table['model'], $table['name']);
-        } else if ($table['makeModel'] == false && !class_exists($table['model'])) {
-            $error = "Create model '" . $table['model'] . "' first or checked create model option";
-            return $this->generateError([$error]);
-        }
-
-        return true;
-    }
-
-    public function storeOrUpdate(Request $request)
-    {
-        if ($request->ajax()) {
-
-            if (($response = DBM::authorize('crud.browse')) !== true) {
-                return $response;
-            }
-
-            $table   = $request->object;
-            $columns = $request->fields;
-            // $action     = ($request->isCrudExists) ? 'edit' : 'add';
-            $permission = $request->isCrudExists ? 'update' : 'create';
-
-            if (($response = DBM::authorize('crud.' . $permission)) !== true) {
-                return $response;
-            }
-
-            if (($response = $this->checkModel($table)) !== true) {
-                return $response;
-            }
-
-            if (!class_exists($table['controller'])) {
-                \DBM::makeController($table['controller']);
-            }
-
-            try
-            {
-                if ($object = $this->addOrUpdateObject($table)) {
-                    foreach ($columns as $column) {
-                        $this->addOrUpdateField($column, $object);
-                    }
-                }
-
-            } catch (\Exception $e) {
-                return $this->generateError([$e->getMessage()]);
-            }
-
-            return response()->json([
-                'success' => true,
-                'object'  => $request->object,
-                'fields'  => $request->fields,
-            ]);
-        }
-
-        return response()->json(['success' => false]);
     }
 
     public function delete(Request $request)
