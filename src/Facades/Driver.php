@@ -1,6 +1,7 @@
 <?php
 namespace CodexShaper\DBM\Facades;
 
+use CodexShaper\DBM\Database\Drivers\Driver as DatabaseDriver;
 use Illuminate\Support\Facades\Facade;
 
 class Driver extends Facade
@@ -12,6 +13,6 @@ class Driver extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return '\CodexShaper\DBM\Database\Drivers\Driver';
+        return DatabaseDriver::class;
     }
 }

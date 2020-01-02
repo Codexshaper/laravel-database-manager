@@ -88,16 +88,16 @@ class CrudController extends Controller
 
                     $isCrudExists = true;
 
-                    $model = $object->model;
-
-                    if ($model == null) {
+                    if ($object->model == null) {
                         $namespace = DBM::getModelNamespace();
 
                         $modelName = ucfirst(Str::singular($object->name));
 
-                        $model = $namespace . '\\' . $modelName;
-                        // $object->model = $model;
+                        $model         = $namespace . '\\' . $modelName;
+                        $object->model = $model;
                     }
+
+                    $model = $object->model;
 
                     $fields = $object->fields()->orderBy('order', 'ASC')->get();
                 } else {
