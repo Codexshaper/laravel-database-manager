@@ -256,6 +256,54 @@ class DatabaseController extends Controller
         }
     }
 
+    public function addOrUpdateCrudField($object, $column, &$fieldNames)
+    {
+        $columnType = $column['type'];
+
+        if (in_array($column['oldName'], $fieldNames)) {
+
+            $field = DBM::Field()->where([
+                'dbm_object_id' => $object->id,
+                'name'          => $column['oldName'],
+            ])->first();
+
+            $field->name = $column['name'];
+            if ($column['oldName'] != $column['name']) {
+                $field->display_name = ucfirst($column['name']);
+            }
+            $field->order = $column['order'];
+            $field->update();
+
+            $fieldNames = array_values(array_diff($fieldNames, [$column['oldName']]));
+        } else {
+
+            if (DBM::Field()->where([
+                'dbm_object_id' => $object->id,
+                'name'          => $column['name']])->first()) {
+                return response()->json([
+                    'success' => false,
+                    'errors'  => ["Field name must be unique. " . $column['name'] . " are duplicate"],
+                ], 400);
+            }
+
+            $field                = DBM::Field();
+            $field->dbm_object_id = $object->id;
+            $field->name          = $column['name'];
+            $field->display_name  = ucfirst($column['name']);
+            $field->type          = static::getInputType($columnType['name']);
+            $field->order         = $column['order'];
+
+            if ($column['autoincrement'] == true) {
+                $field->create = false;
+                $field->read   = false;
+                $field->edit   = false;
+                $field->delete = false;
+            }
+
+            $field->save();
+        }
+    }
+
     public function updateCrudFields($table)
     {
         $tableName = $table['oldName'];
@@ -280,50 +328,7 @@ class DatabaseController extends Controller
 
             foreach ($columns as $column) {
 
-                $columnType = $column['type'];
-
-                if (in_array($column['oldName'], $fieldNames)) {
-
-                    $field = DBM::Field()->where([
-                        'dbm_object_id' => $object->id,
-                        'name'          => $column['oldName'],
-                    ])->first();
-
-                    $field->name = $column['name'];
-                    if ($column['oldName'] != $column['name']) {
-                        $field->display_name = ucfirst($column['name']);
-                    }
-                    $field->order = $column['order'];
-                    $field->update();
-
-                    $fieldNames = array_values(array_diff($fieldNames, [$column['oldName']]));
-                } else {
-
-                    if (DBM::Field()->where([
-                        'dbm_object_id' => $object->id,
-                        'name'          => $column['name']])->first()) {
-                        return response()->json([
-                            'success' => false,
-                            'errors'  => ["Field name must be unique. " . $column['name'] . " are duplicate"],
-                        ], 400);
-                    }
-
-                    $field                = DBM::Field();
-                    $field->dbm_object_id = $object->id;
-                    $field->name          = $column['name'];
-                    $field->display_name  = ucfirst($column['name']);
-                    $field->type          = static::getInputType($columnType['name']);
-                    $field->order         = $column['order'];
-
-                    if ($column['autoincrement'] == true) {
-                        $field->create = false;
-                        $field->read   = false;
-                        $field->edit   = false;
-                        $field->delete = false;
-                    }
-
-                    $field->save();
-                }
+                $this->addOrUpdateCrudField($object, $column, $fieldNames);
 
             }
 
@@ -355,7 +360,6 @@ class DatabaseController extends Controller
             }
 
             $tableName = $table['oldName'];
-            $newName   = $table['name'];
 
             try
             {
