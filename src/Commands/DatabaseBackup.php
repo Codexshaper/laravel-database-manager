@@ -67,6 +67,44 @@ class DatabaseBackup extends Command
         return $fileName;
     }
 
+    public function backup($dumper, $filePath)
+    {
+        $isCompress         = config('dbm.backup.compress', false);
+        $isDebug            = config('dbm.backup.debug', false);
+        $compressBinaryPath = config('dbm.backup.compress_binary_path', "");
+        $compressCommand    = config('dbm.backup.compress_command', "gzip");
+        $compressExtension  = config('dbm.backup.compress_extension', ".gz");
+        $dumpBinaryPath     = config('dbm.backup.' . $driver . '.binary_path', '');
+
+        switch ($driver) {
+            case 'mysql':
+            case 'pgsql':
+                if (!empty($table)) {
+                    $dumper->setTables($table);
+                }
+                break;
+            case 'mongodb':
+                $dsn = config('dbm.backup.mongodb.dsn', '');
+                if (!empty($dsn) && method_exists($dumper, 'setUri')) {
+                    $dumper->setUri($dsn);
+                }
+                break;
+
+        }
+
+        if ($isCompress) {
+            $dumper->setCompressBinaryPath($compressBinaryPath);
+            $dumper->setCompressCommand($compressCommand);
+            $dumper->setCompressExtension($compressExtension);
+        }
+        if ($isDebug) {
+            $dumper->enableDebug();
+        }
+        $dumper->setCommandBinaryPath($dumpBinaryPath)
+            ->setDestinationPath($filePath)
+            ->dump();
+    }
+
     /**
      * Execute the console command.
      *
@@ -101,40 +139,7 @@ class DatabaseBackup extends Command
 
             }
 
-            $isCompress         = config('dbm.backup.compress', false);
-            $isDebug            = config('dbm.backup.debug', false);
-            $compressBinaryPath = config('dbm.backup.compress_binary_path', "");
-            $compressCommand    = config('dbm.backup.compress_command', "gzip");
-            $compressExtension  = config('dbm.backup.compress_extension', ".gz");
-            $dumpBinaryPath     = config('dbm.backup.' . $driver . '.binary_path', '');
-
-            switch ($driver) {
-                case 'mysql':
-                case 'pgsql':
-                    if (!empty($table)) {
-                        $dumper->setTables($table);
-                    }
-                    break;
-                case 'mongodb':
-                    $dsn = config('dbm.backup.mongodb.dsn', '');
-                    if (!empty($dsn)) {
-                        $dumper->setUri($dsn);
-                    }
-                    break;
-
-            }
-
-            if ($isCompress) {
-                $dumper->setCompressBinaryPath($compressBinaryPath);
-                $dumper->setCompressCommand($compressCommand);
-                $dumper->setCompressExtension($compressExtension);
-            }
-            if ($isDebug) {
-                $dumper->enableDebug();
-            }
-            $dumper->setCommandBinaryPath($dumpBinaryPath)
-                ->setDestinationPath($filePath)
-                ->dump();
+            $this->backup($dumper, $filePath);
 
             $this->info("Backup completed");
 
