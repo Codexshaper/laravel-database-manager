@@ -28,7 +28,8 @@
         </whitelist>
     </filter>
     <php>
-        <env name="API_KEY" value=""/>
-        <env name="DEFAULT_TOKEN" value=""/>
+        <env name="APP_ENV" value="testing"/>
+        <env name="CACHE_DRIVER" value="array"/>
+        <env name="SESSION_DRIVER" value="array"/>
     </php>
 </phpunit>
