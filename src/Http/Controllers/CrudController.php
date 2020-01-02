@@ -167,6 +167,35 @@ class CrudController extends Controller
         return response()->json(['success' => false]);
     }
 
+    public function addOrUpdateObject($table)
+    {
+        $object = DBM::Object()->where('name', $table['name'])->first();
+        $action = 'update';
+        if (!$object) {
+            $object       = DBM::Object();
+            $object->name = $table['name'];
+            $action       = 'save';
+        }
+        $object->slug         = Str::slug($table['slug']);
+        $object->display_name = ucfirst($table['display_name']);
+        $object->model        = $table['model'];
+        $object->controller   = $table['controller'];
+        $object->details      = [
+            'findColumn'         => $table['findColumn'],
+            'searchColumn'       => $table['searchColumn'],
+            'perPage'            => $table['perPage'],
+            'orderColumn'        => $table['orderColumn'],
+            'orderDisplayColumn' => $table['orderDisplayColumn'],
+            'orderDirection'     => $table['orderDirection'],
+        ];
+
+        if ($object->{$action}()) {
+            return $object;
+        }
+
+        return false;
+    }
+
     public function addOrUpdateField($column, $object)
     {
         $field = DBM::Field()->where([
@@ -196,72 +225,20 @@ class CrudController extends Controller
         $field->{$action}();
     }
 
-    public function addCrud($table, $columns)
+    public function checkModel($table)
     {
-        try
-        {
-            $object               = DBM::Object();
-            $object->name         = $table['name'];
-            $object->slug         = Str::slug($table['slug']);
-            $object->display_name = ucfirst($table['display_name']);
-            $object->model        = $table['model'];
-            $object->controller   = $table['controller'];
-            $object->details      = [
-                'findColumn'         => $table['findColumn'],
-                'searchColumn'       => $table['searchColumn'],
-                'perPage'            => $table['perPage'],
-                'orderColumn'        => $table['orderColumn'],
-                'orderDisplayColumn' => $table['orderDisplayColumn'],
-                'orderDirection'     => $table['orderDirection'],
-            ];
-
-            if ($object->save()) {
-
-                foreach ($columns as $column) {
-
-                    $this->addOrUpdateField($column, $object);
-                }
-
-            }
-
-            return true;
-
-        } catch (\Exception $e) {
-            return $this->generateError([$e->getMessage()]);
+        if ($table['model'] == '' || $table['model'] == null) {
+            return $this->generateError(["Model Must be provided"]);
         }
-    }
 
-    public function updateCrud($table, $columns)
-    {
-        try
-        {
-            $object               = DBM::Object()->where('name', $table['name'])->first();
-            $object->slug         = Str::slug($table['slug']);
-            $object->display_name = ucfirst($table['display_name']);
-            $object->model        = $table['model'];
-            $object->controller   = $table['controller'];
-            $object->details      = [
-                'findColumn'         => $table['findColumn'],
-                'searchColumn'       => $table['searchColumn'],
-                'perPage'            => $table['perPage'],
-                'orderColumn'        => $table['orderColumn'],
-                'orderDisplayColumn' => $table['orderDisplayColumn'],
-                'orderDirection'     => $table['orderDirection'],
-            ];
-
-            if ($object->update()) {
-
-                foreach ($columns as $column) {
-
-                    $this->addOrUpdateField($column, $object);
-                }
-            }
-
-            return true;
-
-        } catch (\Exception $e) {
-            return $this->generateError([$e->getMessage()]);
+        if ($table['makeModel'] == true && !class_exists($table['model'])) {
+            \DBM::makeModel($table['model'], $table['name']);
+        } else if ($table['makeModel'] == false && !class_exists($table['model'])) {
+            $error = "Create model '" . $table['model'] . "' first or checked create model option";
+            return $this->generateError([$error]);
         }
+
+        return true;
     }
 
     public function storeOrUpdate(Request $request)
@@ -274,44 +251,31 @@ class CrudController extends Controller
 
             $table   = $request->object;
             $columns = $request->fields;
-            $action  = ($request->isCrudExists) ? 'edit' : 'add';
+            // $action     = ($request->isCrudExists) ? 'edit' : 'add';
+            $permission = $request->isCrudExists ? 'update' : 'create';
 
-            // return response()->json(['columns' => $columns, 'action' => $action]);
-
-            if ($table['model'] == '' || $table['model'] == null) {
-                return $this->generateError(["Model Must be provided"]);
-
+            if (($response = DBM::authorize('crud.' . $permission)) !== true) {
+                return $response;
             }
 
-            if ($table['makeModel'] == true && !class_exists($table['model'])) {
-                \DBM::makeModel($table['model'], $table['name']);
-            } else if ($table['makeModel'] == false && !class_exists($table['model'])) {
-                return $this->generateError(["Create model '" . $table['model'] . "' first or checked create model option"]);
+            if (($response = $this->checkModel($table)) !== true) {
+                return $response;
             }
 
             if (!class_exists($table['controller'])) {
                 \DBM::makeController($table['controller']);
             }
 
-            if ($action == 'add') {
-
-                if (($response = DBM::authorize('crud.create')) !== true) {
-                    return $response;
+            try
+            {
+                if ($object = $this->addOrUpdateObject($table)) {
+                    foreach ($columns as $column) {
+                        $this->addOrUpdateField($column, $object);
+                    }
                 }
 
-                if (($response = $this->addCrud($table, $columns)) !== true) {
-                    return $response;
-                }
-
-            } else if ($action == 'edit') {
-
-                if (($response = DBM::authorize('crud.update')) !== true) {
-                    return $response;
-                }
-
-                if (($response = $this->updateCrud($table, $columns)) !== true) {
-                    return $response;
-                }
+            } catch (\Exception $e) {
+                return $this->generateError([$e->getMessage()]);
             }
 
             return response()->json([
