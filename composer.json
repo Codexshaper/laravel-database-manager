@@ -1,0 +1,43 @@
+{
+    "name": "codexshaper/laravel-database-manager",
+    "description": "Laravel Database Manager",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Md Abu Ahsan Basir",
+            "email": "maab.career@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": "^7.2",
+        "doctrine/dbal": "^2.10",
+        "laravel/passport": "^8.0",
+        "codexshaper/database-backup-restore": "^1.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "CodexShaper\\DBM\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "CodexShaper\\DBM\\": "src/",
+            "CodexShaper\\DBM\\Test\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CodexShaper\\DBM\\ManagerServiceProvider"
+            ],
+            "aliases": {
+                "DBM": "CodexShaper\\DBM\\Facades\\Manager"
+            }
+        }
+    }
+}

@@ -1,0 +1,115 @@
+<template>
+	<select class="form-control" v-model="field.function_name">
+	  <option value="">Select Function</option>
+	  <option>ABS</option>
+	  <option>ACOS</option>
+	  <option>ASCII</option>
+	  <option>ASIN</option>
+	  <option>ATAN</option>
+	  <option>BIT_LENGTH</option>
+	  <option>BIT_COUNT</option>
+	  <option>CEILING</option>
+	  <option>CHAR_LENGTH</option>
+	  <option>CONNECTION_ID</option>
+	  <option>COS</option>
+	  <option>COT</option>
+	  <option>CRC32</option>
+	  <option>DAYOFMONTH</option>
+	  <option>DAYOFWEEK</option>
+	  <option>DAYOFYEAR</option>
+	  <option>DEGREES</option>
+	  <option>EXP</option>
+	  <option>FLOOR</option>
+	  <option>HOUR</option>
+	  <option>INET6_ATON</option>
+	  <option>INET_ATON</option>
+	  <option>LENGTH</option>
+	  <option>LN</option>
+	  <option>LOG</option>
+	  <option>LOG2</option>
+	  <option>LOG10</option>
+	  <option>MICROSECOND</option>
+	  <option>MINUTE</option>
+	  <option>MONTH</option>
+	  <option>OCT</option>
+	  <option>ORD</option>
+	  <option>PI</option>
+	  <option>QUARTER</option>
+	  <option>RADIANS</option>
+	  <option>RAND</option>
+	  <option>ROUND</option>
+	  <option>SECOND</option>
+	  <option>SIGN</option>
+	  <option>SIN</option>
+	  <option>SQRT</option>
+	  <option>TAN</option>
+	  <option>TO_DAYS</option>
+	  <option>TO_SECONDS</option>
+	  <option>TIME_TO_SEC</option>
+	  <option>UNCOMPRESSED_LENGTH</option>
+	  <option>UNIX_TIMESTAMP</option>
+	  <option>UUID_SHORT</option>
+	  <option>WEEK</option>
+	  <option>WEEKDAY</option>
+	  <option>WEEKOFYEAR</option>
+	  <option>YEARWEEK</option>
+	  <option value="" disabled="disabled">--------</option>
+	  <option>AES_DECRYPT</option>
+	  <option>AES_ENCRYPT</option>
+	  <option>BIN</option>
+	  <option>CHAR</option>
+	  <option>COMPRESS</option>
+	  <option>CURRENT_DATE</option>
+	  <option>CURRENT_TIME</option>
+	  <option>CURRENT_USER</option>
+	  <option>DATABASE</option>
+	  <option>DATE</option>
+	  <option>DAYNAME</option>
+	  <option>DES_DECRYPT</option>
+	  <option>DES_ENCRYPT</option>
+	  <option>ENCRYPT</option>
+	  <option>FROM_DAYS</option>
+	  <option>FROM_UNIXTIME</option>
+	  <option>HEX</option>
+	  <option>INET6_NTOA</option>
+	  <option>INET_NTOA</option>
+	  <option>LAST_DAY</option>
+	  <option>LOAD_FILE</option>
+	  <option>LOWER</option>
+	  <option>LTRIM</option>
+	  <option>MD5</option>
+	  <option>MONTHNAME</option>
+	  <option>NOW</option>
+	  <option>OLD_PASSWORD</option>
+	  <option>PASSWORD</option>
+	  <option>QUOTE</option>
+	  <option>REVERSE</option>
+	  <option>RTRIM</option>
+	  <option>SEC_TO_TIME</option>
+	  <option>SHA1</option>
+	  <option>SOUNDEX</option>
+	  <option>SPACE</option>
+	  <option>SYSDATE</option>
+	  <option>TIME</option>
+	  <option>TIMESTAMP</option>
+	  <option>TRIM</option>
+	  <option>UNCOMPRESS</option>
+	  <option>UNHEX</option>
+	  <option>UPPER</option>
+	  <option>USER</option>
+	  <option>UTC_DATE</option>
+	  <option>UTC_TIME</option>
+	  <option>UTC_TIMESTAMP</option>
+	  <option>UUID</option>
+	  <option>VERSION</option>
+	  <option>YEAR</option>
+	</select>
+</template>
+<script>
+
+	export default {
+		props: {
+			field: Object,
+		},
+    }
+</script>

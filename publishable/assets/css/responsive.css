@@ -1,0 +1,274 @@
+
+/*============= large device=============*/
+
+@media screen and (max-width: 1024px){
+  #wrapper .sidebar {
+    left: -250px; 
+  }
+  #wrapper .main {
+    width: 100%; 
+  }
+  #wrapper .navbar {
+    width:100%; 
+  }
+  #wrapper .btn-toggle-fullwidth {
+    color: #00AAFF; 
+  }
+  .btn-toggle-minified {
+    display: none; 
+  } 
+  .navbar-default .brand {
+    padding-left: 30px;
+    padding-right: 15px; 
+  } 
+}
+
+/*============= tab device=============*/
+
+@media screen and (max-width: 992px){
+  .navbar-default .brand {
+    display: none; 
+  }
+}
+@media screen and (min-width: 768px) {
+  .navbar-nav.navbar-right {
+    margin-right: 0; 
+  } 
+}
+@media screen and (max-width: 767px) {
+  .navbar + .main-content {
+    padding-top: 155px; 
+  }
+  .navbar-nav {
+    width: 100%;
+    margin: 0; 
+  }
+  .navbar-nav > li {
+    display: table-cell;
+    width: 1%;
+    position: inherit;
+    text-align: center; 
+  }
+  .navbar-nav > li > a {
+    padding: 15px 20px;
+  }
+  .navbar-nav > li > a span:not(.badge),
+  .navbar-nav > li > a .icon-submenu {
+    display: none; 
+  }
+  .navbar-nav .open .dropdown-menu {
+    -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    position: absolute;
+    width: 100%;
+    margin-top: 3px;
+    background-color: #fff; 
+  }
+  .navbar-nav .open .dropdown-menu > li > a {
+    padding: 10px 15px; 
+  }
+  .navbar-nav .icon-menu {
+    padding-top: 15px;
+    padding-bottom: 15px; 
+  }
+  .navbar-nav .icon-menu .badge {
+    top: 10px;
+    right: 15px; 
+  }
+}
+@media screen and (max-width: 640px) {
+  .navbar-default #navbar-menu {
+    float: right; 
+  }
+}
+
+
+@media (min-width: 1025px) and (max-width: 1200px){
+  /*==========created field btn==========*/
+  .create-table-area .create-btn {
+    font-size: 10px;
+    padding: 12px 11px !important;
+  }
+  .search .form-control {
+    font-size: 14px;
+  }
+  .create-table-area .search button {
+    padding: 0px 10px;
+  }
+  
+}
+
+@media (min-width: 992px) and (max-width: 1200px){
+   #wrapper .main {
+    padding-left: 23px;
+  }
+  .navbar + .main-content {
+    padding: 86px 28px 28px 5px;
+  }
+  /*=================created field page================= */
+  .default-fields-form .card {
+     margin-top: -6.5px;
+  }
+  .field-lists .card-body, .dd-dragel .card-body {
+    margin-top: -4.2px;
+  }
+  
+}
+
+@media (min-width: 768px) and (max-width:991px){
+  /*=================created field page================= */
+   #wrapper .main {
+    padding-left: 23px;
+  }
+  .default-fields-form .card {
+     margin-top: -6.5px;
+  }
+  .create-table-area .create-btn {
+    font-size: 10px;
+    padding: 12px 10px ;
+  }
+  .search .form-control {
+    font-size: 14px;
+  }
+  .create-table-area .search button {
+    padding: 0px 10px;
+  }
+  .df-list .df-name {
+    font-size: 13px;
+  }
+
+}
+
+@media (min-width: 576px) and (max-width:767px){
+  /*=================created field page================= */
+   #wrapper .main {
+    padding-left: 23px;
+  }
+  .navbar + .main-content {
+    padding-top:80px;
+  }
+  .default-fields-form .card {
+     margin-top: -6.5px;
+  }
+  .create-table-area .create-btn {
+    font-size: 10px;
+    padding: 12px 11px ;
+  }
+  .search .form-control {
+    font-size: 14px;
+  }
+  .create-table-area .search button {
+    padding: 0px 10px;
+  }
+  .df-list .df-name {
+    font-size: 12px;
+  }
+ .cs-all-btn {
+    padding: 6px 10px;
+  }
+  .create-table-area .dd-handle ,
+  .dd-dragel .dd-handle  {
+    font-size: 12px;
+  }
+  .dd-handle,.dd-dragel .dd-handle{
+    height: 40px;
+    padding: 2px 10px;
+  }
+  .action-area , .dd-dragel .action-area{
+    top: 2px;
+  }
+}
+
+@media (min-width: 481px) and (max-width:575px){
+  /*=================created field page================= */
+  #wrapper .main {
+    padding-left: 23px;
+  }
+  .navbar + .main-content {
+    padding-top:80px;
+  }
+  .default-fields-form .card {
+     margin-top: -6.5px;
+  }
+  .create-table-area .create-btn {
+    font-size: 10px;
+    padding: 12px 11px ;
+  }
+  .create-table-area .search {
+     margin-top: 30px;
+  }
+  .search .form-control {
+    font-size: 14px;
+  }
+  .create-table-area .search button {
+    padding: 0px 10px;
+  }
+  .df-list .df-name {
+    font-size: 12px;
+  }
+ .cs-all-btn {
+    padding: 6px 10px;
+  }
+  .create-table-area .dd-handle ,
+  .dd-dragel .dd-handle  {
+    font-size: 12px;
+  }
+  .dd-handle,.dd-dragel .dd-handle{
+    height: 40px;
+    padding: 2px 10px;
+  }
+  .action-area , .dd-dragel .action-area{
+    top: 2px;
+  }
+  .create-table-area .page-link {
+    font-size: 12px;
+  }
+}
+
+
+@media (min-width: 340px) and (max-width:480px){
+  /*=================created field page================= */
+  #wrapper .main {
+    padding-left: 23px;
+  }
+  .navbar + .main-content {
+    padding-top:80px;
+  }
+  .default-fields-form .card {
+     margin-top: -6.5px;
+  }
+  .create-table-area .create-btn {
+    font-size: 10px;
+    padding: 12px 11px ;
+  }
+  .create-table-area .search {
+     margin-top: 30px;
+  }
+  .search .form-control {
+    font-size: 14px;
+  }
+  .create-table-area .search button {
+    padding: 0px 10px;
+  }
+  .df-list .df-name {
+    font-size: 12px;
+  }
+ .cs-all-btn {
+    padding: 6px 10px;
+  }
+  .create-table-area .dd-handle ,
+  .dd-dragel .dd-handle  {
+    font-size: 12px;
+  }
+  .dd-handle,.dd-dragel .dd-handle{
+    height: 40px;
+    padding: 2px 10px;
+  }
+  .action-area , .dd-dragel .action-area{
+    top: 2px;
+  }
+  .create-table-area .page-link {
+    font-size: 12px;
+  }
+}

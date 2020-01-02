@@ -1,0 +1,173 @@
+<?php
+
+namespace CodexShaper\DBM\Database\Types;
+
+use CodexShaper\DBM\Database\Schema\SchemaManager;
+use Doctrine\DBAL\Types\Type as DoctrineType;
+
+abstract class Type extends DoctrineType
+{
+
+    public function getName()
+    {
+        return static::NAME;
+    }
+
+    public static function registerCustomTypes()
+    {
+        $platform     = SchemaManager::getInstance()->getDatabasePlatform();
+        $platformName = ucfirst($platform->getName());
+
+        $customTypes = array_merge(
+            static::getCustomTypes('Common'),
+            static::getCustomTypes($platformName)
+        );
+
+        foreach ($customTypes as $type) {
+            $name = $type::NAME;
+
+            if (static::hasType($name)) {
+                static::overrideType($name, $type);
+            } else {
+                static::addType($name, $type);
+            }
+
+            $dbType = defined("{$type}::DBTYPE") ? $type::DBTYPE : $name;
+
+            $platform->registerDoctrineTypeMapping($dbType, $name);
+        }
+    }
+
+    protected static function getCustomTypes($platformName)
+    {
+        $customPlatformDir = __DIR__ . DIRECTORY_SEPARATOR . $platformName . DIRECTORY_SEPARATOR;
+
+        $customTypes = [];
+
+        foreach (glob($customPlatformDir . '*.php') as $file) {
+            $className     = basename($file, ".php");
+            $customTypes[] = __NAMESPACE__ . '\\' . $platformName . '\\' . $className;
+        }
+
+        return $customTypes;
+    }
+
+    public static function getTypeCategories()
+    {
+
+        return [
+            'numbers'  => [
+                'boolean',
+                'tinyint',
+                'smallint',
+                'mediumint',
+                'integer',
+                'int',
+                'bigint',
+                'decimal',
+                'numeric',
+                'money',
+                'float',
+                'real',
+                'double',
+                'double precision',
+            ],
+            'strings'  => [
+                'char',
+                'character',
+                'varchar',
+                'character varying',
+                'string',
+                'guid',
+                'uuid',
+                'tinytext',
+                'text',
+                'mediumtext',
+                'longtext',
+                'tsquery',
+                'tsvector',
+                'xml',
+            ],
+            'datetime' => [
+                'date',
+                'datetime',
+                'year',
+                'time',
+                'timetz',
+                'timestamp',
+                'timestamptz',
+                'datetimetz',
+                'dateinterval',
+                'interval',
+            ],
+            'lists'    => [
+                'enum',
+                'set',
+                'simple_array',
+                'array',
+                'json',
+                'jsonb',
+                'json_array',
+            ],
+            'binary'   => [
+                'bit',
+                'bit varying',
+                'binary',
+                'varbinary',
+                'tinyblob',
+                'blob',
+                'mediumblob',
+                'longblob',
+                'bytea',
+            ],
+            'network'  => [
+                'cidr',
+                'inet',
+                'macaddr',
+                'txid_snapshot',
+            ],
+            'geometry' => [
+                'geometry',
+                'point',
+                'linestring',
+                'polygon',
+                'multipoint',
+                'multilinestring',
+                'multipolygon',
+                'geometrycollection',
+            ],
+            'objects'  => ['object'],
+        ];
+    }
+
+    public static function getTypeCategory($type)
+    {
+        $categories = static::getTypeCategories();
+
+        foreach ($categories as $key => $category) {
+            foreach ($category as $value) {
+                if ($value == $type) {
+                    switch ($key) {
+                        case 'numbers':
+                            return 'Numbers';
+                        case 'strings':
+                            return 'Strings';
+                        case 'datetime':
+                            return 'Date and Time';
+                        case 'lists':
+                            return 'Lists';
+                        case 'binary':
+                            return 'Binary';
+                        case 'network':
+                            return 'Networks';
+                        case 'geometry':
+                            return 'Geometry';
+                        case 'objects':
+                            return 'Objects';
+                    }
+                }
+            }
+        }
+    }
+
+}

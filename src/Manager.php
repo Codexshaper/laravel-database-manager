@@ -1,0 +1,281 @@
+<?php
+namespace CodexShaper\DBM;
+
+use CodexShaper\DBM\Facades\Driver;
+use CodexShaper\DBM\Models\DBM_Field;
+use CodexShaper\DBM\Models\DBM_MongoField;
+use CodexShaper\DBM\Models\DBM_MongoObject;
+use CodexShaper\DBM\Models\DBM_MongoPermission;
+use CodexShaper\DBM\Models\DBM_MongoTemplate;
+use CodexShaper\DBM\Models\DBM_Object;
+use CodexShaper\DBM\Models\DBM_Permission;
+use CodexShaper\DBM\Models\DBM_Template;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
+class Manager
+{
+    public function webRoutes()
+    {
+        require __DIR__ . '/../routes/web.php';
+    }
+
+    public function apiRoutes()
+    {
+        require __DIR__ . '/../routes/api.php';
+    }
+
+    /**
+     * Load assests
+     *
+     * @param  string $path
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function assets($path)
+    {
+        $file = base_path(trim(config('dbm.resources_path'), '/') . "/" . urldecode($path));
+
+        if (File::exists($file)) {
+
+            switch ($extension = pathinfo($file, PATHINFO_EXTENSION)) {
+                case 'js':
+                    $mimeType = 'text/javascript';
+                    break;
+                case 'css':
+                    $mimeType = 'text/css';
+                    break;
+                default:
+                    $mimeType = File::mimeType($file);
+                    break;
+            }
+
+            $response = Response::make(File::get($file), 200);
+            $response->header('Content-Type', $mimeType);
+            $response->setSharedMaxAge(31536000);
+            $response->setMaxAge(31536000);
+            $response->setExpires(new \DateTime('+1 year'));
+
+            return $response;
+        }
+
+        return response('', 404);
+    }
+
+    public function getModelNamespace()
+    {
+        return trim(config('dbm.modal_namespace', app()->getNamespace()), '\\');
+    }
+
+    public function makeModel($model, $table)
+    {
+        try {
+
+            $partials = explode("\\", $model);
+
+            $className = array_pop($partials);
+            $namespace = implode("\\", $partials);
+
+            $contents = "<?php\n\n";
+            $contents .= "namespace " . $namespace . ";\n\n";
+            if (Driver::isMongoDB()) {
+                $contents .= "use Jenssegers\Mongodb\Eloquent\Model;\n\n";
+            } else {
+                $contents .= "use Illuminate\Database\Eloquent\Model;\n\n";
+            }
+            $contents .= "class " . $className . " extends Model\n";
+            $contents .= "{\n\n";
+            if (Driver::isMongoDB()) {
+                $contents .= "\tprotected \$collection = '" . $table . "';\n";
+            } else {
+                $contents .= "\tprotected \$table = '" . $table . "';\n";
+            }
+
+            // $content .= "\tpublic \$timestamps = false;\n";
+            $contents .= "}\n";
+
+            $filesystem = new Filesystem;
+            $filesystem->put(base_path($model . ".php"), $contents);
+        } catch (\Exception $e) {
+            throw new \Exception("There has an error when create model. The error is :" . $e->getMessage(), 1);
+
+        }
+
+    }
+
+    public function makeController($controller)
+    {
+        try {
+            Artisan::call('make:controller', [
+                'name' => $controller,
+            ]);
+        } catch (\Exception $e) {
+            throw new \Exception("There has an error when create Controller. The error is :" . $e->getMessage(), 1);
+
+        }
+
+    }
+
+    public function model($model, $table = null)
+    {
+        if ($table == null) {
+            return new $model;
+        }
+
+        return (new $model)->setTable($table);
+    }
+
+    public function Object()
+    {
+        if (Driver::isMongoDB()) {
+            return new DBM_MongoObject();
+        }
+
+        return new DBM_Object;
+    }
+
+    public function Field()
+    {
+        if (Driver::isMongoDB()) {
+            return new DBM_MongoField;
+        }
+
+        return new DBM_Field;
+    }
+
+    public function Permission()
+    {
+        if (Driver::isMongoDB()) {
+            return new DBM_MongoPermission;
+        }
+
+        return new DBM_Permission;
+    }
+
+    public function Template()
+    {
+        if (Driver::isMongoDB()) {
+            return new DBM_MongoTemplate;
+        }
+
+        return new DBM_Template;
+    }
+
+    public function templates()
+    {
+        $templates    = static::Template()->get();
+        $newTemplates = [];
+
+        foreach ($templates as $template) {
+            $newTemplates[] = (object) [
+                "name"          => $template->name,
+                "oldName"       => $template->old_name,
+                "type"          => [
+                    "name" => $template->type,
+                ],
+                "notnull"       => $template->notnull,
+                "unsigned"      => $template->unsigned,
+                "autoincrement" => $template->auto_increment,
+                "default"       => $template->default,
+                "length"        => $template->length,
+                "index"         => ($template->index != null) ? $template->index : "",
+            ];
+        }
+
+        return $newTemplates;
+    }
+
+    /*
+     * File System
+     */
+
+    public function getPathPrefix($driver = 'local')
+    {
+        return trim(Storage::disk($driver)->getDriver()->getAdapter()->getPathPrefix(), DIRECTORY_SEPARATOR);
+    }
+
+    /*
+     * Permission
+     */
+
+    public function userPermissions()
+    {
+        $user = Auth::user();
+
+        return self::Object()
+            ->setManyToManyRelation(
+                $user,
+                static::Permission(),
+                'dbm_user_permissions',
+                'user_id',
+                'dbm_permission_id'
+            )
+            ->belongs_to_many;
+    }
+
+    public function isLoggedIn()
+    {
+        if (Auth::guest()) {
+            return Route::has('login') ? redirect(route('login')) : abort(404);
+        }
+
+        return true;
+    }
+
+    public function checkPermission($prefix, $slug)
+    {
+        if (Auth::guest()) {
+            return 'not_logged_in';
+        }
+
+        $user_model        = config('dbm.user.model');
+        $user_table        = config('dbm.user.table');
+        $user_local_key    = config('dbm.user.local_key');
+        $user_display_name = config('dbm.user.display_name');
+
+        $permissions = $this->userPermissions();
+
+        foreach ($permissions as $permission) {
+            if ($permission->prefix == $prefix && $permission->slug == $slug) {
+                return 'authorized';
+            }
+        }
+
+        return 'not_authorized';
+
+    }
+
+    public function authorize($permission)
+    {
+        $permission = explode('.', $permission);
+
+        $prefix = $permission[0];
+        $slug   = $permission[1];
+
+        switch ($this->checkPermission($prefix, $slug)) {
+            case 'not_logged_in':
+                return response()->json([
+                    'success' => false,
+                    'url'     => route('login'),
+                ]);
+                break;
+
+            case 'not_authorized':
+                return response()->json([
+                    'success' => false,
+                    'errors'  => ["You don't have permission to " . $slug . " " . $prefix],
+                ], 401);
+                break;
+            case 'authorized':
+                return true;
+                break;
+        }
+    }
+
+}
