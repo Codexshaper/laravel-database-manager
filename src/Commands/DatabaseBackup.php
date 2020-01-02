@@ -80,12 +80,12 @@ class DatabaseBackup extends Command
 
         $driver = dbm_driver();
 
-        $hostname = config('database.connections.' . $driver . '.host', '127.0.0.1');
-        $port     = config('database.connections.' . $driver . '.port', '3306');
+        // $hostname = config('database.connections.' . $driver . '.host', '127.0.0.1');
+        // $port     = config('database.connections.' . $driver . '.port', '3306');
         $database = config('database.connections.' . $driver . '.database', 'dbm');
         $table    = ($this->option('table') != null) ? $this->option('table') : '';
-        $username = config('database.connections.' . $driver . '.username', 'root');
-        $password = config('database.connections.' . $driver . '.password', '');
+        // $username = config('database.connections.' . $driver . '.username', 'root');
+        // $password = config('database.connections.' . $driver . '.password', '');
 
         try
         {
