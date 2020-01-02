@@ -12,7 +12,7 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.2",
-        "illuminate/support": "~5.5|~6.0",
+        "laravel/framework": "~5.5|~6.0",
         "doctrine/dbal": "^2.10",
         "laravel/passport": "^8.0",
         "codexshaper/database-backup-restore": "^1.1"
