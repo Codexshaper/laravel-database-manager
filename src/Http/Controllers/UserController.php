@@ -5,11 +5,12 @@ namespace CodexShaper\DBM\Http\Controllers;
 use DBM;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
 class UserController extends Controller
 {
-    public function showLoginForm(Request $request)
+    public function showLoginForm()
     {
         return view('dbm::admin');
     }
@@ -97,7 +98,7 @@ class UserController extends Controller
     public function api()
     {
         if (Auth::guest()) {
-            return Route::has('login') ? redirect(route('login')) : abort(404);
+            return Route::has('login') ? redirect(route('login')) : Response::view('dbm::errors.404', [], 404);
         }
 
         return view('dbm::api');

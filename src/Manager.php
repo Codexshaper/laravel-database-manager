@@ -11,6 +11,7 @@ use CodexShaper\DBM\Models\DBM_Object;
 use CodexShaper\DBM\Models\DBM_Permission;
 use CodexShaper\DBM\Models\DBM_Template;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -56,6 +57,10 @@ class Manager
                     break;
             }
 
+            if (!$mimeType) {
+                $mimeType = 'text/plain';
+            }
+
             $response = Response::make(File::get($file), 200);
             $response->header('Content-Type', $mimeType);
             $response->setSharedMaxAge(31536000);
@@ -70,7 +75,7 @@ class Manager
 
     public function getModelNamespace()
     {
-        return trim(config('dbm.modal_namespace', app()->getNamespace()), '\\');
+        return trim(config('dbm.modal_namespace', App::getNamespace()), '\\');
     }
 
     public function makeModel($model, $table)
@@ -222,7 +227,7 @@ class Manager
     public function isLoggedIn()
     {
         if (Auth::guest()) {
-            return Route::has('login') ? redirect(route('login')) : abort(404);
+            return Route::has('login') ? redirect(route('login')) : Response::view('dbm::errors.404', [], 404);
         }
 
         return true;
