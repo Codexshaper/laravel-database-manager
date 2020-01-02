@@ -101,7 +101,7 @@ class DatabaseBackup extends Command
             $dumper->enableDebug();
         }
         $dumper->setCommandBinaryPath($dumpBinaryPath)
-            ->setDestinationPath($filePath)
+            ->setDestinationPath($data['filePath'])
             ->dump();
     }
 

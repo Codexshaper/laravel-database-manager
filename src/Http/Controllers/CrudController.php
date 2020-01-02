@@ -167,31 +167,39 @@ class CrudController extends Controller
         return response()->json(['success' => false]);
     }
 
+    public function addOrUpdateField($column, $object)
+    {
+        $field = DBM::Field()->where([
+            'dbm_object_id' => $object->id,
+            'name'          => $column['name'],
+        ])->first();
+
+        $action = 'update';
+
+        if (!$field) {
+            $field                = DBM::Field();
+            $field->dbm_object_id = $object->id;
+            $field->name          = $column['name'];
+            $action               = 'save';
+        }
+
+        $field->display_name  = ucfirst($column['display_name']);
+        $field->type          = $column['type'];
+        $field->create        = isset($column['create']) ? $column['create'] : false;
+        $field->read          = isset($column['read']) ? $column['read'] : false;
+        $field->edit          = isset($column['edit']) ? $column['edit'] : false;
+        $field->delete        = isset($column['delete']) ? $column['delete'] : false;
+        $field->order         = $column['order'];
+        $field->function_name = isset($column['function_name']) ? $column['function_name'] : "";
+        $field->settings      = json_decode($column['settings']);
+
+        $field->{$action}();
+    }
+
     public function addCrud($table, $columns)
     {
         try
         {
-            if ($table['model'] == '' || $table['model'] == null) {
-                return response()->json([
-                    'success' => false,
-                    'errors'  => ["Model Must be provided"],
-                ], 400);
-
-            }
-
-            if ($table['makeModel'] == true && !class_exists($table['model'])) {
-                \DBM::makeModel($table['model'], $table['name']);
-            } else if ($table['makeModel'] == false && !class_exists($table['model'])) {
-                return response()->json([
-                    'success' => false,
-                    'errors'  => ["Create model '" . $table['model'] . "' first or checked create model option"],
-                ], 400);
-            }
-
-            if (!class_exists($table['controller'])) {
-                \DBM::makeController($table['controller']);
-            }
-
             $object               = DBM::Object();
             $object->name         = $table['name'];
             $object->slug         = Str::slug($table['slug']);
@@ -211,21 +219,7 @@ class CrudController extends Controller
 
                 foreach ($columns as $column) {
 
-                    $field                = DBM::Field();
-                    $field->dbm_object_id = $object->id;
-                    $field->name          = $column['name'];
-                    $field->display_name  = ucfirst($column['display_name']);
-                    $field->type          = $column['type'];
-                    // $field->required      = isset($column['required']) ? $column['required'] : false;
-                    $field->create        = isset($column['create']) ? $column['create'] : false;
-                    $field->read          = isset($column['read']) ? $column['read'] : false;
-                    $field->edit          = isset($column['edit']) ? $column['edit'] : false;
-                    $field->delete        = isset($column['delete']) ? $column['delete'] : false;
-                    $field->order         = $column['order'];
-                    $field->function_name = $column['function_name'];
-                    $field->settings      = json_decode($column['settings']);
-
-                    $field->save();
+                    $this->addOrUpdateField($column, $object);
                 }
 
             }
@@ -241,22 +235,6 @@ class CrudController extends Controller
     {
         try
         {
-
-            if ($table['model'] == '' || $table['model'] == null) {
-                return $this->generateError(["Model Must be provided"]);
-
-            }
-
-            if ($table['makeModel'] == true) {
-                \DBM::makeModel($table['model'], $table['name']);
-            } else if ($table['makeModel'] == false && !class_exists($table['model'])) {
-                return $this->generateError(["Create mode '" . $table['model'] . "' first."]);
-            }
-
-            if (!class_exists($table['controller'])) {
-                \DBM::makeController($table['controller']);
-            }
-
             $object               = DBM::Object()->where('name', $table['name'])->first();
             $object->slug         = Str::slug($table['slug']);
             $object->display_name = ucfirst($table['display_name']);
@@ -275,23 +253,7 @@ class CrudController extends Controller
 
                 foreach ($columns as $column) {
 
-                    $field = DBM::Field()->where([
-                        'dbm_object_id' => $object->id,
-                        'name'          => $column['name'],
-                    ])->first();
-
-                    $field->display_name = ucfirst($column['display_name']);
-                    $field->type         = $column['type'];
-                    // $field->required      = isset($column['required']) ? $column['required'] : false;
-                    $field->create        = isset($column['create']) ? $column['create'] : false;
-                    $field->read          = isset($column['read']) ? $column['read'] : false;
-                    $field->edit          = isset($column['edit']) ? $column['edit'] : false;
-                    $field->delete        = isset($column['delete']) ? $column['delete'] : false;
-                    $field->order         = $column['order'];
-                    $field->function_name = isset($column['function_name']) ? $column['function_name'] : "";
-                    $field->settings      = json_decode($column['settings']);
-
-                    $field->update();
+                    $this->addOrUpdateField($column, $object);
                 }
             }
 
@@ -316,15 +278,28 @@ class CrudController extends Controller
 
             // return response()->json(['columns' => $columns, 'action' => $action]);
 
+            if ($table['model'] == '' || $table['model'] == null) {
+                return $this->generateError(["Model Must be provided"]);
+
+            }
+
+            if ($table['makeModel'] == true && !class_exists($table['model'])) {
+                \DBM::makeModel($table['model'], $table['name']);
+            } else if ($table['makeModel'] == false && !class_exists($table['model'])) {
+                return $this->generateError(["Create model '" . $table['model'] . "' first or checked create model option"]);
+            }
+
+            if (!class_exists($table['controller'])) {
+                \DBM::makeController($table['controller']);
+            }
+
             if ($action == 'add') {
 
                 if (($response = DBM::authorize('crud.create')) !== true) {
                     return $response;
                 }
 
-                $response = $this->addCrud($table, $columns);
-
-                if ($response !== true) {
+                if (($response = $this->addCrud($table, $columns)) !== true) {
                     return $response;
                 }
 
@@ -334,9 +309,7 @@ class CrudController extends Controller
                     return $response;
                 }
 
-                $response = $this->updateCrud($table, $columns);
-
-                if ($response !== true) {
+                if (($response = $this->updateCrud($table, $columns)) !== true) {
                     return $response;
                 }
             }
