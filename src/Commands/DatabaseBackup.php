@@ -67,20 +67,20 @@ class DatabaseBackup extends Command
         return $fileName;
     }
 
-    public function backup($dumper, $filePath)
+    public function backup(Dumper $dumper, array $data)
     {
         $isCompress         = config('dbm.backup.compress', false);
         $isDebug            = config('dbm.backup.debug', false);
         $compressBinaryPath = config('dbm.backup.compress_binary_path', "");
         $compressCommand    = config('dbm.backup.compress_command', "gzip");
         $compressExtension  = config('dbm.backup.compress_extension', ".gz");
-        $dumpBinaryPath     = config('dbm.backup.' . $driver . '.binary_path', '');
+        $dumpBinaryPath     = config('dbm.backup.' . $data['driver'] . '.binary_path', '');
 
-        switch ($driver) {
+        switch ($data['driver']) {
             case 'mysql':
             case 'pgsql':
-                if (!empty($table)) {
-                    $dumper->setTables($table);
+                if (!empty($data['table'])) {
+                    $dumper->setTables($data['table']);
                 }
                 break;
             case 'mongodb':
@@ -139,7 +139,11 @@ class DatabaseBackup extends Command
 
             }
 
-            $this->backup($dumper, $filePath);
+            $this->backup($dumper, [
+                'filePath' => $filePath,
+                'driver'   => $driver,
+                'table'    => $table,
+            ]);
 
             $this->info("Backup completed");
 
