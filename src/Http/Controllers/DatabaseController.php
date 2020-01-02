@@ -89,8 +89,8 @@ class DatabaseController extends Controller
                     }
 
                     $table['columns'] = $newColumns;
-                    $columns          = $newColumns;
-                    $isCrudExists     = true;
+                    // $columns          = $newColumns;
+                    $isCrudExists = true;
                 }
             }
 
@@ -224,8 +224,10 @@ class DatabaseController extends Controller
                 return $response;
             }
 
-            if (!is_array($request->table)) {
-                $table = json_decode($request->table, true);
+            $table = $request->table;
+
+            if (!is_array($table)) {
+                $table = json_decode($table, true);
             }
 
             $tableName = $table['oldName'];
@@ -333,8 +335,8 @@ class DatabaseController extends Controller
 
                     if ($object = DBM::Object()::where('slug', Str::slug($tableName))->first()) {
 
-                        $fieldNames        = $object->fields->pluck('name')->toArray();
-                        $relationshipItems = [];
+                        $fieldNames = $object->fields->pluck('name')->toArray();
+                        // $relationshipItems = [];
 
                         foreach ($columns as $column) {
 

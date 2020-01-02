@@ -462,10 +462,10 @@ class RecordController extends Controller
 
                 if ($field->type == 'relationship') {
 
-                    $relationship     = $field->settings;
-                    $relationshipType = $relationship['relationType'];
-                    $localModel       = $relationship['localModel'];
-                    $localKey         = $relationship['localKey'];
+                    $relationship = $field->settings;
+                    // $relationshipType = $relationship['relationType'];
+                    // $localModel       = $relationship['localModel'];
+                    // $localKey         = $relationship['localKey'];
                     $foreignModel     = $relationship['foreignModel'];
                     $foreignKey       = $relationship['foreignKey'];
                     $relationshipType = $relationship['relationType'];
