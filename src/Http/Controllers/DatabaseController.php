@@ -4,9 +4,9 @@ namespace CodexShaper\DBM\Http\Controllers;
 
 use CodexShaper\DBM\Database\Schema\Table;
 use CodexShaper\DBM\Facades\Driver;
+use CodexShaper\DBM\Facades\Manager as DBM;
 use CodexShaper\DBM\Models\CollectionField;
 use CodexShaper\DBM\Models\DBM_Collection;
-use DBM;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -340,7 +340,7 @@ class DatabaseController extends Controller
             try
             {
                 // Update Template
-                app('\CodexShaper\DBM\Http\Controllers\TemplateController')->updateTemplates($request->templates);
+                app('\CodexShaper\DBM\Http\Controllers\TemplateController')->updateTemplates($request);
 
                 if (Table::exists($tableName)) {
 

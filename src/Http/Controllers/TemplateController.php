@@ -8,11 +8,11 @@ use Illuminate\Http\Request;
 class TemplateController extends Controller
 {
 
-    public function updateTemplates($templates)
+    public function updateTemplates(Request $request)
     {
-        if (is_array($templates) && count($templates) > 0) {
+        if (is_array($request->templates) && count($request->templates) > 0) {
 
-            foreach ($templates as $field) {
+            foreach ($request->templates as $field) {
 
                 if ($template = DBM::Template()->where('old_name', $field['oldName'])->first()) {
 
