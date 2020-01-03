@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
-trait RecordHelper
+trait RecordTrait
 {
     protected $name;
     protected $function_name;

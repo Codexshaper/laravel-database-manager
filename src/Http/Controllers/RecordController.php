@@ -4,14 +4,14 @@ namespace CodexShaper\DBM\Http\Controllers;
 
 use CodexShaper\DBM\Database\Schema\Table;
 use CodexShaper\DBM\Facades\Driver;
-use CodexShaper\DBM\Traits\RecordHelper;
 use CodexShaper\DBM\Traits\RecordRelationship;
+use CodexShaper\DBM\Traits\RecordTrait;
 use DBM;
 use Illuminate\Http\Request;
 
 class RecordController extends Controller
 {
-    use RecordHelper, RecordRelationship;
+    use RecordTrait, RecordRelationship;
 
     public function index()
     {
