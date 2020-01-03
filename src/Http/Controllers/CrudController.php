@@ -70,13 +70,10 @@ class CrudController extends Controller
             try
             {
                 if (!Table::exists($request->table)) {
-
                     throw new \Exception("Sorry! There is no table", 1);
-
                 }
 
                 $tableName           = $request->table;
-                $namespace           = DBM::getModelNamespace();
                 $relationship_tables = Table::all();
                 $isCrudExists        = false;
 
@@ -89,51 +86,27 @@ class CrudController extends Controller
                     $isCrudExists = true;
 
                     if (!$object->model) {
-                        $namespace = DBM::getModelNamespace();
-
-                        $modelName = ucfirst(Str::singular($object->name));
-
-                        $model         = $namespace . '\\' . $modelName;
-                        $object->model = $model;
+                        $object->model = DBM::generateModelName($object->name);
                     }
 
                     $fields = $object->fields()->orderBy('order', 'ASC')->get();
+
                 } else {
                     if (($response = DBM::authorize('crud.create')) !== true) {
                         return $response;
                     }
-                    $table = Table::getTable($tableName);
 
-                    $modelName = ucfirst(Str::singular($table['name']));
-                    $model     = $namespace . '\\' . $modelName;
+                    $table = Table::getTable($tableName);
 
                     $object               = new \stdClass;
                     $object->name         = $table['name'];
                     $object->slug         = Str::slug($table['name']);
                     $object->display_name = ucfirst($table['name']);
-                    $object->model        = $model;
+                    $object->model        = DBM::generateModelName($table['name']);
                     $object->controller   = '';
 
-                    $fields = [];
-                    $order  = 1;
+                    $fields = $this->prepareFields($table);
 
-                    foreach ($table['columns'] as $column) {
-
-                        $fields[] = (object) [
-                            'name'          => $column->name,
-                            'display_name'  => ucfirst($column->name),
-                            'type'          => DatabaseController::getInputType($column->type['name']),
-                            'create'        => ($column->autoincrement) ? false : true,
-                            'read'          => ($column->autoincrement) ? false : true,
-                            'edit'          => ($column->autoincrement) ? false : true,
-                            'delete'        => ($column->autoincrement) ? false : true,
-                            'function_name' => '',
-                            'order'         => $order,
-                            'settings'      => '{ }',
-                        ];
-
-                        $order++;
-                    }
                 }
 
                 $object->makeModel = false;
@@ -145,26 +118,49 @@ class CrudController extends Controller
 
                 ];
 
-            } catch (\Exception $e) {
                 return response()->json([
-                    'success' => false,
-                    'errors'  => [$e->getMessage()],
-                ], 400);
-            }
+                    'success'              => true,
+                    'relationship_tables'  => $relationship_tables,
+                    'relationship_details' => $relationshipDetails,
+                    'object'               => $object,
+                    'fields'               => $fields,
+                    'isCrudExists'         => $isCrudExists,
+                    'userPermissions'      => DBM::userPermissions(),
+                    'driver'               => Driver::getConnectionName(),
+                ]);
 
-            return response()->json([
-                'success'              => true,
-                'relationship_tables'  => $relationship_tables,
-                'relationship_details' => $relationshipDetails,
-                'object'               => $object,
-                'fields'               => $fields,
-                'isCrudExists'         => $isCrudExists,
-                'userPermissions'      => DBM::userPermissions(),
-                'driver'               => Driver::getConnectionName(),
-            ]);
+            } catch (\Exception $e) {
+                return $this->generateError([$e->getMessage()]);
+            }
         }
 
         return response()->json(['success' => false]);
+    }
+
+    public function prepareFields($table)
+    {
+        $fields = [];
+        $order  = 1;
+
+        foreach ($table['columns'] as $column) {
+
+            $fields[] = (object) [
+                'name'          => $column->name,
+                'display_name'  => ucfirst($column->name),
+                'type'          => DatabaseController::getInputType($column->type['name']),
+                'create'        => ($column->autoincrement) ? false : true,
+                'read'          => ($column->autoincrement) ? false : true,
+                'edit'          => ($column->autoincrement) ? false : true,
+                'delete'        => ($column->autoincrement) ? false : true,
+                'function_name' => '',
+                'order'         => $order,
+                'settings'      => '{ }',
+            ];
+
+            $order++;
+        }
+
+        return $fields;
     }
 
     public function storeOrUpdate(Request $request)
@@ -179,7 +175,7 @@ class CrudController extends Controller
                 return $response;
             }
 
-            if (($response = $this->checkModel($table)) !== true) {
+            if (($response = $this->makeModel($table)) !== true) {
                 return $response;
             }
 
@@ -193,13 +189,9 @@ class CrudController extends Controller
                     foreach ($columns as $column) {
                         $this->addOrUpdateField($column, $object);
                     }
-
-                    return response()->json([
-                        'success' => true,
-                        'object'  => $request->object,
-                        'fields'  => $request->fields,
-                    ]);
                 }
+
+                return response()->json(['success' => true, 'object' => $request->object, 'fields' => $request->fields]);
 
             } catch (\Exception $e) {
                 return $this->generateError([$e->getMessage()]);
@@ -209,7 +201,7 @@ class CrudController extends Controller
         return response()->json(['success' => false]);
     }
 
-    public function checkModel($table)
+    public function makeModel($table)
     {
         if (empty($table['model'])) {
             return $this->generateError(["Model Must be provided"]);

@@ -78,6 +78,15 @@ class Manager
         return trim(config('dbm.modal_namespace', App::getNamespace()), '\\');
     }
 
+    public function generateModelName($className)
+    {
+        $namespace = static::getModelNamespace();
+
+        $modelName = ucfirst(Str::singular($className));
+
+        return $namespace . '\\' . $modelName;
+    }
+
     public function makeModel($model, $table)
     {
         try {
