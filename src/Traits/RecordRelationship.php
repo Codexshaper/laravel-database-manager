@@ -7,6 +7,10 @@ use CodexShaper\DBM\Facades\Manager as DBM;
 
 trait RecordRelationship
 {
+    protected $has_many;
+    protected $belongs_to_many;
+    protected $belongs_to;
+
     public function prepareRelationshipData($records, $browseFields, $object)
     {
         foreach ($records as $item => $record) {
