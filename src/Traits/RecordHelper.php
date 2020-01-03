@@ -9,6 +9,22 @@ use Illuminate\Support\Facades\Validator;
 
 trait RecordHelper
 {
+    protected $name;
+    protected $function_name;
+    protected $localModel;
+    protected $create;
+    protected $relatedPivotKey;
+    protected $parentPivotKey;
+    protected $relationType;
+    protected $details;
+    protected $rules;
+    protected $update;
+    protected $type;
+    protected $settings;
+    protected $validation;
+    protected $pivotTable;
+    protected $foreignModel;
+
     public function removeRelationshipData($field, $object, $table)
     {
         if ($field->type == 'relationship') {
