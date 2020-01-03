@@ -36,8 +36,8 @@ Route::group([
      * U = Update/Edit
      * D = Delete
      */
-    Route::get('/crud/tables', 'CrudController@all');
-    Route::get('/crud/details/{table}', 'CrudController@getObjectDetails');
+    Route::get('/crud/tables', 'ObjectController@all');
+    Route::get('/crud/details/{table}', 'ObjectController@getObjectDetails');
     Route::post('/crud', 'CrudController@storeOrUpdate');
     Route::delete('/crud/{table}', 'CrudController@delete');
     // Relationship
