@@ -9,8 +9,8 @@ Route::group([
     // Helpers Route
     Route::get('assets', 'ManagerController@assets')->name('dbm.asset');
     // Database
-    Route::get('/tables', 'DatabaseController@all');
-    Route::get('/table/{name}', 'DatabaseController@getTable');
+    Route::get('/tables', 'TableController@all');
+    Route::get('/table/{name}', 'TableController@getTable');
     Route::post('/table', 'DatabaseController@create');
     Route::put('/table', 'DatabaseController@update');
     Route::delete('/table', 'DatabaseController@delete');
@@ -28,8 +28,6 @@ Route::group([
     // Template
     Route::post('/template', 'TemplateController@save');
     Route::delete('/template', 'TemplateController@remove');
-    // Unique ID
-    Route::get('getUniqueId', 'DatabaseController@getUniqueId');
     /*
      * C = Create
      * R = Read
@@ -48,7 +46,7 @@ Route::group([
     // Table
     Route::group(['prefix' => 'table'], function () {
         Route::get('/details/{table}', 'RecordController@getTableDetails');
-        Route::get('/columns/{table}', 'DatabaseController@getTableColumns');
+        Route::get('/columns/{table}', 'TableController@getTableColumns');
     });
     // Record
     Route::post('/record', 'RecordController@store');
