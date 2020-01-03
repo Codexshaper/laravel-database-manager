@@ -71,121 +71,58 @@ trait RecordHelper
         return $value;
     }
 
-    public function storeRelationshipData($fields, $columns, $object, $table)
+    public function prepareRecordFields($fields)
     {
-        foreach ($fields as $field) {
+        foreach ($fields as $key => $field) {
 
-            if (isset($field->relationship) && $field->relationship->relationType == "belongsToMany") {
+            if ($field->type == 'relationship') {
 
-                $relationship = $field->relationship;
-
-                $localModel      = $relationship->localModel;
-                $localTable      = $relationship->localTable;
-                $foreignModel    = $relationship->foreignModel;
-                $pivotTable      = $relationship->pivotTable;
-                $parentPivotKey  = $relationship->parentPivotKey;
-                $relatedPivotKey = $relationship->relatedPivotKey;
-
-                $findColumn = $object->details['findColumn'];
-
-                $localObject = DBM::model($localModel, $localTable)::where($findColumn, $table->{$findColumn})->first();
-
-                DBM::Object()
-                    ->setManyToManyRelation(
-                        $localObject,
-                        $foreignModel,
-                        $pivotTable,
-                        $parentPivotKey,
-                        $relatedPivotKey
-                    )
-                    ->belongs_to_many()
-                    ->attach($columns->{$relatedPivotKey});
+                $relationship            = $field->settings;
+                $foreignModel            = $relationship['foreignModel'];
+                $foreignKey              = $relationship['foreignKey'];
+                $fields                  = $this->removeRelationshipKeyForBelongsTo($fields, $foreignKey);
+                $field->foreignTableData = $foreignModel::all();
+                $field->relationship     = $relationship;
+                continue;
             }
-        }
-    }
 
-    public function updateRelationshipData($fields, $columns, $object, $table)
-    {
-        foreach ($fields as $field) {
-
-            if (isset($field->relationship)) {
-
-                $relationship = $field->relationship;
-
-                $localModel   = $relationship->localModel;
-                $localTable   = $relationship->localTable;
-                $foreignModel = $relationship->foreignModel;
-
-                if ($field->relationship->relationType == "belongsToMany") {
-                    $pivotTable      = $relationship->pivotTable;
-                    $parentPivotKey  = $relationship->parentPivotKey;
-                    $relatedPivotKey = $relationship->relatedPivotKey;
-
-                    $findColumn = $object->details['findColumn'];
-
-                    $localObject = DBM::model($localModel, $localTable)->where($findColumn, $table->{$findColumn})->first();
-
-                    DBM::Object()
-                        ->setManyToManyRelation(
-                            $localObject,
-                            $foreignModel,
-                            $pivotTable,
-                            $parentPivotKey,
-                            $relatedPivotKey
-                        )
-                        ->belongs_to_many()
-                        ->sync($columns->{$relatedPivotKey});
+            if (isset($field->settings['options'])) {
+                $options = $this->getSettingOptions($field);
+                if (is_array($options)) {
+                    $fields[$key]->options = $options;
                 }
-
             }
         }
+
+        return $fields;
     }
 
-    public function removeRelationshipData($field, $object, $table)
+    public function prepareJsonFieldData($records, $fields, $object, $findValue)
     {
-        if ($field->type == 'relationship') {
+        $newRecords = [];
+        $newRecord  = new \stdClass();
 
-            $relationship = $field->settings;
+        foreach ($records as $item => $record) {
 
-            $localModel   = $relationship->localModel;
-            $foreignModel = $relationship->foreignModel;
+            foreach ($fields as $key => &$field) {
 
-            $findColumn = $object->details['findColumn'];
+                if (isset($record->{$field->name})) {
 
-            $localObject = $localModel::where($findColumn, $table->{$findColumn})->first();
-
-            if ($relationship->relationType == 'belongsToMany') {
-
-                $pivotTable      = $relationship->pivotTable;
-                $parentPivotKey  = $relationship->parentPivotKey;
-                $relatedPivotKey = $relationship->relatedPivotKey;
-
-                DBM::Object()
-                    ->setManyToManyRelation(
-                        $localObject,
-                        $foreignModel,
-                        $pivotTable,
-                        $parentPivotKey,
-                        $relatedPivotKey
-                    )
-                    ->belongs_to_many()
-                    ->detach();
-            } else if ($relationship->relationType == 'hasMany') {
-
-                $foreignKey = $relationship->foreignKey;
-                $localKey   = $relationship->localKey;
-
-                DBM::Object()
-                    ->setCommonRelation(
-                        $localObject,
-                        $foreignModel,
-                        $foreignKey,
-                        $localKey)
-                    ->has_many()
-                    ->delete();
+                    $record->{$field->name} = is_json($record->{$field->name}) ? json_decode($record->{$field->name}, true) : $record->{$field->name};
+                }
             }
 
+            if ($findValue && $record->{$object->details['findColumn']} == $findValue) {
+                $newRecord = $record;
+            }
+
+            $newRecords[] = $record;
         }
+
+        return [
+            "records" => $newRecords,
+            "record"  => $newRecord,
+        ];
     }
 
     public function getSettingOptions($field)
@@ -198,21 +135,6 @@ trait RecordHelper
 
             return app($controllerName)->{$methodName}();
         }
-    }
-
-    public function removeRelationshipKeyForBelongsTo($fields, $foreignKey)
-    {
-        $results = [];
-
-        foreach ($fields as $key => $field) {
-            if ($field->name == $foreignKey) {
-                unset($fields[$key]);
-                continue;
-            }
-            $results[] = $field;
-        }
-
-        return $results;
     }
 
     public function validation($fields, $columns, $action = "create")
