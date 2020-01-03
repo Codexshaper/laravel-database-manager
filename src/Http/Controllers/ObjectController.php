@@ -73,9 +73,7 @@ class ObjectController extends Controller
                     throw new \Exception("Sorry! There is no table", 1);
                 }
 
-                $tableName           = $request->table;
-                $relationship_tables = Table::all();
-
+                $tableName  = $request->table;
                 $details    = $this->getObject($tableName);
                 $permission = $details['isCrudExists'] ? 'update' : 'create';
 
@@ -83,16 +81,12 @@ class ObjectController extends Controller
                     return $response;
                 }
 
-                $relationshipDetails = (object) [
-                    'type'                => 'hasOne',
-                    'foreignTableDetails' => Table::getTable($relationship_tables[0]),
-                    'localTableDetails'   => Table::getTable($tableName),
-                ];
+                $relationship = $this->getRelationshipDetails($tableName);
 
                 return response()->json([
                     'success'              => true,
-                    'relationship_tables'  => $relationship_tables,
-                    'relationship_details' => $relationshipDetails,
+                    'relationship_tables'  => $relationship['tables'],
+                    'relationship_details' => $relationship['details'],
                     'object'               => $details['object'],
                     'fields'               => $details['fields'],
                     'isCrudExists'         => $details['isCrudExists'],
@@ -164,6 +158,22 @@ class ObjectController extends Controller
         }
 
         return $fields;
+    }
+
+    public function getRelationshipDetails($tableName)
+    {
+        $tables = Table::all();
+
+        $relationshipDetails = (object) [
+            'type'                => 'hasOne',
+            'foreignTableDetails' => Table::getTable($tables[0]),
+            'localTableDetails'   => Table::getTable($tableName),
+        ];
+
+        return [
+            'tables'  => $tables,
+            'details' => $relationshipDetails,
+        ];
     }
 
     protected function generateError($errors)
