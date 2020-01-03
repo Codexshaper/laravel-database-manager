@@ -336,10 +336,10 @@ class RecordController extends Controller
                 return $response;
             }
 
-            $tableName       = $request->table;
-            $originalColumns = Table::getColumnsName($tableName);
-            $columns         = json_decode($request->columns);
-            $fields          = $request->fields;
+            $tableName = $request->table;
+            // $originalColumns = Table::getColumnsName($tableName);
+            $columns = json_decode($request->columns);
+            $fields  = $request->fields;
 
             $object  = DBM::Object()->where('name', $tableName)->first();
             $model   = $object->model;
@@ -348,7 +348,6 @@ class RecordController extends Controller
 
             if (!class_exists($model)) {
                 return $this->generateError(["Model not found. Please create model first"]);
-
             }
 
             try {
@@ -361,49 +360,7 @@ class RecordController extends Controller
 
                         $field = json_decode($field);
 
-                        if ($field->type == 'relationship') {
-
-                            $relationship = $field->settings;
-
-                            $localModel   = $relationship->localModel;
-                            $foreignModel = $relationship->foreignModel;
-
-                            $findColumn = $object->details['findColumn'];
-
-                            $localObject = $localModel::where($findColumn, $table->{$findColumn})->first();
-
-                            if ($relationship->relationType == 'belongsToMany') {
-
-                                $pivotTable      = $relationship->pivotTable;
-                                $parentPivotKey  = $relationship->parentPivotKey;
-                                $relatedPivotKey = $relationship->relatedPivotKey;
-
-                                DBM::Object()
-                                    ->setManyToManyRelation(
-                                        $localObject,
-                                        $foreignModel,
-                                        $pivotTable,
-                                        $parentPivotKey,
-                                        $relatedPivotKey
-                                    )
-                                    ->belongs_to_many()
-                                    ->detach();
-                            } else if ($relationship->relationType == 'hasMany') {
-
-                                $foreignKey = $relationship->foreignKey;
-                                $localKey   = $relationship->localKey;
-
-                                DBM::Object()
-                                    ->setCommonRelation(
-                                        $localObject,
-                                        $foreignModel,
-                                        $foreignKey,
-                                        $localKey)
-                                    ->has_many()
-                                    ->delete();
-                            }
-
-                        }
+                        $this->removeRelationshipData($field);
                     }
 
                     if ($table->delete()) {
@@ -417,6 +374,53 @@ class RecordController extends Controller
         }
 
         return response()->json(['success' => false]);
+    }
+
+    public function removeRelationshipData($field)
+    {
+        if ($field->type == 'relationship') {
+
+            $relationship = $field->settings;
+
+            $localModel   = $relationship->localModel;
+            $foreignModel = $relationship->foreignModel;
+
+            $findColumn = $object->details['findColumn'];
+
+            $localObject = $localModel::where($findColumn, $table->{$findColumn})->first();
+
+            if ($relationship->relationType == 'belongsToMany') {
+
+                $pivotTable      = $relationship->pivotTable;
+                $parentPivotKey  = $relationship->parentPivotKey;
+                $relatedPivotKey = $relationship->relatedPivotKey;
+
+                DBM::Object()
+                    ->setManyToManyRelation(
+                        $localObject,
+                        $foreignModel,
+                        $pivotTable,
+                        $parentPivotKey,
+                        $relatedPivotKey
+                    )
+                    ->belongs_to_many()
+                    ->detach();
+            } else if ($relationship->relationType == 'hasMany') {
+
+                $foreignKey = $relationship->foreignKey;
+                $localKey   = $relationship->localKey;
+
+                DBM::Object()
+                    ->setCommonRelation(
+                        $localObject,
+                        $foreignModel,
+                        $foreignKey,
+                        $localKey)
+                    ->has_many()
+                    ->delete();
+            }
+
+        }
     }
 
     protected function getSettingOptions($field)
