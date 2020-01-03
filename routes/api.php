@@ -41,10 +41,10 @@ Route::group([
     Route::post('/crud', 'CrudController@storeOrUpdate');
     Route::delete('/crud/{table}', 'CrudController@delete');
     // Relationship
-    Route::get('/relationship', 'RelationController@getRelation');
-    Route::post('/relationship', 'RelationController@addRelation');
-    Route::put('/relationship', 'RelationController@updateRelation');
-    Route::delete('/relationship', 'RelationController@deleteRelation');
+    Route::get('/relationship', 'RelationController@get');
+    Route::post('/relationship', 'RelationController@add');
+    Route::put('/relationship', 'RelationController@update');
+    Route::delete('/relationship', 'RelationController@delete');
     // Table
     Route::group(['prefix' => 'table'], function () {
         Route::get('/details/{table}', 'RecordController@getTableDetails');
