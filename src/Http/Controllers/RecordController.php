@@ -466,9 +466,9 @@ class RecordController extends Controller
                     // $relationshipType = $relationship['relationType'];
                     // $localModel       = $relationship['localModel'];
                     // $localKey         = $relationship['localKey'];
-                    $foreignModel     = $relationship['foreignModel'];
-                    $foreignKey       = $relationship['foreignKey'];
-                    $relationshipType = $relationship['relationType'];
+                    $foreignModel = $relationship['foreignModel'];
+                    $foreignKey   = $relationship['foreignKey'];
+                    // $relationshipType = $relationship['relationType'];
 
                     // if ($relationshipType == 'belongsTo') {
                     $createFields            = $this->removeRelationshipKeyForBelongsTo($createFields, $foreignKey);
@@ -492,13 +492,13 @@ class RecordController extends Controller
 
                 if ($field->type == 'relationship') {
 
-                    $relationship     = $field->settings;
-                    $relationshipType = $relationship['relationType'];
-                    $localModel       = $relationship['localModel'];
-                    $localKey         = $relationship['localKey'];
-                    $foreignModel     = $relationship['foreignModel'];
-                    $foreignKey       = $relationship['foreignKey'];
-                    $relationshipType = $relationship['relationType'];
+                    $relationship = $field->settings;
+                    // $relationshipType = $relationship['relationType'];
+                    // $localModel       = $relationship['localModel'];
+                    // $localKey         = $relationship['localKey'];
+                    $foreignModel = $relationship['foreignModel'];
+                    $foreignKey   = $relationship['foreignKey'];
+                    // $relationshipType = $relationship['relationType'];
 
                     // if ($relationshipType == 'belongsTo') {
                     $editFields              = $this->removeRelationshipKeyForBelongsTo($editFields, $foreignKey);
@@ -661,7 +661,7 @@ class RecordController extends Controller
         foreach ($fields as $field) {
             $name = $field->name;
 
-            if ((is_array($field->settings) || is_object($field->settings)) && array_key_exists('validation', $field->settings) !== false) {
+            if (is_object($field->settings) && property_exists($field->settings, 'validation') !== false) {
                 $validationSettings = $field->settings->validation;
 
                 if ($action == 'create' && isset($validationSettings->create)) {
@@ -690,31 +690,6 @@ class RecordController extends Controller
                 }
             }
         }
-
-        // foreach ($fields as $field) {
-
-        //     if ($field->required) {
-        //         $name = $field->name;
-        //         if ($field->type == 'relationship') {
-        //             $relationship = $field->relationship;
-        //             if ($relationship->relationType == 'belongsToMany') {
-        //                 $name = $relationship->relatedPivotKey;
-        //             } else {
-        //                 $name = $relationship->foreignKey;
-        //             }
-
-        //             if (!isset($columns->{$name}) || empty($columns->{$name})) {
-        //                 $errors[] = "{$name} Required";
-        //             }
-
-        //             continue;
-        //         }
-
-        //         if (!isset($columns->{$name}) || $columns->{$name} == "") {
-        //             $errors[] = "{$name} Required";
-        //         }
-        //     }
-        // }
 
         return $errors;
     }
