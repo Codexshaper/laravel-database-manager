@@ -26,8 +26,8 @@ Route::group([
     Route::put('/permissions/syncUserPermissions', 'PermissionController@syncUserPermissions');
     Route::delete('/permissions/deleteUserPermissions', 'PermissionController@deleteUserPermissions');
     // Template
-    Route::post('/template', 'DatabaseController@saveTemplate');
-    Route::delete('/template', 'DatabaseController@removeTemplate');
+    Route::post('/template', 'TemplateController@save');
+    Route::delete('/template', 'TemplateController@remove');
     // Unique ID
     Route::get('getUniqueId', 'DatabaseController@getUniqueId');
     /*

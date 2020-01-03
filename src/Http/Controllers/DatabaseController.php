@@ -6,14 +6,12 @@ use CodexShaper\DBM\Database\Schema\Table;
 use CodexShaper\DBM\Facades\Driver;
 use CodexShaper\DBM\Models\CollectionField;
 use CodexShaper\DBM\Models\DBM_Collection;
-use CodexShaper\DBM\Traits\Template;
 use DBM;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class DatabaseController extends Controller
 {
-    use Template;
 
     public function index()
     {
@@ -342,7 +340,7 @@ class DatabaseController extends Controller
             try
             {
                 // Update Template
-                $this->updateTemplates($request->templates);
+                app('\CodexShaper\DBM\Http\Controllers\TemplateController')->updateTemplates($request->templates);
 
                 if (Table::exists($tableName)) {
 

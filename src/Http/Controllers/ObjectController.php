@@ -130,7 +130,11 @@ class ObjectController extends Controller
 
         $object->makeModel = false;
 
-        return ['object' => $object, 'fields' => $fields, 'isCrudExists' => $isCrudExists];
+        return [
+            'object'       => $object,
+            'fields'       => $fields,
+            'isCrudExists' => $isCrudExists,
+        ];
 
     }
 
