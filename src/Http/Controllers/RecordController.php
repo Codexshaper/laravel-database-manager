@@ -93,9 +93,11 @@ class RecordController extends Controller
         if (count($values) > 1) {
             $value = $values;
             if (!Driver::isMongoDB()) {
-                $value = is_array($values) ? json_encode($values) : $values;
+                $value = json_encode($values);
             }
-        } else if (count($values) == 1) {
+        }
+
+        if (count($values) == 1) {
             $value = $values[0];
         }
 
@@ -167,8 +169,6 @@ class RecordController extends Controller
             $columns         = json_decode($request->columns);
             $fields          = json_decode($request->fields);
 
-            // return response()->json(['columns' => $columns->multiple_dropdown]);
-
             $errors = $this->validation($fields, $columns, 'update');
 
             if (count($errors) > 0) {
@@ -188,100 +188,29 @@ class RecordController extends Controller
 
                 $table = DBM::model($model, $tableName)->where($key, $columns->{$key})->first();
 
-                // return response()->json(['details' => $table, 'key' => $key]);
-
                 foreach ($columns as $column => $value) {
-                    // $column = $field->name;
-                    // $value = $request->{$column};
 
                     if (in_array($column, $originalColumns)) {
 
                         if ($request->hasFile($column)) {
-                            $files  = $request->file($column);
-                            $values = [];
-                            foreach ($files as $file) {
-                                $fileName = Str::random(config('dbm.filesystem.random_length')) . '.' . $file->getClientOriginalExtension();
-                                $path     = 'public/dbm/' . $tableName;
-                                $file->storeAs($path, $fileName);
-                                $values[] = $fileName;
-                            }
-
-                            // $value = json_encode($values);
-
-                            if (count($values) > 1) {
-                                $value = $values;
-                                if (!Driver::isMongoDB()) {
-                                    $value = is_array($values) ? json_encode($values) : $value;
-                                }
-                            } else if (count($values) == 1) {
-                                $value = $values[0];
-                            }
+                            $value = $this->saveFiles($request, $column, $tableName);
                         }
 
                         if ($value !== null && $value !== "") {
 
                             if (!Driver::isMongoDB()) {
                                 if ($functionName = $this->hasFunction($fields, $column)) {
-
                                     $value = $this->executeFunction($functionName, $value);
                                 }
                             }
 
-                            $table->{$column} = is_array($value) ? json_encode($value) : $value;
-
-                            if (Driver::isMongoDB()) {
-
-                                $fieldType = $this->getFieldType($tableName, $column);
-
-                                if (!in_array($fieldType, Type::getTypes())) {
-                                    $this->generateError([$fieldType . " type not supported."]);
-                                }
-
-                                $table->{$column} = Type::$fieldType($value);
-
-                            }
+                            $table->{$column} = $this->prepareStoreField($value, $tableName, $column);
                         }
                     }
                 }
 
                 if ($table->update()) {
-
-                    foreach ($fields as $field) {
-
-                        // return response()->json(['fields' => $fields]);
-
-                        if (isset($field->relationship)) {
-
-                            $relationship = $field->relationship;
-
-                            $localModel   = $relationship->localModel;
-                            $localTable   = $relationship->localTable;
-                            $foreignModel = $relationship->foreignModel;
-
-                            if ($field->relationship->relationType == "belongsToMany") {
-                                $pivotTable      = $relationship->pivotTable;
-                                $parentPivotKey  = $relationship->parentPivotKey;
-                                $relatedPivotKey = $relationship->relatedPivotKey;
-
-                                $findColumn = $object->details['findColumn'];
-
-                                $localObject = DBM::model($localModel, $localTable)->where($findColumn, $table->{$findColumn})->first();
-
-                                DBM::Object()
-                                    ->setManyToManyRelation(
-                                        $localObject,
-                                        $foreignModel,
-                                        $pivotTable,
-                                        $parentPivotKey,
-                                        $relatedPivotKey
-                                    )
-                                    ->belongs_to_many()
-                                    ->sync($columns->{$relatedPivotKey});
-                            }
-
-                        }
-                    }
-
+                    $this->updateRelationshipData($fields, $columns, $object, $table);
                     return response()->json(['success' => true]);
                 }
 
@@ -291,6 +220,43 @@ class RecordController extends Controller
         }
 
         return response()->json(['success' => false]);
+    }
+
+    public function updateRelationshipData($fields, $columns, $object, $table)
+    {
+        foreach ($fields as $field) {
+
+            if (isset($field->relationship)) {
+
+                $relationship = $field->relationship;
+
+                $localModel   = $relationship->localModel;
+                $localTable   = $relationship->localTable;
+                $foreignModel = $relationship->foreignModel;
+
+                if ($field->relationship->relationType == "belongsToMany") {
+                    $pivotTable      = $relationship->pivotTable;
+                    $parentPivotKey  = $relationship->parentPivotKey;
+                    $relatedPivotKey = $relationship->relatedPivotKey;
+
+                    $findColumn = $object->details['findColumn'];
+
+                    $localObject = DBM::model($localModel, $localTable)->where($findColumn, $table->{$findColumn})->first();
+
+                    DBM::Object()
+                        ->setManyToManyRelation(
+                            $localObject,
+                            $foreignModel,
+                            $pivotTable,
+                            $parentPivotKey,
+                            $relatedPivotKey
+                        )
+                        ->belongs_to_many()
+                        ->sync($columns->{$relatedPivotKey});
+                }
+
+            }
+        }
     }
 
     public function delete(Request $request)
