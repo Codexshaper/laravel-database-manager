@@ -8,7 +8,6 @@ use CodexShaper\DBM\Facades\Driver;
 use CodexShaper\DBM\Traits\RecordHelper;
 use DBM;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class RecordController extends Controller
 {
@@ -79,83 +78,6 @@ class RecordController extends Controller
         return response()->json(['success' => false]);
     }
 
-    public function saveFiles($request, $column, $tableName)
-    {
-        $files  = $request->file($column);
-        $values = [];
-        foreach ($files as $file) {
-            $fileName = Str::random(config('dbm.filesystem.random_length')) . '.' . $file->getClientOriginalExtension();
-            $path     = 'public/dbm/' . $tableName;
-            $file->storeAs($path, $fileName);
-            $values[] = $fileName;
-        }
-
-        if (count($values) > 1) {
-            $value = $values;
-            if (!Driver::isMongoDB()) {
-                $value = json_encode($values);
-            }
-        }
-
-        if (count($values) == 1) {
-            $value = $values[0];
-        }
-
-        return $value;
-    }
-
-    public function prepareStoreField($value, $tableName, $column)
-    {
-        $value = is_array($value) ? json_encode($value) : $value;
-
-        if (Driver::isMongoDB()) {
-
-            $fieldType = $this->getFieldType($tableName, $column);
-
-            if (!in_array($fieldType, Type::getTypes())) {
-                $this->generateError([$fieldType . " type not supported."]);
-            }
-
-            $value = Type::$fieldType($value);
-
-        }
-
-        return $value;
-    }
-
-    public function storeRelationshipData($fields, $columns, $object, $table)
-    {
-        foreach ($fields as $field) {
-
-            if (isset($field->relationship) && $field->relationship->relationType == "belongsToMany") {
-
-                $relationship = $field->relationship;
-
-                $localModel      = $relationship->localModel;
-                $localTable      = $relationship->localTable;
-                $foreignModel    = $relationship->foreignModel;
-                $pivotTable      = $relationship->pivotTable;
-                $parentPivotKey  = $relationship->parentPivotKey;
-                $relatedPivotKey = $relationship->relatedPivotKey;
-
-                $findColumn = $object->details['findColumn'];
-
-                $localObject = DBM::model($localModel, $localTable)::where($findColumn, $table->{$findColumn})->first();
-
-                DBM::Object()
-                    ->setManyToManyRelation(
-                        $localObject,
-                        $foreignModel,
-                        $pivotTable,
-                        $parentPivotKey,
-                        $relatedPivotKey
-                    )
-                    ->belongs_to_many()
-                    ->attach($columns->{$relatedPivotKey});
-            }
-        }
-    }
-
     public function update(Request $request)
     {
         if ($request->ajax()) {
@@ -220,43 +142,6 @@ class RecordController extends Controller
         }
 
         return response()->json(['success' => false]);
-    }
-
-    public function updateRelationshipData($fields, $columns, $object, $table)
-    {
-        foreach ($fields as $field) {
-
-            if (isset($field->relationship)) {
-
-                $relationship = $field->relationship;
-
-                $localModel   = $relationship->localModel;
-                $localTable   = $relationship->localTable;
-                $foreignModel = $relationship->foreignModel;
-
-                if ($field->relationship->relationType == "belongsToMany") {
-                    $pivotTable      = $relationship->pivotTable;
-                    $parentPivotKey  = $relationship->parentPivotKey;
-                    $relatedPivotKey = $relationship->relatedPivotKey;
-
-                    $findColumn = $object->details['findColumn'];
-
-                    $localObject = DBM::model($localModel, $localTable)->where($findColumn, $table->{$findColumn})->first();
-
-                    DBM::Object()
-                        ->setManyToManyRelation(
-                            $localObject,
-                            $foreignModel,
-                            $pivotTable,
-                            $parentPivotKey,
-                            $relatedPivotKey
-                        )
-                        ->belongs_to_many()
-                        ->sync($columns->{$relatedPivotKey});
-                }
-
-            }
-        }
     }
 
     public function delete(Request $request)
