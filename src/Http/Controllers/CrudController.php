@@ -30,27 +30,7 @@ class CrudController extends Controller
 
             $userPermissions = DBM::userPermissions();
             $tables          = Table::paginate($perPage, null, [], $query);
-            $objects         = DBM::Object()->all();
-
-            $newTables = [];
-
-            foreach ($tables as $table) {
-                foreach ($objects as $object) {
-                    if ($table == $object->name) {
-                        $newTables[] = [
-                            'name'   => $table,
-                            'isCrud' => true,
-                        ];
-
-                        continue 2;
-                    }
-                }
-
-                $newTables[] = [
-                    'name'   => $table,
-                    'isCrud' => false,
-                ];
-            }
+            $newTables       = $this->filterCrudTables($tables);
 
             return response()->json([
                 'success'         => true,
@@ -61,6 +41,31 @@ class CrudController extends Controller
         }
 
         return response()->json(['success' => false]);
+    }
+
+    public function filterCrudTables($tables)
+    {
+        $objects   = DBM::Object()->all();
+        $newTables = [];
+
+        foreach ($tables as $table) {
+            foreach ($objects as $object) {
+                if ($table == $object->name) {
+                    $newTables[] = [
+                        'name'   => $table,
+                        'isCrud' => true,
+                    ];
+                    continue 2;
+                }
+            }
+
+            $newTables[] = [
+                'name'   => $table,
+                'isCrud' => false,
+            ];
+        }
+
+        return $newTables;
     }
 
     public function getObjectDetails(Request $request)
@@ -110,6 +115,9 @@ class CrudController extends Controller
 
     public function getObject($tableName)
     {
+        $isCrudExists = false;
+        $fields       = [];
+
         if ($object = DBM::Object()->where('name', $tableName)->first()) {
             $isCrudExists = true;
             if (!$object->model) {
@@ -119,9 +127,7 @@ class CrudController extends Controller
         }
 
         if (!$object) {
-
-            $isCrudExists = false;
-            $table        = Table::getTable($tableName);
+            $table = Table::getTable($tableName);
 
             $object               = new \stdClass;
             $object->name         = $table['name'];
