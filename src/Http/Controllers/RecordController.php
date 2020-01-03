@@ -395,81 +395,19 @@ class RecordController extends Controller
             $fields           = $object->allFields();
             $foreignTableData = [];
 
-            // return response()->json(['createFields' => auth()->user()]);
+            $createFields = $this->prepareRecordFields($createFields);
+            $editFields   = $this->prepareRecordFields($editFields);
 
-            foreach ($createFields as $key => $field) {
-
-                if ($field->type == 'relationship') {
-
-                    $relationship = $field->settings;
-                    // $relationshipType = $relationship['relationType'];
-                    // $localModel       = $relationship['localModel'];
-                    // $localKey         = $relationship['localKey'];
-                    $foreignModel = $relationship['foreignModel'];
-                    $foreignKey   = $relationship['foreignKey'];
-                    // $relationshipType = $relationship['relationType'];
-
-                    // if ($relationshipType == 'belongsTo') {
-                    $createFields            = $this->removeRelationshipKeyForBelongsTo($createFields, $foreignKey);
-                    $field->foreignTableData = $foreignModel::all();
-                    $field->relationship     = $relationship;
-                    // } else {
-                    //     unset($fields[$key]);
-                    // }
-                } else {
-                    if (isset($field->settings['options'])) {
-                        $options = $this->getSettingOptions($field);
-                        if (is_array($options)) {
-                            $createFields[$key]->options = $options;
-                        }
-                    }
-
-                }
-            }
-
-            foreach ($editFields as $key => $field) {
-
-                if ($field->type == 'relationship') {
-
-                    $relationship = $field->settings;
-                    // $relationshipType = $relationship['relationType'];
-                    // $localModel       = $relationship['localModel'];
-                    // $localKey         = $relationship['localKey'];
-                    $foreignModel = $relationship['foreignModel'];
-                    $foreignKey   = $relationship['foreignKey'];
-                    // $relationshipType = $relationship['relationType'];
-
-                    // if ($relationshipType == 'belongsTo') {
-                    $editFields              = $this->removeRelationshipKeyForBelongsTo($editFields, $foreignKey);
-                    $field->foreignTableData = $foreignModel::all();
-                    $field->relationship     = $relationship;
-                    // } else {
-                    //     unset($fields[$key]);
-                    // }
-                    continue;
-                }
-
-                if (isset($field->settings['options'])) {
-                    $options = $this->getSettingOptions($field);
-                    if (is_array($options)) {
-                        $editFields[$key]->options = $options;
-                    }
-                }
-            }
             $model = $object->model;
 
             if (!class_exists($model)) {
                 return $this->generateError(["Model not found. Please create model first"]);
             }
 
-            $perPage = (int) $request->perPage;
-            $query   = $request->q;
-
+            $perPage      = (int) $request->perPage;
+            $query        = $request->q;
             $searchColumn = $object->details['searchColumn'];
-
-            $records = DBM::model($model, $tableName)->paginate($perPage);
-
-            // return response()->json(['success' => $perPage]);
+            $records      = DBM::model($model, $tableName)->paginate($perPage);
 
             if (!empty($query) && !empty($searchColumn)) {
                 $records = DBM::model($model, $tableName)
@@ -477,85 +415,8 @@ class RecordController extends Controller
                     ->paginate($perPage);
             }
 
-            foreach ($records as $item => $record) {
-
-                foreach ($browseFields as $field) {
-
-                    if ($field->type == 'relationship') {
-
-                        $relationship = $field->settings;
-
-                        $findColumn = $object->details['findColumn'];
-
-                        $localModel       = $relationship['localModel'];
-                        $localKey         = $relationship['localKey'];
-                        $foreignModel     = $relationship['foreignModel'];
-                        $foreignKey       = $relationship['foreignKey'];
-                        $relationshipType = $relationship['relationType'];
-                        $displayLabel     = $relationship['displayLabel'];
-
-                        if ($relationshipType == 'belongsTo') {
-
-                            $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
-
-                            $datas = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->belongs_to;
-
-                            $record->{$field->name}  = $datas;
-                            $field->displayLabel     = $displayLabel;
-                            $field->localKey         = $localKey;
-                            $field->foreignKey       = $foreignKey;
-                            $field->relationshipType = $relationshipType;
-
-                        } else if ($relationshipType == 'hasMany') {
-
-                            $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
-                            $datas       = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->has_many;
-
-                            $record->{$field->name}  = $datas;
-                            $field->displayLabel     = $displayLabel;
-                            $field->localKey         = $localKey;
-                            $field->foreignKey       = $foreignKey;
-                            $field->relationshipType = $relationshipType;
-
-                        } else if ($relationshipType == 'belongsToMany') {
-
-                            $pivotTable      = $relationship['pivotTable'];
-                            $parentPivotKey  = $relationship['parentPivotKey'];
-                            $relatedPivotKey = $relationship['relatedPivotKey'];
-
-                            $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
-
-                            $datas = DBM::Object()->setManyToManyRelation($localObject, $foreignModel, $pivotTable, $parentPivotKey, $relatedPivotKey)->belongs_to_many;
-
-                            $record->{$field->name}  = $datas;
-                            $field->displayLabel     = $displayLabel;
-                            $field->localKey         = $localKey;
-                            $field->foreignKey       = $foreignKey;
-                            $field->relationshipType = $relationshipType;
-                        }
-                    }
-                }
-            }
-
-            $newRecords = [];
-            $newRecord  = new \stdClass;
-
-            foreach ($records as $item => $record) {
-
-                foreach ($fields as $key => &$field) {
-
-                    if (isset($record->{$field->name})) {
-
-                        $record->{$field->name} = is_json($record->{$field->name}) ? json_decode($record->{$field->name}, true) : $record->{$field->name};
-                    }
-                }
-
-                if ($request->findValue && $record->{$object->details['findColumn']} == $request->findValue) {
-                    $newRecord = $record;
-                }
-
-                $newRecords[] = $record;
-            }
+            $records       = $this->prepareRelationshipData($records, $browseFields, $object);
+            $recordsDetail = $this->prepareJsonFieldData($records, $fields, $object, $request->findValue);
 
             $objectDetails            = $object->details;
             $objectDetails['perPage'] = $perPage;
@@ -568,8 +429,8 @@ class RecordController extends Controller
                 'browseFields'     => $browseFields,
                 'editFields'       => $editFields,
                 'deleteFields'     => $deleteFields,
-                'records'          => $newRecords,
-                'record'           => $newRecord,
+                'records'          => $recordsDetail['records'],
+                'record'           => $recordsDetail['record'],
                 'foreignTableData' => $foreignTableData,
                 'userPermissions'  => DBM::userPermissions(),
                 'pagination'       => $records,
@@ -577,5 +438,124 @@ class RecordController extends Controller
         }
 
         return response()->json(['success' => false]);
+    }
+
+    public function prepareRecordFields($fields)
+    {
+        foreach ($fields as $key => $field) {
+
+            if ($field->type == 'relationship') {
+
+                $relationship            = $field->settings;
+                $foreignModel            = $relationship['foreignModel'];
+                $foreignKey              = $relationship['foreignKey'];
+                $fields                  = $this->removeRelationshipKeyForBelongsTo($fields, $foreignKey);
+                $field->foreignTableData = $foreignModel::all();
+                $field->relationship     = $relationship;
+                continue;
+            }
+
+            if (isset($field->settings['options'])) {
+                $options = $this->getSettingOptions($field);
+                if (is_array($options)) {
+                    $fields[$key]->options = $options;
+                }
+            }
+        }
+
+        return $fields;
+    }
+
+    public function prepareJsonFieldData($records, $fields, $object, $findValue)
+    {
+        $newRecords = [];
+        $newRecord  = new \stdClass();
+
+        foreach ($records as $item => $record) {
+
+            foreach ($fields as $key => &$field) {
+
+                if (isset($record->{$field->name})) {
+
+                    $record->{$field->name} = is_json($record->{$field->name}) ? json_decode($record->{$field->name}, true) : $record->{$field->name};
+                }
+            }
+
+            if ($findValue && $record->{$object->details['findColumn']} == $findValue) {
+                $newRecord = $record;
+            }
+
+            $newRecords[] = $record;
+        }
+
+        return [
+            "records" => $newRecords,
+            "record"  => $newRecord,
+        ];
+    }
+
+    public function prepareRelationshipData($records, $browseFields, $object)
+    {
+        foreach ($records as $item => $record) {
+
+            foreach ($browseFields as $field) {
+
+                if ($field->type == 'relationship') {
+
+                    $relationship = $field->settings;
+
+                    $findColumn = $object->details['findColumn'];
+
+                    $localModel       = $relationship['localModel'];
+                    $localKey         = $relationship['localKey'];
+                    $foreignModel     = $relationship['foreignModel'];
+                    $foreignKey       = $relationship['foreignKey'];
+                    $relationshipType = $relationship['relationType'];
+                    $displayLabel     = $relationship['displayLabel'];
+
+                    if ($relationshipType == 'belongsTo') {
+
+                        $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
+
+                        $datas = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->belongs_to;
+
+                        $record->{$field->name}  = $datas;
+                        $field->displayLabel     = $displayLabel;
+                        $field->localKey         = $localKey;
+                        $field->foreignKey       = $foreignKey;
+                        $field->relationshipType = $relationshipType;
+
+                    } else if ($relationshipType == 'hasMany') {
+
+                        $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
+                        $datas       = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->has_many;
+
+                        $record->{$field->name}  = $datas;
+                        $field->displayLabel     = $displayLabel;
+                        $field->localKey         = $localKey;
+                        $field->foreignKey       = $foreignKey;
+                        $field->relationshipType = $relationshipType;
+
+                    } else if ($relationshipType == 'belongsToMany') {
+
+                        $pivotTable      = $relationship['pivotTable'];
+                        $parentPivotKey  = $relationship['parentPivotKey'];
+                        $relatedPivotKey = $relationship['relatedPivotKey'];
+
+                        $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
+
+                        $datas = DBM::Object()->setManyToManyRelation($localObject, $foreignModel, $pivotTable, $parentPivotKey, $relatedPivotKey)->belongs_to_many;
+
+                        $record->{$field->name}  = $datas;
+                        $field->displayLabel     = $displayLabel;
+                        $field->localKey         = $localKey;
+                        $field->foreignKey       = $foreignKey;
+                        $field->relationshipType = $relationshipType;
+                    }
+                }
+            }
+        }
+
+        return $records;
     }
 }
