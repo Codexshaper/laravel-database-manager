@@ -27,6 +27,7 @@ trait RecordHelper
     protected $validation;
     protected $pivotTable;
     protected $foreignModel;
+    protected $localTable;
 
     public function saveFiles($request, $column, $tableName)
     {
