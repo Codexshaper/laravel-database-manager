@@ -143,6 +143,10 @@ class RelationController extends Controller
             $relationship = $request->relationship;
             $field        = $request->field;
 
+            if (($response = $this->checkErrors($relationship)) !== true) {
+                return $response;
+            }
+
             $settings = $this->prepareSettings($relationship);
 
             $field           = DBM::Field()::find($field['id']);

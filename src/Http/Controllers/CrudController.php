@@ -75,56 +75,27 @@ class CrudController extends Controller
 
                 $tableName           = $request->table;
                 $relationship_tables = Table::all();
-                $isCrudExists        = false;
 
-                if ($object = DBM::Object()->where('name', $tableName)->first()) {
+                $details    = $this->getObject($tableName);
+                $permission = $details['isCrudExists'] ? 'update' : 'create';
 
-                    if (($response = DBM::authorize('crud.update')) !== true) {
-                        return $response;
-                    }
-
-                    $isCrudExists = true;
-
-                    if (!$object->model) {
-                        $object->model = DBM::generateModelName($object->name);
-                    }
-
-                    $fields = $object->fields()->orderBy('order', 'ASC')->get();
-
-                } else {
-                    if (($response = DBM::authorize('crud.create')) !== true) {
-                        return $response;
-                    }
-
-                    $table = Table::getTable($tableName);
-
-                    $object               = new \stdClass;
-                    $object->name         = $table['name'];
-                    $object->slug         = Str::slug($table['name']);
-                    $object->display_name = ucfirst($table['name']);
-                    $object->model        = DBM::generateModelName($table['name']);
-                    $object->controller   = '';
-
-                    $fields = $this->prepareFields($table);
-
+                if (($response = DBM::authorize("crud.{$permission}")) !== true) {
+                    return $response;
                 }
-
-                $object->makeModel = false;
 
                 $relationshipDetails = (object) [
                     'type'                => 'hasOne',
                     'foreignTableDetails' => Table::getTable($relationship_tables[0]),
                     'localTableDetails'   => Table::getTable($tableName),
-
                 ];
 
                 return response()->json([
                     'success'              => true,
                     'relationship_tables'  => $relationship_tables,
                     'relationship_details' => $relationshipDetails,
-                    'object'               => $object,
-                    'fields'               => $fields,
-                    'isCrudExists'         => $isCrudExists,
+                    'object'               => $details['object'],
+                    'fields'               => $details['fields'],
+                    'isCrudExists'         => $details['isCrudExists'],
                     'userPermissions'      => DBM::userPermissions(),
                     'driver'               => Driver::getConnectionName(),
                 ]);
@@ -135,6 +106,37 @@ class CrudController extends Controller
         }
 
         return response()->json(['success' => false]);
+    }
+
+    public function getObject($tableName)
+    {
+        if ($object = DBM::Object()->where('name', $tableName)->first()) {
+            $isCrudExists = true;
+            if (!$object->model) {
+                $object->model = DBM::generateModelName($object->name);
+            }
+            $fields = $object->fields()->orderBy('order', 'ASC')->get();
+        }
+
+        if (!$object) {
+
+            $isCrudExists = false;
+            $table        = Table::getTable($tableName);
+
+            $object               = new \stdClass;
+            $object->name         = $table['name'];
+            $object->slug         = Str::slug($table['name']);
+            $object->display_name = ucfirst($table['name']);
+            $object->model        = DBM::generateModelName($table['name']);
+            $object->controller   = '';
+
+            $fields = $this->prepareFields($table);
+        }
+
+        $object->makeModel = false;
+
+        return ['object' => $object, 'fields' => $fields, 'isCrudExists' => $isCrudExists];
+
     }
 
     public function prepareFields($table)
