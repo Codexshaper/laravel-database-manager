@@ -2,10 +2,13 @@
 
 namespace CodexShaper\DBM\Traits;
 
+use CodexShaper\DBM\Database\Drivers\MongoDB\Type;
+use CodexShaper\DBM\Facades\Driver;
 use CodexShaper\DBM\Facades\Manager as DBM;
 use CodexShaper\DBM\Models\DBM_Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 trait RecordHelper
 {
