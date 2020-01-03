@@ -360,7 +360,7 @@ class RecordController extends Controller
 
                         $field = json_decode($field);
 
-                        $this->removeRelationshipData($field);
+                        $this->removeRelationshipData($field, $object, $table);
                     }
 
                     if ($table->delete()) {
@@ -376,7 +376,7 @@ class RecordController extends Controller
         return response()->json(['success' => false]);
     }
 
-    public function removeRelationshipData($field)
+    public function removeRelationshipData($field, $object, $table)
     {
         if ($field->type == 'relationship') {
 
@@ -666,28 +666,12 @@ class RecordController extends Controller
             $name = $field->name;
 
             if (is_object($field->settings) && property_exists($field->settings, 'validation') !== false) {
+
                 $validationSettings = $field->settings->validation;
-
-                if ($action == 'create' && isset($validationSettings->create)) {
-                    $createSettings = $validationSettings->create;
-                    $rules          = $createSettings->rules;
-                } else if ($action == 'update' && isset($validationSettings->update)) {
-                    $updateSettings = $validationSettings->update;
-                    $localKey       = $updateSettings->localKey;
-                    $rules          = $updateSettings->rules . ',' . $columns->{$localKey};
-                } else if (isset($field->settings->validation) && is_string($validationSettings)) {
-                    $rules = $validationSettings;
-                } else {
-                    $rules = '';
-                }
-
-                $data      = [$name => $columns->{$name}];
-                $validator = Validator::make($data, [
-                    $name => $rules,
-                ]);
-
+                $rules              = $this->prepareRules($columns, $action, $validationSettings);
+                $data               = [$name => $columns->{$name}];
+                $validator          = Validator::make($data, [$name => $rules]);
                 if ($validator->fails()) {
-
                     foreach ($validator->errors()->all() as $error) {
                         $errors[] = $error;
                     }
@@ -696,6 +680,24 @@ class RecordController extends Controller
         }
 
         return $errors;
+    }
+
+    protected function prepareRules($columns, $action, $settings)
+    {
+        $rules = '';
+
+        if (is_string($settings)) {
+            $rules = $settings;
+        } else if ($action == 'create' && isset($settings->create)) {
+            $createSettings = $settings->create;
+            $rules          = $createSettings->rules;
+        } else if ($action == 'update' && isset($settings->update)) {
+            $updateSettings = $settings->update;
+            $localKey       = $updateSettings->localKey;
+            $rules          = $updateSettings->rules . ',' . $columns->{$localKey};
+        }
+
+        return $rules;
     }
 
     protected function getFieldType($collectionName, $fieldName)
