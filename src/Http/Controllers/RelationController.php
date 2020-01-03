@@ -62,16 +62,8 @@ class RelationController extends Controller
 
             $relationship = $request->relationship;
 
-            if (!class_exists($relationship['localModel'])) {
-
-                $error = "{$relationship['localModel']} Model not found. Please create the {$relationship['localModel']} model first";
-                return $this->generateError([$error]);
-            }
-
-            if (!class_exists($relationship['foreignModel'])) {
-
-                $error = $relationship['foreignModel'] . " Model not found. Please create the " . $relationship['foreignModel'] . " model first";
-                return $this->generateError([$error]);
+            if (($response = $this->checkErrors($relationship)) !== true) {
+                return $response;
             }
 
             $fieldName = $this->getFieldName($relationship);
@@ -87,12 +79,31 @@ class RelationController extends Controller
             $field->display_name  = ucfirst($relationship['foreignTable']);
             $field->order         = $order + 1;
             $field->settings      = $settings;
+
             if ($field->save()) {
                 return response()->json(['success' => true]);
             }
         }
 
         return response()->json(['success' => false]);
+    }
+
+    public function checkErrors($relationship)
+    {
+        $localModel   = $relationship['localModel'];
+        $foreignModel = $relationship['foreignModel'];
+
+        if (!class_exists($localModel)) {
+            $error = "{$localModel} Model not found. Please create the {$localModel} model first";
+            return $this->generateError([$error]);
+        }
+
+        if (!class_exists($foreignModel)) {
+            $error = "{$foreignModel} Model not found. Please create the {$foreignModel} model first";
+            return $this->generateError([$error]);
+        }
+
+        return true;
     }
 
     public function getFieldName($relationship)
