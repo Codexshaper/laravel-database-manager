@@ -5,15 +5,14 @@ namespace CodexShaper\DBM\Http\Controllers;
 use CodexShaper\DBM\Database\Drivers\MongoDB\Type;
 use CodexShaper\DBM\Database\Schema\Table;
 use CodexShaper\DBM\Facades\Driver;
-use CodexShaper\DBM\Models\DBM_Collection;
+use CodexShaper\DBM\Traits\RecordHelper;
 use DBM;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 
 class RecordController extends Controller
 {
+    use RecordHelper;
 
     public function index()
     {
@@ -340,7 +339,6 @@ class RecordController extends Controller
             // $originalColumns = Table::getColumnsName($tableName);
             $columns = json_decode($request->columns);
             $fields  = $request->fields;
-
             $object  = DBM::Object()->where('name', $tableName)->first();
             $model   = $object->model;
             $details = $object->details;
@@ -351,18 +349,14 @@ class RecordController extends Controller
             }
 
             try {
-
                 $table = DBM::model($model, $tableName)->where($key, $columns->{$key})->first();
-
                 if ($table) {
-
+                    // Remove Relationship data
                     foreach ($fields as $field) {
-
                         $field = json_decode($field);
-
                         $this->removeRelationshipData($field, $object, $table);
                     }
-
+                    // Check Table deleted successfully
                     if ($table->delete()) {
                         return response()->json(['success' => true]);
                     }
@@ -374,65 +368,6 @@ class RecordController extends Controller
         }
 
         return response()->json(['success' => false]);
-    }
-
-    public function removeRelationshipData($field, $object, $table)
-    {
-        if ($field->type == 'relationship') {
-
-            $relationship = $field->settings;
-
-            $localModel   = $relationship->localModel;
-            $foreignModel = $relationship->foreignModel;
-
-            $findColumn = $object->details['findColumn'];
-
-            $localObject = $localModel::where($findColumn, $table->{$findColumn})->first();
-
-            if ($relationship->relationType == 'belongsToMany') {
-
-                $pivotTable      = $relationship->pivotTable;
-                $parentPivotKey  = $relationship->parentPivotKey;
-                $relatedPivotKey = $relationship->relatedPivotKey;
-
-                DBM::Object()
-                    ->setManyToManyRelation(
-                        $localObject,
-                        $foreignModel,
-                        $pivotTable,
-                        $parentPivotKey,
-                        $relatedPivotKey
-                    )
-                    ->belongs_to_many()
-                    ->detach();
-            } else if ($relationship->relationType == 'hasMany') {
-
-                $foreignKey = $relationship->foreignKey;
-                $localKey   = $relationship->localKey;
-
-                DBM::Object()
-                    ->setCommonRelation(
-                        $localObject,
-                        $foreignModel,
-                        $foreignKey,
-                        $localKey)
-                    ->has_many()
-                    ->delete();
-            }
-
-        }
-    }
-
-    protected function getSettingOptions($field)
-    {
-        $options = $field->settings['options'];
-        if (isset($options['controller'])) {
-            $partials       = explode('@', $options['controller']);
-            $controllerName = $partials[0];
-            $methodName     = $partials[1];
-
-            return app($controllerName)->{$methodName}();
-        }
     }
 
     public function getTableDetails(Request $request)
@@ -642,96 +577,5 @@ class RecordController extends Controller
         }
 
         return response()->json(['success' => false]);
-    }
-
-    public function removeRelationshipKeyForBelongsTo($fields, $foreignKey)
-    {
-        $results = [];
-
-        foreach ($fields as $key => $field) {
-            if ($field->name == $foreignKey) {
-                unset($fields[$key]);
-                continue;
-            }
-            $results[] = $field;
-        }
-
-        return $results;
-    }
-
-    protected function validation($fields, $columns, $action = "create")
-    {
-        $errors = [];
-        foreach ($fields as $field) {
-            $name = $field->name;
-
-            if (is_object($field->settings) && property_exists($field->settings, 'validation') !== false) {
-
-                $validationSettings = $field->settings->validation;
-                $rules              = $this->prepareRules($columns, $action, $validationSettings);
-                $data               = [$name => $columns->{$name}];
-                $validator          = Validator::make($data, [$name => $rules]);
-                if ($validator->fails()) {
-                    foreach ($validator->errors()->all() as $error) {
-                        $errors[] = $error;
-                    }
-                }
-            }
-        }
-
-        return $errors;
-    }
-
-    protected function prepareRules($columns, $action, $settings)
-    {
-        $rules = '';
-
-        if (is_string($settings)) {
-            $rules = $settings;
-        } else if ($action == 'create' && isset($settings->create)) {
-            $createSettings = $settings->create;
-            $rules          = $createSettings->rules;
-        } else if ($action == 'update' && isset($settings->update)) {
-            $updateSettings = $settings->update;
-            $localKey       = $updateSettings->localKey;
-            $rules          = $updateSettings->rules . ',' . $columns->{$localKey};
-        }
-
-        return $rules;
-    }
-
-    protected function getFieldType($collectionName, $fieldName)
-    {
-        $collection = DBM_Collection::where('name', $collectionName)->first();
-
-        return $collection->fields()->where('name', $fieldName)->first()->type;
-    }
-
-    protected function generateError($errors)
-    {
-        return response()->json([
-            'success' => false,
-            'errors'  => $errors,
-        ], 400);
-    }
-
-    protected function hasFunction($fields, $column)
-    {
-        foreach ($fields as $field) {
-            if ($field->name == $column && ($field->function_name != null || $field->function_name != "")) {
-                return $field->function_name;
-            }
-        }
-
-        return false;
-    }
-
-    protected function executeFunction($functionName, $value = null)
-    {
-        $signature = ($value != null) ? "{$functionName}('{$value}')" : "{$functionName}()";
-
-        $result = DB::raw("{$signature}");
-
-        return $result;
     }
 }
