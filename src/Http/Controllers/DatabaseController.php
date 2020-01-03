@@ -340,7 +340,7 @@ class DatabaseController extends Controller
             try
             {
                 // Update Template
-                app('\CodexShaper\DBM\Http\Controllers\TemplateController')->updateTemplates($request);
+                (new \CodexShaper\DBM\Http\Controllers\TemplateController)->updateTemplates($request);
 
                 if (Table::exists($tableName)) {
 
