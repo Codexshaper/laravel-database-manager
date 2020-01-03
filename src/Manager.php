@@ -80,11 +80,7 @@ class Manager
 
     public function generateModelName($className)
     {
-        $namespace = static::getModelNamespace();
-
-        $modelName = ucfirst(Str::singular($className));
-
-        return $namespace . '\\' . $modelName;
+        return static::getModelNamespace() . '\\' . ucfirst(Str::singular($className));
     }
 
     public function makeModel($model, $table)
