@@ -94,18 +94,18 @@
                             </tr>
                         </tfoot>
                     </table>
+                </div>
 
-                    <div class="row">
-                        <div class="col-sm-12 col-md-5">
-                            <div class="dataTables_info" id="database-table_info" role="status" aria-live="polite">Showing {{ pagination.from }} to {{ pagination.to }} of {{ pagination.total }} entries</div>
-                        </div>
-                        <div class="col-sm-12 col-md-7">
-                            <pagination 
-                                :data="pagination" 
-                                :limit="2" 
-                                align="right" 
-                                @pagination-change-page="fetchDatabaseTables"></pagination>
-                        </div>
+                <div class="row">
+                    <div class="col-sm-12 col-md-5">
+                        <div class="dataTables_info" id="database-table_info" role="status" aria-live="polite">Showing {{ pagination.from }} to {{ pagination.to }} of {{ pagination.total }} entries</div>
+                    </div>
+                    <div class="col-sm-12 col-md-7">
+                        <pagination 
+                            :data="pagination" 
+                            :limit="2" 
+                            align="right" 
+                            @pagination-change-page="fetchDatabaseTables"></pagination>
                     </div>
                 </div>
 

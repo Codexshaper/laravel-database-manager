@@ -146,7 +146,6 @@ class MongoDB
          */
 
         if ($collection->count() > 0) {
-            $sets = [];
             foreach ($newFields as $newField) {
                 $cursor   = $collection->find();
                 $iterator = iterator_to_array($cursor);

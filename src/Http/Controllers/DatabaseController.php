@@ -93,7 +93,10 @@ class DatabaseController extends Controller
 
                 if (in_array($column['oldName'], $fieldNames)) {
 
-                    $collection_field = CollectionField::where('old_name', $column['oldName'])->first();
+                    $collection_field = $collection_field = CollectionField::where([
+                        'dbm_collection_id' => $collection->_id,
+                        'old_name'          => $column['oldName'],
+                    ])->first();
 
                     $collection_field->name     = $column['name'];
                     $collection_field->old_name = $column['oldName'];
@@ -241,7 +244,8 @@ class DatabaseController extends Controller
 
                     if (Driver::isMongoDB()) {
 
-                        $this->updateMongoDbTable($table);
+                        $table = $this->updateMongoDbTable($table);
+
                     }
 
                     // Update Database

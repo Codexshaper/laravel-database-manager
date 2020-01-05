@@ -125,8 +125,7 @@ trait RecordRelationship
                     $pivotTable      = $relationship->pivotTable;
                     $parentPivotKey  = $relationship->parentPivotKey;
                     $relatedPivotKey = $relationship->relatedPivotKey;
-
-                    $findColumn = $object->details['findColumn'];
+                    $findColumn      = $object->details['findColumn'];
 
                     $localObject = DBM::model($localModel, $localTable)->where($findColumn, $table->{$findColumn})->first();
 

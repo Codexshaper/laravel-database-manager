@@ -32,6 +32,7 @@ class Type
         'null',
         'integer',
         'longInteger',
+        'relationship',
     ];
     public static function binary(string $value, int $type = Binary::TYPE_GENERIC)
     {
@@ -129,6 +130,11 @@ class Type
     public static function longInteger($value)
     {
         return (int) $value;
+    }
+
+    public static function relationship($value)
+    {
+        return $value;
     }
 
     public static function getTypes()

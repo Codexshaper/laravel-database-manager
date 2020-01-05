@@ -64,7 +64,9 @@ trait RecordTrait
                 $this->generateError([$fieldType . " type not supported."]);
             }
 
-            $value = Type::$fieldType($value);
+            if ($fieldType != 'timestamp') {
+                $value = Type::$fieldType($value);
+            }
 
         }
 

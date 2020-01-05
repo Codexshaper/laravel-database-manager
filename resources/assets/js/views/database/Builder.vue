@@ -198,7 +198,7 @@
                   responseType: 'json',
                 })
                 .then(res => {
-                    // console.log(res.data);
+                    console.log(res.data);
                     if( res.data.success == true ){
                         toastr.success('Table Updated Successfully.');
                         if(this.oldTable != this.tableName) {
@@ -282,7 +282,7 @@
               
             },
             getIndex: function(field) {
-              console.log(field);
+              // console.log(field);
               for(var index of this.indexes) {
                   var columns = index.columns;
                   if(columns.includes(field.name)) {

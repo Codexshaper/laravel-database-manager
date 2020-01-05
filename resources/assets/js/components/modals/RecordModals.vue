@@ -243,7 +243,7 @@
         	        data: formData,
         	        responseType: 'json',
         	    }).then(res => {
-        	        // console.log(res.data);
+        	        console.log(res.data);
         	        if( res.data.success == true ){
         	            toastr.success("Record Added successfully.");
         	            this.$emit('fresh');
@@ -254,7 +254,7 @@
         	        
         	    })
         	    .catch(err => {
-        	        // console.log(err.response);
+        	        console.log(err.response);
                     this.$Progress.fail()
         	        this.displayError(err.response);                
         	    });
@@ -273,7 +273,7 @@
                     data: formData,
                     responseType: 'json',
                 }).then(res => {
-                    // console.log(res.data);
+                    console.log(res.data);
                     if( res.data.success == true ){
                         toastr.success("Record Updated successfully.");
                         this.$emit('fresh');
@@ -284,7 +284,7 @@
                     
                 })
                 .catch(err => {
-                    // console.log(err.response);
+                    console.log(err.response);
                     this.$Progress.fail()
                     this.displayError(err.response);                
                 });
