@@ -210,6 +210,7 @@
                     
                 })
                 .catch(err => {
+                  console.log(err);
                   this.$Progress.fail()
                   this.displayError(err.response)
                 });

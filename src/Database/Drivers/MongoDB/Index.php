@@ -31,32 +31,41 @@ class Index
 
     public static function getType(IndexInfo $index)
     {
-        if ($index->isText()) {
-            return "TEXT";
-        }
+        $type = static::getCommonType($index);
 
         if ($index->isUnique() && !$index->isSparse() && !static::checkDescending($index)) {
-            return "UNIQUE";
+            $type = "UNIQUE";
         }
 
         if ($index->isUnique() && !$index->isSparse() && static::checkDescending($index)) {
-            return "UNIQUE_DESC";
+            $type = "UNIQUE_DESC";
         }
 
         if ($index->isSparse() && !static::checkDescending($index)) {
-            return "SPARSE";
+            $type = "SPARSE";
         }
 
         if ($index->isSparse() && $index->isUnique() && !static::checkDescending($index)) {
-            return "SPARSE_UNIQUE";
+            $type = "SPARSE_UNIQUE";
         }
 
         if ($index->isSparse() && $index->isUnique() && static::checkDescending($index)) {
-            return "SPARSE_UNIQUE_DESC";
+            $type = "SPARSE_UNIQUE_DESC";
         }
 
         if ($index->isSparse() && static::checkDescending($index)) {
-            return "SPARSE_DESC";
+            $type = "SPARSE_DESC";
+        }
+
+        $type = static::getDefaultType($index);
+
+        return $type;
+    }
+
+    protected static function getCommonType(IndexInfo $index)
+    {
+        if ($index->isText()) {
+            return "TEXT";
         }
 
         if ($index->is2dSphere()) {
@@ -70,8 +79,6 @@ class Index
         if ($index->isGeoHaystack()) {
             return "GEOHAYSTACK";
         }
-
-        return static::getDefaultType($index);
     }
 
     protected static function getDefaultType(IndexInfo $index)

@@ -93,7 +93,7 @@ class DatabaseController extends Controller
 
                 if (in_array($column['oldName'], $fieldNames)) {
 
-                    $collection_field = $collection_field = CollectionField::where([
+                    $collection_field = CollectionField::where([
                         'dbm_collection_id' => $collection->_id,
                         'old_name'          => $column['oldName'],
                     ])->first();

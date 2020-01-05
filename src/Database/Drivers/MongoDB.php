@@ -112,13 +112,10 @@ class MongoDB
 
     }
 
-    public function setFields($collectionName, $fields)
+    public function renameColumns($collectionName, $fields)
     {
         $collection = $this->selectCollection($collectionName);
-        /*
-         * Rename Columns
-         */
-        $renames = [];
+        $renames    = [];
         foreach ($fields as $field) {
             if ($field->oldName != "") {
                 if ($field->oldName != $field->name) {
@@ -131,19 +128,23 @@ class MongoDB
         if (count($renames) > 0) {
             $update['$rename'] = $renames;
             $collection->updateMany(array(), $update, array('upsert' => true));
+            $dbmCollection = DBM_Collection::where('name', $collectionName)->first();
             foreach ($renames as $oldName => $newName) {
-                $collection_field           = CollectionField::where('old_name', $oldName)->first();
+                $collection_field = CollectionField::where([
+                    'dbm_collection_id' => $dbmCollection->_id,
+                    'old_name'          => $oldName,
+                ])->first();
                 $collection_field->old_name = $newName;
                 $collection_field->update();
             }
         }
+    }
 
-        $newFields = $this->getColumnsName($collectionName);
-        $columns   = $this->getCollectionColumns($collectionName);
-
-        /*
-         * Add Columns
-         */
+    public function addColumns($collectionName)
+    {
+        $collection = $this->selectCollection($collectionName);
+        $newFields  = $this->getColumnsName($collectionName);
+        $update     = [];
 
         if ($collection->count() > 0) {
             foreach ($newFields as $newField) {
@@ -176,14 +177,16 @@ class MongoDB
             }
 
         }
+    }
 
-        /*
-         * Remove Columns
-         */
+    public function removeColumns($collectionName)
+    {
+        $collection = $this->selectCollection($collectionName);
+        $newFields  = $this->getColumnsName($collectionName);
+        $columns    = $this->getCollectionColumns($collectionName);
+        $update     = [];
+        $unsets     = [];
 
-        $update = [];
-
-        $unsets = [];
         foreach ($columns as $column) {
             if (!in_array($column, $newFields)) {
                 $unsets[$column] = "";
@@ -194,7 +197,23 @@ class MongoDB
             $update['$unset'] = $unsets;
             $collection->updateMany(array(), $update, array('upsert' => true));
         }
+    }
 
+    public function setFields($collectionName, $fields)
+    {
+        /*
+         * Rename Columns
+         */
+        $this->renameColumns($collectionName, $fields);
+
+        /*
+         * Add Columns
+         */
+        $this->addColumns($collectionName);
+        /*
+         * Remove Columns
+         */
+        $this->removeColumns($collectionName);
         return true;
     }
 
