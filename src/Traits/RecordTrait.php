@@ -127,6 +127,43 @@ trait RecordTrait
         ];
     }
 
+    public function sync($request, $object)
+    {
+        $tableName       = $request->table;
+        $originalColumns = Table::getColumnsName($tableName);
+        $columns         = json_decode($request->columns);
+        $fields          = json_decode($request->fields);
+        $key             = $object->details['findColumn'];
+
+        $table = DBM::model($object->model, $tableName)->where($key, $columns->{$key})->first();
+
+        foreach ($columns as $column => $value) {
+
+            if (in_array($column, $originalColumns)) {
+
+                if ($request->hasFile($column)) {
+                    $value = $this->saveFiles($request, $column, $tableName);
+                }
+
+                if ($value !== null && $value !== "") {
+
+                    if (!Driver::isMongoDB()) {
+                        if ($functionName = $this->hasFunction($fields, $column)) {
+                            $value = $this->executeFunction($functionName, $value);
+                        }
+                    }
+
+                    $table->{$column} = $this->prepareStoreField($value, $tableName, $column);
+                }
+            }
+        }
+
+        if ($table->update()) {
+            $this->updateRelationshipData($fields, $columns, $object, $table);
+            return response()->json(['success' => true]);
+        }
+    }
+
     public function getSettingOptions($field)
     {
         $options = $field->settings['options'];

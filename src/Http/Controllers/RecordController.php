@@ -103,7 +103,7 @@ class RecordController extends Controller
             }
 
             try {
-                $this->updateData($request, $object);
+                $this->sync($request, $object);
                 return response()->json(['success' => true]);
             } catch (\Exception $e) {
                 return $this->generateError([$e->getMessage()]);
@@ -111,43 +111,6 @@ class RecordController extends Controller
         }
 
         return response()->json(['success' => false]);
-    }
-
-    public function updateData($request, $object)
-    {
-        $tableName       = $request->table;
-        $originalColumns = Table::getColumnsName($tableName);
-        $columns         = json_decode($request->columns);
-        $fields          = json_decode($request->fields);
-        $key             = $object->details['findColumn'];
-
-        $table = DBM::model($object->model, $tableName)->where($key, $columns->{$key})->first();
-
-        foreach ($columns as $column => $value) {
-
-            if (in_array($column, $originalColumns)) {
-
-                if ($request->hasFile($column)) {
-                    $value = $this->saveFiles($request, $column, $tableName);
-                }
-
-                if ($value !== null && $value !== "") {
-
-                    if (!Driver::isMongoDB()) {
-                        if ($functionName = $this->hasFunction($fields, $column)) {
-                            $value = $this->executeFunction($functionName, $value);
-                        }
-                    }
-
-                    $table->{$column} = $this->prepareStoreField($value, $tableName, $column);
-                }
-            }
-        }
-
-        if ($table->update()) {
-            $this->updateRelationshipData($fields, $columns, $object, $table);
-            return response()->json(['success' => true]);
-        }
     }
 
     public function delete(Request $request)
