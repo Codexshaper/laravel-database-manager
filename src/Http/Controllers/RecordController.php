@@ -86,10 +86,9 @@ class RecordController extends Controller
                 return $response;
             }
 
-            $tableName       = $request->table;
-            $originalColumns = Table::getColumnsName($tableName);
-            $columns         = json_decode($request->columns);
-            $fields          = json_decode($request->fields);
+            $tableName = $request->table;
+            $columns   = json_decode($request->columns);
+            $fields    = json_decode($request->fields);
 
             $errors = $this->validation($fields, $columns, 'update');
 
@@ -97,51 +96,58 @@ class RecordController extends Controller
                 return $this->generateError($errors);
             }
 
-            $object  = DBM::Object()->where('name', $tableName)->first();
-            $model   = $object->model;
-            $details = $object->details;
-            $key     = $details['findColumn'];
+            $object = DBM::Object()->where('name', $tableName)->first();
 
-            if (!class_exists($model)) {
+            if (!class_exists($object->model)) {
                 return $this->generateError(["Model not found. Please create model first"]);
             }
 
             try {
-
-                $table = DBM::model($model, $tableName)->where($key, $columns->{$key})->first();
-
-                foreach ($columns as $column => $value) {
-
-                    if (in_array($column, $originalColumns)) {
-
-                        if ($request->hasFile($column)) {
-                            $value = $this->saveFiles($request, $column, $tableName);
-                        }
-
-                        if ($value !== null && $value !== "") {
-
-                            if (!Driver::isMongoDB()) {
-                                if ($functionName = $this->hasFunction($fields, $column)) {
-                                    $value = $this->executeFunction($functionName, $value);
-                                }
-                            }
-
-                            $table->{$column} = $this->prepareStoreField($value, $tableName, $column);
-                        }
-                    }
-                }
-
-                if ($table->update()) {
-                    $this->updateRelationshipData($fields, $columns, $object, $table);
-                    return response()->json(['success' => true]);
-                }
-
+                $this->updateData($request, $object);
+                return response()->json(['success' => true]);
             } catch (\Exception $e) {
                 return $this->generateError([$e->getMessage()]);
             }
         }
 
         return response()->json(['success' => false]);
+    }
+
+    public function updateData($request, $object)
+    {
+        $tableName       = $request->table;
+        $originalColumns = Table::getColumnsName($tableName);
+        $columns         = json_decode($request->columns);
+        $fields          = json_decode($request->fields);
+        $key             = $object->details['findColumn'];
+
+        $table = DBM::model($object->model, $tableName)->where($key, $columns->{$key})->first();
+
+        foreach ($columns as $column => $value) {
+
+            if (in_array($column, $originalColumns)) {
+
+                if ($request->hasFile($column)) {
+                    $value = $this->saveFiles($request, $column, $tableName);
+                }
+
+                if ($value !== null && $value !== "") {
+
+                    if (!Driver::isMongoDB()) {
+                        if ($functionName = $this->hasFunction($fields, $column)) {
+                            $value = $this->executeFunction($functionName, $value);
+                        }
+                    }
+
+                    $table->{$column} = $this->prepareStoreField($value, $tableName, $column);
+                }
+            }
+        }
+
+        if ($table->update()) {
+            $this->updateRelationshipData($fields, $columns, $object, $table);
+            return response()->json(['success' => true]);
+        }
     }
 
     public function delete(Request $request)

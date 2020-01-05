@@ -303,13 +303,14 @@
                       }
                     })
                     .then(res => {
-                        // console.log(res.data);
+                        console.log(res.data);
                         if( res.data.success == true ){
                             toastr.success("Relation Deleted Successfully");
                             this.fetchDatabaseTables();
                         }
                     })
                     .catch(err => {
+                      console.log(err);
                       this.displayError(err.response);
                     });
 
