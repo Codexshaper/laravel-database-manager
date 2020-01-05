@@ -66,8 +66,8 @@ class RecordController extends Controller
                 }
 
                 if ($table->save()) {
-                    $relationship = $this->storeRelationshipData($fields, $columns, $object, $table);
-                    return response()->json(['success' => true, 'object' => $object, 'table' => $table]);
+                    $this->storeRelationshipData($fields, $columns, $object, $table);
+                    return response()->json(['success' => true]);
                 }
 
             } catch (\Exception $e) {

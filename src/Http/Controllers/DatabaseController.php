@@ -243,9 +243,7 @@ class DatabaseController extends Controller
                 if (Table::exists($tableName)) {
 
                     if (Driver::isMongoDB()) {
-
-                        $table = $this->updateMongoDbTable($table);
-
+                        $this->updateMongoDbTable($table);
                     }
 
                     // Update Database

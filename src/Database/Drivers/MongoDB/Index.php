@@ -33,39 +33,65 @@ class Index
     {
         if ($index->isText()) {
             return "TEXT";
-        } else if ($index->isUnique() && !$index->isSparse() && !static::checkDescending($index)) {
-            return "UNIQUE";
-        } else if ($index->isUnique() && !$index->isSparse() && static::checkDescending($index)) {
-            return "UNIQUE_DESC";
-        } else if ($index->isSparse() && !static::checkDescending($index)) {
-            return "SPARSE";
-        } else if ($index->isSparse() && $index->isUnique() && !static::checkDescending($index)) {
-            return "SPARSE_UNIQUE";
-        } else if ($index->isSparse() && $index->isUnique() && static::checkDescending($index)) {
-            return "SPARSE_UNIQUE_DESC";
-        } else if ($index->isSparse() && static::checkDescending($index)) {
-            return "SPARSE_DESC";
-        } else if ($index->is2dSphere()) {
-            return "2DSPARSE";
-        } else if ($index->isTtl()) {
-            return "TTL";
-        } else if ($index->isGeoHaystack()) {
-            return "GEOHAYSTACK";
-        } else {
-            $name     = $index->getName();
-            $partials = explode("_", $name);
-            $type     = end($partials);
-            if ($type == 'asc') {
-                return "ASC";
-            } else if ($type == 'index') {
-                return "INDEX";
-            } else if ($type == 'desc') {
-                return "DESC";
-            } else {
-                return "";
-            }
-
         }
+
+        if ($index->isUnique() && !$index->isSparse() && !static::checkDescending($index)) {
+            return "UNIQUE";
+        }
+
+        if ($index->isUnique() && !$index->isSparse() && static::checkDescending($index)) {
+            return "UNIQUE_DESC";
+        }
+
+        if ($index->isSparse() && !static::checkDescending($index)) {
+            return "SPARSE";
+        }
+
+        if ($index->isSparse() && $index->isUnique() && !static::checkDescending($index)) {
+            return "SPARSE_UNIQUE";
+        }
+
+        if ($index->isSparse() && $index->isUnique() && static::checkDescending($index)) {
+            return "SPARSE_UNIQUE_DESC";
+        }
+
+        if ($index->isSparse() && static::checkDescending($index)) {
+            return "SPARSE_DESC";
+        }
+
+        if ($index->is2dSphere()) {
+            return "2DSPARSE";
+        }
+
+        if ($index->isTtl()) {
+            return "TTL";
+        }
+
+        if ($index->isGeoHaystack()) {
+            return "GEOHAYSTACK";
+        }
+
+        return static::getDefaultType($index);
+    }
+
+    protected static function getDefaultType(IndexInfo $index)
+    {
+        $name     = $index->getName();
+        $partials = explode("_", $name);
+        $type     = end($partials);
+        if ($type == 'asc') {
+            return "ASC";
+        }
+
+        if ($type == 'index') {
+            return "INDEX";
+        }
+
+        if ($type == 'desc') {
+            return "DESC";
+        }
+
+        return "";
     }
 
     protected static function checkDescending($index)
