@@ -62,6 +62,7 @@ class RecordController extends Controller
     {
         $originalColumns = Table::getColumnsName($request->table);
         $columns         = json_decode($request->columns);
+        $fields          = json_decode($request->fields);
         $table           = DBM::model($object->model, $request->table);
 
         foreach ($columns as $column => $value) {
@@ -109,7 +110,11 @@ class RecordController extends Controller
             }
 
             try {
-                $this->sync($request, $object);
+                $table = $this->processUpdateData($request, $object);
+                if ($table->update()) {
+                    $this->updateRelationshipData($fields, $columns, $object, $table);
+                    return response()->json(['success' => true]);
+                }
                 return response()->json(['success' => true]);
             } catch (\Exception $e) {
                 return $this->generateError([$e->getMessage()]);
@@ -117,6 +122,40 @@ class RecordController extends Controller
         }
 
         return response()->json(['success' => false]);
+    }
+
+    public function processUpdateData($request, $object)
+    {
+        $originalColumns = Table::getColumnsName($request->table);
+        $columns         = json_decode($request->columns);
+        $fields          = json_decode($request->fields);
+        $key             = $object->details['findColumn'];
+
+        $table = DBM::model($object->model, $request->table)->where($key, $columns->{$key})->first();
+
+        foreach ($columns as $column => $value) {
+
+            if (in_array($column, $originalColumns)) {
+
+                if ($request->hasFile($column)) {
+                    $value = $this->saveFiles($request, $column, $request->table);
+                }
+
+                if ($value !== null && $value !== "") {
+
+                    if (!Driver::isMongoDB()) {
+                        if ($functionName = $this->hasFunction($fields, $column)) {
+                            $value = $this->executeFunction($functionName, $value);
+                        }
+                    }
+
+                    $table->{$column} = $this->prepareStoreField($value, $request->table, $column);
+                }
+            }
+        }
+
+        return $table;
+
     }
 
     public function delete(Request $request)
