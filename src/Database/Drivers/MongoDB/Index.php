@@ -31,6 +31,8 @@ class Index
 
     public static function getType(IndexInfo $index)
     {
+        $type = "";
+
         $type = static::getCommonType($index);
 
         if ($index->isUnique() && !$index->isSparse() && !static::checkDescending($index)) {
@@ -57,8 +59,6 @@ class Index
             $type = "SPARSE_DESC";
         }
 
-        $type = static::getDefaultType($index);
-
         return $type;
     }
 
@@ -66,39 +66,30 @@ class Index
     {
         if ($index->isText()) {
             return "TEXT";
-        }
-
-        if ($index->is2dSphere()) {
+        } else if ($index->is2dSphere()) {
             return "2DSPARSE";
-        }
-
-        if ($index->isTtl()) {
+        } else if ($index->isTtl()) {
             return "TTL";
-        }
-
-        if ($index->isGeoHaystack()) {
+        } else if ($index->isGeoHaystack()) {
             return "GEOHAYSTACK";
-        }
-    }
+        } else {
+            $name     = $index->getName();
+            $partials = explode("_", $name);
+            $type     = end($partials);
+            if ($type == 'asc') {
+                return "ASC";
+            }
 
-    protected static function getDefaultType(IndexInfo $index)
-    {
-        $name     = $index->getName();
-        $partials = explode("_", $name);
-        $type     = end($partials);
-        if ($type == 'asc') {
-            return "ASC";
-        }
+            if ($type == 'index') {
+                return "INDEX";
+            }
 
-        if ($type == 'index') {
-            return "INDEX";
-        }
+            if ($type == 'desc') {
+                return "DESC";
+            }
 
-        if ($type == 'desc') {
-            return "DESC";
+            return "";
         }
-
-        return "";
     }
 
     protected static function checkDescending($index)
