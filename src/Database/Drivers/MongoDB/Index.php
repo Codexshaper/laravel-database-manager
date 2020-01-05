@@ -62,53 +62,9 @@ class Index
                     continue;
                 }
 
-                switch ($type) {
-
-                    case 'TEXT':
-                        $indexType = 'text';
-                        break;
-                    case 'INDEX':
-                        $indexType = 1;
-                        break;
-                    case 'UNIQUE':
-                        $indexType         = 1;
-                        $options['unique'] = true;
-                        break;
-                    case 'UNIQUE_DESC':
-                        $indexType         = -1;
-                        $options['unique'] = true;
-                        break;
-                    case 'TTL':
-                        $indexType                     = 1;
-                        $options['expireAfterSeconds'] = 3600;
-                        break;
-                    case 'SPARSE':
-                        $indexType         = 1;
-                        $options['sparse'] = true;
-                        break;
-                    case 'SPARSE_DESC':
-                        $indexType         = -1;
-                        $options['sparse'] = true;
-                        break;
-                    case 'SPARSE_UNIQUE':
-                        $indexType         = 1;
-                        $options['sparse'] = true;
-                        $options['unique'] = true;
-                    case 'SPARSE_UNIQUE_DESC':
-                        $indexType         = -1;
-                        $options['sparse'] = true;
-                        $options['unique'] = true;
-                        break;
-                    case 'ASC':
-                        $indexType = 1;
-                        break;
-                    case 'DESC':
-                        $indexType = -1;
-                        break;
-                    default:
-                        $indexType = 1;
-                        break;
-                }
+                $indexDetails = static::getIndexDetails($type);
+                $indexType    = $indexDetails['type'];
+                $options      = $indexDetails['options'];
 
                 $options['name'] = strtolower($collection->getCollectionName() . "_" . $column . "_" . $type);
 
@@ -119,5 +75,58 @@ class Index
         }
 
         return true;
+    }
+
+    public static function getIndexDetails($type)
+    {
+        $indexType = 1;
+        $options   = [];
+
+        switch ($type) {
+
+            case 'TEXT':
+                $indexType = 'text';
+                break;
+            case 'INDEX':
+                $indexType = 1;
+                break;
+            case 'UNIQUE':
+                $indexType         = 1;
+                $options['unique'] = true;
+                break;
+            case 'UNIQUE_DESC':
+                $indexType         = -1;
+                $options['unique'] = true;
+                break;
+            case 'TTL':
+                $indexType                     = 1;
+                $options['expireAfterSeconds'] = 3600;
+                break;
+            case 'SPARSE':
+                $indexType         = 1;
+                $options['sparse'] = true;
+                break;
+            case 'SPARSE_DESC':
+                $indexType         = -1;
+                $options['sparse'] = true;
+                break;
+            case 'SPARSE_UNIQUE':
+                $indexType         = 1;
+                $options['sparse'] = true;
+                $options['unique'] = true;
+            case 'SPARSE_UNIQUE_DESC':
+                $indexType         = -1;
+                $options['sparse'] = true;
+                $options['unique'] = true;
+                break;
+            case 'ASC':
+                $indexType = 1;
+                break;
+            case 'DESC':
+                $indexType = -1;
+                break;
+        }
+
+        return ["type" => $indexType, "options" => $options];
     }
 }
