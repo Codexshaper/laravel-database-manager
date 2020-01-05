@@ -37,6 +37,10 @@ class Index
             $type = static::getSpecialType($index);
         }
 
+        if (empty($type)) {
+            $type = static::getDefaultType($index);
+        }
+
         return $type;
     }
 
@@ -46,22 +50,12 @@ class Index
 
         if ($index->isText()) {
             $type = "TEXT";
-        }
-
-        if ($index->is2dSphere()) {
+        } else if ($index->is2dSphere()) {
             $type = "2DSPARSE";
-        }
-
-        if ($index->isTtl()) {
+        } else if ($index->isTtl()) {
             $type = "TTL";
-        }
-
-        if ($index->isGeoHaystack()) {
+        } else if ($index->isGeoHaystack()) {
             $type = "GEOHAYSTACK";
-        }
-
-        if ($type === "") {
-            $type = static::getDefaultType($index);
         }
 
         return $type;
@@ -71,27 +65,17 @@ class Index
     {
         $type = "";
 
-        if ($index->isUnique() && !$index->isSparse() && !static::checkDescending($index)) {
+        if (static::checkUnique($index)) {
             $type = "UNIQUE";
-        }
-
-        if ($index->isUnique() && !$index->isSparse() && static::checkDescending($index)) {
+        } else if (static::checkUniqueDesc($index)) {
             $type = "UNIQUE_DESC";
-        }
-
-        if ($index->isSparse() && !static::checkDescending($index)) {
+        } else if (static::checkSparse($index)) {
             $type = "SPARSE";
-        }
-
-        if ($index->isSparse() && $index->isUnique() && !static::checkDescending($index)) {
+        } else if (static::checkSparseUnique($index)) {
             $type = "SPARSE_UNIQUE";
-        }
-
-        if ($index->isSparse() && $index->isUnique() && static::checkDescending($index)) {
+        } else if (static::checkSparseUniqueDesc($index)) {
             $type = "SPARSE_UNIQUE_DESC";
-        }
-
-        if ($index->isSparse() && static::checkDescending($index)) {
+        } else if (static::checkSparseDesc($index)) {
             $type = "SPARSE_DESC";
         }
 
@@ -106,17 +90,43 @@ class Index
 
         if ($type == 'asc') {
             return "ASC";
-        }
-
-        if ($type == 'index') {
+        } else if ($type == 'index') {
             return "INDEX";
-        }
-
-        if ($type == 'desc') {
+        } else if ($type == 'desc') {
             return "DESC";
         }
 
         return "";
+    }
+
+    protected static function checkUnique($index)
+    {
+        return $index->isUnique() && !$index->isSparse() && !static::checkDescending($index) ? true : false;
+    }
+
+    protected static function checkUniqueDesc($index)
+    {
+        return $index->isUnique() && !$index->isSparse() && static::checkDescending($index) ? true : false;
+    }
+
+    protected static function checkSparse($index)
+    {
+        return $index->isSparse() && !static::checkDescending($index) ? true : false;
+    }
+
+    protected static function checkSparseUnique($index)
+    {
+        return $index->isSparse() && $index->isUnique() && !static::checkDescending($index) ? true : false;
+    }
+
+    protected static function checkSparseUniqueDesc($index)
+    {
+        return $index->isSparse() && $index->isUnique() && static::checkDescending($index) ? true : false;
+    }
+
+    protected static function checkSparseDesc($index)
+    {
+        return $index->isSparse() && static::checkDescending($index) ? true : false;
     }
 
     protected static function checkDescending($index)
