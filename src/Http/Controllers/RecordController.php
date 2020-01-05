@@ -4,14 +4,13 @@ namespace CodexShaper\DBM\Http\Controllers;
 
 use CodexShaper\DBM\Database\Schema\Table;
 use CodexShaper\DBM\Facades\Driver;
-use CodexShaper\DBM\Traits\RecordRelationship;
 use CodexShaper\DBM\Traits\RecordTrait;
 use DBM;
 use Illuminate\Http\Request;
 
 class RecordController extends Controller
 {
-    use RecordTrait, RecordRelationship;
+    use RecordTrait;
 
     public function index()
     {
@@ -26,10 +25,9 @@ class RecordController extends Controller
                 return $response;
             }
 
-            $tableName       = $request->table;
-            $originalColumns = Table::getColumnsName($tableName);
-            $columns         = json_decode($request->columns);
-            $fields          = json_decode($request->fields);
+            $tableName = $request->table;
+            $columns   = json_decode($request->columns);
+            $fields    = json_decode($request->fields);
 
             $errors = $this->validation($fields, $columns);
 
@@ -38,32 +36,14 @@ class RecordController extends Controller
             }
 
             $object = DBM::Object()->where('name', $tableName)->first();
-            $model  = $object->model;
 
-            if (!class_exists($model)) {
+            if (!class_exists($object->model)) {
                 return $this->generateError(["Model not found. Please create model first"]);
             }
 
             try {
 
-                $table = DBM::model($model, $tableName);
-
-                foreach ($columns as $column => $value) {
-                    if (in_array($column, $originalColumns)) {
-
-                        if ($request->hasFile($column)) {
-                            $value = $this->saveFiles($request, $column, $tableName);
-                        }
-
-                        if (!Driver::isMongoDB()) {
-                            if ($functionName = $this->hasFunction($fields, $column)) {
-                                $value = $this->executeFunction($functionName, $value);
-                            }
-                        }
-
-                        $table->{$column} = $this->prepareStoreField($value, $tableName, $column);
-                    }
-                }
+                $table = $this->processStoreData($request, $object);
 
                 if ($table->save()) {
                     $this->storeRelationshipData($fields, $columns, $object, $table);
@@ -76,6 +56,32 @@ class RecordController extends Controller
         }
 
         return response()->json(['success' => false]);
+    }
+
+    public function processStoreData($request, $object)
+    {
+        $originalColumns = Table::getColumnsName($request->table);
+        $columns         = json_decode($request->columns);
+        $table           = DBM::model($object->model, $request->table);
+
+        foreach ($columns as $column => $value) {
+            if (in_array($column, $originalColumns)) {
+
+                if ($request->hasFile($column)) {
+                    $value = $this->saveFiles($request, $column, $request->table);
+                }
+
+                if (!Driver::isMongoDB()) {
+                    if ($functionName = $this->hasFunction($fields, $column)) {
+                        $value = $this->executeFunction($functionName, $value);
+                    }
+                }
+
+                $table->{$column} = $this->prepareStoreField($value, $request->table, $column);
+            }
+        }
+
+        return $table;
     }
 
     public function update(Request $request)
