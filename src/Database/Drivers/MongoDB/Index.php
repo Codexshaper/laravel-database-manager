@@ -31,9 +31,45 @@ class Index
 
     public static function getType(IndexInfo $index)
     {
+        $type = static::getCommonType($index);
+
+        if (empty($type)) {
+            $type = static::getSpecialType($index);
+        }
+
+        return $type;
+    }
+
+    protected static function getCommonType(IndexInfo $index)
+    {
         $type = "";
 
-        $type = static::getCommonType($index);
+        if ($index->isText()) {
+            $type = "TEXT";
+        }
+
+        if ($index->is2dSphere()) {
+            $type = "2DSPARSE";
+        }
+
+        if ($index->isTtl()) {
+            $type = "TTL";
+        }
+
+        if ($index->isGeoHaystack()) {
+            $type = "GEOHAYSTACK";
+        }
+
+        if ($type === "") {
+            $type = static::getDefaultType($index);
+        }
+
+        return $type;
+    }
+
+    protected static function getSpecialType(IndexInfo $index)
+    {
+        $type = "";
 
         if ($index->isUnique() && !$index->isSparse() && !static::checkDescending($index)) {
             $type = "UNIQUE";
@@ -62,34 +98,25 @@ class Index
         return $type;
     }
 
-    protected static function getCommonType(IndexInfo $index)
+    protected static function getDefaultType(IndexInfo $index)
     {
-        if ($index->isText()) {
-            return "TEXT";
-        } else if ($index->is2dSphere()) {
-            return "2DSPARSE";
-        } else if ($index->isTtl()) {
-            return "TTL";
-        } else if ($index->isGeoHaystack()) {
-            return "GEOHAYSTACK";
-        } else {
-            $name     = $index->getName();
-            $partials = explode("_", $name);
-            $type     = end($partials);
-            if ($type == 'asc') {
-                return "ASC";
-            }
+        $name     = $index->getName();
+        $partials = explode("_", $name);
+        $type     = end($partials);
 
-            if ($type == 'index') {
-                return "INDEX";
-            }
-
-            if ($type == 'desc') {
-                return "DESC";
-            }
-
-            return "";
+        if ($type == 'asc') {
+            return "ASC";
         }
+
+        if ($type == 'index') {
+            return "INDEX";
+        }
+
+        if ($type == 'desc') {
+            return "DESC";
+        }
+
+        return "";
     }
 
     protected static function checkDescending($index)
