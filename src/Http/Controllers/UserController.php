@@ -2,9 +2,10 @@
 
 namespace CodexShaper\DBM\Http\Controllers;
 
-use DBM;
+use CodexShaper\DBM\Facades\Manager as DBM;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Route;
 
@@ -17,31 +18,33 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        // if ($request->ajax()) {
-        try {
-            $credentials = [
-                'email'    => $request->data['email'],
-                'password' => $request->data['password'],
-            ];
+        if ($request->ajax()) {
+            try {
+                $credentials = [
+                    'email'    => $request->data['email'],
+                    'password' => $request->data['password'],
+                ];
 
-            if (Auth::attempt($credentials)) {
-                $user = Auth::user();
-                if ($user->tokens()->delete()) {
-                    return response()->json([
-                        'success' => true,
-                        'user'    => $user,
-                        'token'   => $user->createToken('DBM')->accessToken,
-                    ]);
+                if (Auth::attempt($credentials)) {
+                    $user   = Auth::user();
+                    $expiry = Config::get('dbm.auth.token.expiry');
+                    if ($user->tokens()->delete()) {
+                        return response()->json([
+                            'success' => true,
+                            'user'    => $user,
+                            'token'   => $user->createToken('DBM')->accessToken,
+                            'expiry'  => $expiry,
+                        ]);
+                    }
+
                 }
-
+            } catch (\Exception $e) {
+                return response()->json([
+                    'success' => false,
+                    'errors'  => [$e->getMessage()],
+                ], 400);
             }
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'errors'  => [$e->getMessage()],
-            ], 400);
         }
-        // }
         return response()->json(["success" => false, "error" => "Unauthorised"], 401);
 
     }
@@ -73,27 +76,30 @@ class UserController extends Controller
         }
     }
 
+    /*
+
     public function logout(Request $request)
     {
-        if ($request->ajax()) {
-            // return response()->json(['success' => false]);
-            try {
-                $token = $request->user()->token();
-                if ($token->revoke()) {
-                    return response()->json(['success' => true, 'token' => $token]);
-                }
-
-            } catch (\Exception $e) {
-                return response()->json([
-                    'success' => false,
-                    'errors'  => [$e->getMessage()],
-                ], 400);
-            }
-
-        }
-
-        return response()->json(['success' => false, 'error' => 'Unauthorized']);
+    if ($request->ajax()) {
+    // return response()->json(['success' => false]);
+    try {
+    $token = $request->user()->token();
+    if ($token->revoke()) {
+    return response()->json(['success' => true, 'token' => $token]);
     }
+
+    } catch (\Exception $e) {
+    return response()->json([
+    'success' => false,
+    'errors'  => [$e->getMessage()],
+    ], 400);
+    }
+
+    }
+
+    return response()->json(['success' => false, 'error' => 'Unauthorized']);
+    }
+     */
 
     public function api()
     {

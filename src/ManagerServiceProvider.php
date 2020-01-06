@@ -2,6 +2,7 @@
 
 namespace CodexShaper\DBM;
 
+use CodexShaper\DBM\Commands\DatabaseAdmin;
 use CodexShaper\DBM\Commands\DatabaseBackup;
 use CodexShaper\DBM\Commands\DatabaseRestore;
 use CodexShaper\DBM\Commands\InstallDatabaseManager;
@@ -128,6 +129,7 @@ class ManagerServiceProvider extends ServiceProvider
     private function registerCommands()
     {
         $this->commands(InstallDatabaseManager::class);
+        $this->commands(DatabaseAdmin::class);
         $this->commands(DatabaseBackup::class);
         $this->commands(DatabaseRestore::class);
     }

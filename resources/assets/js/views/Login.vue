@@ -68,10 +68,13 @@
                       }
                     })
                     .then(res => {
-                        console.log(res.data);
-                        localStorage.setItem('dbm.user', JSON.stringify(res.data.user));
-                        localStorage.setItem('dbm.authToken', res.data.token);
-                        this.redirectTo();
+                        // console.log(res.data);
+                        localStorage.setItem('dbm.user', JSON.stringify(res.data.user))
+                        localStorage.setItem('dbm.authToken', res.data.token)
+                        let now = new Date()
+                        let expiry = now.getTime() + res.data.expiry
+                        localStorage.setItem('dbm.authTokenExpiry', expiry)
+                        this.redirectTo()
                     })
                     .catch(err => {
                         console.log(err)
@@ -81,7 +84,7 @@
             },
             redirectTo: function(){
                 if (localStorage.getItem('dbm.authToken') != null) {
-                    this.$emit('check');
+                    this.$emit('check')
                     if (this.$route.params.nextUrl != null) {
                         this.$router.push(this.$route.params.nextUrl)
                     } else {

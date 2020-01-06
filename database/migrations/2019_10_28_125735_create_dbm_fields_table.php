@@ -19,13 +19,14 @@ class CreateDBMFieldsTable extends Migration
             $table->string('name');
             $table->string('display_name');
             $table->string('type')->nullable();
-            $table->boolean('required')->default(false);
+            // $table->boolean('required')->default(false);
             $table->boolean('create')->default(true);
             $table->boolean('read')->default(true);
             $table->boolean('edit')->default(true);
             $table->boolean('delete')->default(true);
             $table->integer('order')->unsigned();
-            $table->text('extra')->nullable();
+            $table->string('function_name')->nullable();
+            $table->text('settings')->nullable();
             $table->timestamps();
         });
     }

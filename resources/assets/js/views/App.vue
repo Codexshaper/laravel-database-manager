@@ -128,22 +128,10 @@
                 
             },
             logout(){
-                axios.defaults.headers.common['Content-Type'] = 'application/json'
-                axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('dbm.authToken');
-                axios.delete('/api/database/logout/')
-                .then(res => {
-                    console.log(res.data);
-                    if(res.data.success == true) {
-                        localStorage.removeItem('dbm.authToken')
-                        localStorage.removeItem('dbm.user')
-                        this.check()
-                        this.$router.push({name: 'login'})
-                    }
-                    
-                })
-                .catch(err => console.log(err))
-
-                
+                localStorage.removeItem('dbm.authToken')
+                localStorage.removeItem('dbm.user')
+                this.check()
+                this.$router.push({name: 'login'})
             }
         }
     }

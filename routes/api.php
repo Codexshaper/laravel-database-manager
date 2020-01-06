@@ -53,7 +53,7 @@ Route::group([
     Route::put('/record', 'RecordController@update');
     Route::delete('/record', 'RecordController@delete');
     //User
-    Route::delete('/logout', 'UserController@logout')->middleware('auth:api');
+    // Route::delete('/logout', 'UserController@logout')->middleware('auth:api');
 });
 
 Route::group([
@@ -62,5 +62,5 @@ Route::group([
 ], function () {
     // User
     Route::post('/login', 'UserController@login');
-    Route::post('/oauth/token', 'UserController@getPersonalAccessToken');
+    // Route::post('/oauth/token', 'UserController@getPersonalAccessToken');
 });

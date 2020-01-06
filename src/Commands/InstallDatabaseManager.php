@@ -69,6 +69,8 @@ class InstallDatabaseManager extends Command
 
         $this->info('Migrating the database tables into your application');
         $this->call('migrate', ['--force' => $this->option('force')]);
+        $this->info('Install Passport');
+        $this->call('passport:install', ['--force' => $this->option('force')]);
 
         $this->info('Dumping the autoloaded files and reloading all new files');
         $composer = $this->findComposer();
@@ -77,7 +79,7 @@ class InstallDatabaseManager extends Command
         $process->setWorkingDirectory(base_path())->run();
 
         // Load Custom Database Manager routes into application's 'routes/web.php'
-        $this->info('Adding Database Manager routes to routes/web.php');
+        $this->info('Adding Database Manager routes');
         $web_routes_contents = $filesystem->get(base_path('routes/web.php'));
         $api_routes_contents = $filesystem->get(base_path('routes/api.php'));
         if (false === strpos($web_routes_contents, 'DBM::webRoutes();')) {
@@ -93,10 +95,10 @@ class InstallDatabaseManager extends Command
             );
         }
 
+        $this->info('Seeding...');
         // Seeding Dummy Data
         $class = 'DatabaseManagerSeeder';
         $file  = $this->seedersPath . $class . '.php';
-
         if (file_exists($file) && !class_exists($class)) {
             require_once $file;
         }

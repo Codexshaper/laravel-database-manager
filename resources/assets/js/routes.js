@@ -243,6 +243,14 @@ router.beforeEach((to, from, next) => {
                 name: "login", 
                 params: {nextUrl: to.fullPath}
             })
+        }else if(new Date().getTime() > localStorage.getItem('dbm.authTokenExpiry')){
+            localStorage.removeItem('dbm.user')
+            localStorage.removeItem('dbm.authToken')
+            localStorage.removeItem('dbm.authTokenExpiry')
+            router.push({
+                name: "login", 
+                params: {nextUrl: to.fullPath}
+            })
         } else {
             next() 
         }

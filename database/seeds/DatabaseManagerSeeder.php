@@ -14,7 +14,7 @@ class DatabaseManagerSeeder extends Seeder
     {
         $seeds = [
             'DatabasePermissionSeeder',
-            'DatabaseUserPerissionsSeeder',
+            // 'DatabaseUserPerissionsSeeder',
         ];
 
         foreach ($seeds as $class) {

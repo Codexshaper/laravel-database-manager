@@ -2,6 +2,7 @@
 
 namespace CodexShaper\DBM\Http\Controllers;
 
+use CodexShaper\DBM\Facades\Manager as DBM;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
 
@@ -17,6 +18,6 @@ class ManagerController extends Controller
      */
     public function assets(Request $request)
     {
-        return \DBM::assets($request->path);
+        return DBM::assets($request->path);
     }
 }

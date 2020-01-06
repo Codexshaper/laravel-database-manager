@@ -4,7 +4,7 @@ namespace CodexShaper\DBM\Http\Controllers;
 
 use CodexShaper\DBM\Database\Drivers\MongoDB\Type;
 use CodexShaper\DBM\Database\Schema\Table;
-use DBM;
+use CodexShaper\DBM\Facades\Manager as DBM;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 

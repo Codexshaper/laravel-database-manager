@@ -2,7 +2,7 @@
 
 namespace CodexShaper\DBM\Http\Controllers;
 
-use DBM;
+use CodexShaper\DBM\Facades\Manager as DBM;
 use Illuminate\Http\Request;
 
 class TemplateController extends Controller
