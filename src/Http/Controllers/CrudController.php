@@ -10,12 +10,20 @@ use Illuminate\Support\Str;
 
 class CrudController extends Controller
 {
-
+    /**
+     * Load all crud tables
+     *
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function index()
     {
         return view('dbm::app');
     }
-
+    /**
+     * Create|Update CRUD
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function storeOrUpdate(Request $request)
     {
         if ($request->ajax()) {
@@ -57,7 +65,13 @@ class CrudController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Create a new model if not exists
+     *
+     * @param array $table
+     *
+     * @return \Illuminate\Http\Response|true
+     */
     public function makeModel($table)
     {
         if (empty($table['model'])) {
@@ -75,7 +89,13 @@ class CrudController extends Controller
 
         return true;
     }
-
+    /**
+     * Create|Update Object
+     *
+     * @param array $table
+     *
+     * @return \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject|false
+     */
     public function addOrUpdateObject($table)
     {
         $object = DBM::Object()->where('name', $table['name'])->first();
@@ -104,7 +124,14 @@ class CrudController extends Controller
 
         return false;
     }
-
+    /**
+     * Create|Update Object Field
+     *
+     * @param array $column
+     * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
+     *
+     * @return \CodexShaper\DBM\Models\DBM_Field|\CodexShaper\DBM\Models\DBM_MongoField
+     */
     public function addOrUpdateField($column, $object)
     {
         $field = DBM::Field()->where([
@@ -133,7 +160,11 @@ class CrudController extends Controller
 
         $field->{$action}();
     }
-
+    /**
+     * Delete CRUD
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function delete(Request $request)
     {
         if ($request->ajax()) {
@@ -152,7 +183,13 @@ class CrudController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Generate an error
+     *
+     * @param array $errors
+     *
+     * @return \Illuminate\Http\Response
+     */
     protected function generateError($errors)
     {
         return response()->json([

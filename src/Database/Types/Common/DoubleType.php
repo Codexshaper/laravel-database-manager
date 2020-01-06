@@ -8,6 +8,11 @@ class DoubleType extends DoctrineFloatType
 {
     const NAME = 'double';
 
+    /**
+     * Register double type
+     *
+     * @return string
+     */
     public function getName()
     {
         return static::NAME;

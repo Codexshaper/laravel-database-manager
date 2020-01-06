@@ -9,7 +9,12 @@ class PolygonType extends Type
 {
     const NAME = 'polygon';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register polygon type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'polygon';
     }

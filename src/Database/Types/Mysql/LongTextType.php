@@ -9,7 +9,12 @@ class LongTextType extends Type
 {
     const NAME = 'longtext';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register longtext type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'longtext';
     }

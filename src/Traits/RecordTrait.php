@@ -29,6 +29,15 @@ trait RecordTrait
     protected $foreignModel;
     protected $localTable;
 
+    /**
+     * Store files in storage
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param string $column
+     * @param string $tableName
+     *
+     * @return array|string
+     */
     public function saveFiles($request, $column, $tableName)
     {
         $files  = $request->file($column);
@@ -51,7 +60,15 @@ trait RecordTrait
 
         return $value;
     }
-
+    /**
+     * Prepare fields to store
+     *
+     * @param array|string|int|double|bool $request
+     * @param string $tableName
+     * @param string $column
+     *
+     * @return array|string|int|double|bool
+     */
     public function prepareStoreField($value, $tableName, $column)
     {
         $value = is_array($value) ? json_encode($value) : $value;
@@ -72,7 +89,13 @@ trait RecordTrait
 
         return $value;
     }
-
+    /**
+     * Prepare record fields
+     *
+     * @param \Illuminate\Support\Collection $fields
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function prepareRecordFields($fields)
     {
         foreach ($fields as $key => $field) {
@@ -98,7 +121,14 @@ trait RecordTrait
 
         return $fields;
     }
-
+    /**
+     * Remove field when belongs_to relation
+     *
+     * @param \Illuminate\Support\Collection $fields
+     * @param string $foreignKey
+     *
+     * @return array
+     */
     public function removeRelationshipKeyForBelongsTo($fields, $foreignKey)
     {
         $results = [];
@@ -113,8 +143,17 @@ trait RecordTrait
 
         return $results;
     }
-
-    public function prepareJsonFieldData($records, $fields, $object, $findValue)
+    /**
+     * Prepare Record Details
+     *
+     * @param mixed $records
+     * @param \Illuminate\Support\Collection $fields
+     * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
+     * @param string $findValue
+     *
+     * @return array
+     */
+    public function prepareRecordDetails($records, $fields, $object, $findValue)
     {
         $newRecords = [];
         $newRecord  = new \stdClass();
@@ -141,7 +180,13 @@ trait RecordTrait
             "record"  => $newRecord,
         ];
     }
-
+    /**
+     * Get options for Dropdown, Selectbox, Radio button and other fields via controller
+     *
+     * @param object $field
+     *
+     * @return array|mixed
+     */
     public function getSettingOptions($field)
     {
         $options = $field->settings['options'];
@@ -153,7 +198,15 @@ trait RecordTrait
             return app($controllerName)->{$methodName}();
         }
     }
-
+    /**
+     * Check validation and return errors if fails
+     *
+     * @param array $fields
+     * @param object $columns
+     * @param string $action
+     *
+     * @return array
+     */
     public function validation($fields, $columns, $action = "create")
     {
         $errors = [];
@@ -176,7 +229,15 @@ trait RecordTrait
 
         return $errors;
     }
-
+    /**
+     * Prepare validation rules
+     *
+     * @param object $columns
+     * @param string $action
+     * @param string|object $settings
+     *
+     * @return array|string
+     */
     public function prepareRules($columns, $action, $settings)
     {
         $rules = '';
@@ -194,14 +255,27 @@ trait RecordTrait
 
         return $rules;
     }
-
+    /**
+     * Get field name
+     *
+     * @param string $collectionName
+     * @param string $fieldName
+     *
+     * @return string
+     */
     public function getFieldType($collectionName, $fieldName)
     {
         $collection = DBM_Collection::where('name', $collectionName)->first();
 
         return $collection->fields()->where('name', $fieldName)->first()->type;
     }
-
+    /**
+     * Generate errors and return response
+     *
+     * @param array $errors
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function generateError($errors)
     {
         return response()->json([
@@ -209,7 +283,14 @@ trait RecordTrait
             'errors'  => $errors,
         ], 400);
     }
-
+    /**
+     * Check Function name is available for MySQL
+     *
+     * @param array $fields
+     * @param string $column
+     *
+     * @return string|false
+     */
     public function hasFunction($fields, $column)
     {
         foreach ($fields as $field) {
@@ -220,13 +301,18 @@ trait RecordTrait
 
         return false;
     }
-
+    /**
+     * Execute MySQL Function
+     *
+     * @param string $functionName
+     * @param string|int|double|bool|null $column
+     *
+     * @return string|int|double|bool
+     */
     public function executeFunction($functionName, $value = null)
     {
         $signature = ($value != null) ? "{$functionName}('{$value}')" : "{$functionName}()";
-
-        $result = DB::raw("{$signature}");
-
+        $result    = DB::raw("{$signature}");
         return $result;
     }
 }

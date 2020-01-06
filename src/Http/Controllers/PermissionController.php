@@ -7,12 +7,20 @@ use Illuminate\Http\Request;
 
 class PermissionController extends Controller
 {
-
+    /**
+     * Get all permissions
+     *
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function index()
     {
         return view('dbm::app');
     }
-
+    /**
+     * Get all users with permissions
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function all(Request $request)
     {
         if ($request->ajax()) {
@@ -31,7 +39,6 @@ class PermissionController extends Controller
                 $users = DBM::model($user_model, $user_table)->get();
 
                 foreach ($users as $user) {
-                    // $user = $user_model::where($user_local_key, $user->{$user_local_key})->first();
                     $user->permissions = DBM::Object()
                         ->setManyToManyRelation(
                             $user,
@@ -73,7 +80,11 @@ class PermissionController extends Controller
         return response()->json(['success' => false]);
 
     }
-
+    /**
+     * Assign Permissions to User
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function assignUserPermissions(Request $request)
     {
         if ($request->ajax()) {
@@ -92,7 +103,11 @@ class PermissionController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Update User Permissions
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function syncUserPermissions(Request $request)
     {
         if ($request->ajax()) {
@@ -111,7 +126,11 @@ class PermissionController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Delete User Permissions
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function deleteUserPermissions(Request $request)
     {
         if ($request->ajax()) {
@@ -129,7 +148,13 @@ class PermissionController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Get User Relation
+     *
+     * @param object $user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
     protected function getRelation($user)
     {
         $user_model        = config('dbm.user.model');

@@ -7,9 +7,16 @@ use MongoDB\Client;
 
 trait MongoConnection
 {
+    /* @var object */
     protected static $connection;
+    /* @var string */
     protected $admin = 'admin';
 
+    /**
+     * Create new Mongo Client
+     *
+     * @return void
+     */
     public function __construct()
     {
         if (!self::$connection = DB::connection()->getMongoClient()) {
@@ -29,7 +36,11 @@ trait MongoConnection
         $this->admin = config('database.connections.mongodb.options.database', 'admin');
 
     }
-
+    /**
+     * Get mongo client instance
+     *
+     * @return \MongoDB\Client
+     */
     public function getMongoClient()
     {
         if (!self::$connection) {

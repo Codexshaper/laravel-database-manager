@@ -10,9 +10,14 @@ class BitVaryingType extends Type
     const NAME   = 'bit varying';
     const DBTYPE = 'varbit';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register bit varying type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $length = empty($field['length']) ? 255 : $field['length'];
+        $length = empty($fieldDeclaration['length']) ? 255 : $fieldDeclaration['length'];
 
         return "varbit({$length})";
     }

@@ -11,11 +11,20 @@ use Illuminate\Support\Facades\Route;
 
 class UserController extends Controller
 {
+    /**
+     * Show login form
+     *
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function showLoginForm()
     {
         return view('dbm::admin');
     }
-
+    /**
+     * Login User for API
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function login(Request $request)
     {
         if ($request->ajax()) {
@@ -28,14 +37,15 @@ class UserController extends Controller
                 if (Auth::attempt($credentials)) {
                     $user   = Auth::user();
                     $expiry = Config::get('dbm.auth.token.expiry');
-                    if ($user->tokens()->delete()) {
-                        return response()->json([
-                            'success' => true,
-                            'user'    => $user,
-                            'token'   => $user->createToken('DBM')->accessToken,
-                            'expiry'  => $expiry,
-                        ]);
+                    if (count($user->tokens) > 0) {
+                        $user->tokens()->delete();
                     }
+                    return response()->json([
+                        'success' => true,
+                        'user'    => $user,
+                        'token'   => $user->createToken('DBM')->accessToken,
+                        'expiry'  => $expiry,
+                    ]);
 
                 }
             } catch (\Exception $e) {
@@ -48,7 +58,11 @@ class UserController extends Controller
         return response()->json(["success" => false, "error" => "Unauthorised"], 401);
 
     }
-
+    /**
+     * Get access token for API
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getPersonalAccessToken(Request $request)
     {
         try {
@@ -100,7 +114,11 @@ class UserController extends Controller
     return response()->json(['success' => false, 'error' => 'Unauthorized']);
     }
      */
-
+    /**
+     * Load API component
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function api()
     {
         if (Auth::guest()) {

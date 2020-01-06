@@ -9,10 +9,15 @@ class VarBinaryType extends Type
 {
     const NAME = 'varbinary';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register varbinary type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $field['length'] = empty($field['length']) ? 255 : $field['length'];
+        $fieldDeclaration['length'] = empty($fieldDeclaration['length']) ? 255 : $fieldDeclaration['length'];
 
-        return "varbinary({$field['length']})";
+        return "varbinary({$fieldDeclaration['length']})";
     }
 }

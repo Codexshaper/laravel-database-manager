@@ -14,6 +14,13 @@ class UpdateManager
     protected $newTable;
     protected $originalTable;
 
+    /**
+     * Update table
+     *
+     * @param array $table
+     *
+     * @return void
+     */
     public function update($table = [])
     {
         if (!is_array($table)) {
@@ -21,10 +28,6 @@ class UpdateManager
         }
 
         $tableName = $table['oldName'];
-
-        // if (!is_array($tableName)) {
-        //     $tableName = [$tableName];
-        // }
 
         if (!SchemaManager::getInstance()->tablesExist($tableName)) {
             throw SchemaException::tableDoesNotExist($table['oldName']);
@@ -36,7 +39,13 @@ class UpdateManager
 
         $this->updateTable();
     }
-
+    /**
+     * Get all table details
+     *
+     * @param string $tableName
+     *
+     * @return \CodexShaper\DBM\Database\Schema\Table
+     */
     public static function listTableDetails($tableName)
     {
         $columns = SchemaManager::getInstance()->listTableColumns($tableName);
@@ -50,7 +59,11 @@ class UpdateManager
 
         return new DoctrineTable($tableName, $columns, $indexes, $foreignKeys, false, []);
     }
-
+    /**
+     * Update table
+     *
+     * @return void
+     */
     public function updateTable()
     {
         $newTableName = '';
@@ -83,7 +96,11 @@ class UpdateManager
             SchemaManager::getInstance()->alterTable($tableDiff);
         }
     }
-
+    /**
+     * Rename columns
+     *
+     * @return void
+     */
     protected function renameColumns()
     {
         $renamedColumnsDiff            = new TableDiff($this->data['oldName']);
@@ -105,10 +122,8 @@ class UpdateManager
 
         if ($renamedColumnsDiff) {
             SchemaManager::getInstance()->alterTable($renamedColumnsDiff);
-
             // Refresh original table after renaming the columns
             $this->originalTable = SchemaManager::getInstance()->listTableDetails($this->data['oldName']);
         }
-
     }
 }

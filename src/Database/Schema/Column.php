@@ -7,7 +7,14 @@ use Doctrine\DBAL\Types\Type as DoctrineType;
 
 class Column
 {
-    public static function create(array $column)
+    /**
+     * Create new column
+     *
+     * @param array $column
+     *
+     * @return \Doctrine\DBAL\Schema\Column
+     */
+    public static function create($column)
     {
 
         $name = $column['name'];
@@ -20,7 +27,11 @@ class Column
 
         return $DoctrineColumn;
     }
-
+    /**
+     * Get all columns as an array
+     *
+     * @return array
+     */
     public static function toArray(DoctrineColumn $column)
     {
         $type = $column->getType();

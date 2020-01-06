@@ -10,7 +10,14 @@ class Index
     const UNIQUE  = 'UNIQUE';
     const INDEX   = 'INDEX';
 
-    public static function create(array $index)
+    /**
+     * Create new index
+     *
+     * @param array $index
+     *
+     * @return \Doctrine\DBAL\Schema\Index
+     */
+    public static function create($index)
     {
 
         $indexColumns = $index['columns'];
@@ -50,8 +57,16 @@ class Index
         return new DoctrineIndex($indexName, $indexColumns, $isUnique, $isPrimary, $flags, $options);
 
     }
-
-    public static function createName(array $columns, $type, $table = null)
+    /**
+     * Get index name
+     *
+     * @param array $columns
+     * @param string $type
+     * @param string|null $table
+     *
+     * @return \Doctrine\DBAL\Schema\Index
+     */
+    public static function createName($columns, $type, $table = null)
     {
         $table = isset($table) ? trim($table) . '_' : '';
         $type  = trim($type);
@@ -59,7 +74,11 @@ class Index
 
         return str_replace(['-', '.'], '_', $name);
     }
-
+    /**
+     * Get all indexes as an array
+     *
+     * @return array
+     */
     public static function toArray(DoctrineIndex $index)
     {
         return [
@@ -74,7 +93,11 @@ class Index
             "options"     => $index->getOptions(),
         ];
     }
-
+    /**
+     * Get index type
+     *
+     * @return string
+     */
     public static function getType(DoctrineIndex $index)
     {
         if ($index->isPrimary()) {

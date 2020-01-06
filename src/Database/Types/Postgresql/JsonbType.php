@@ -9,7 +9,12 @@ class JsonbType extends Type
 {
     const NAME = 'jsonb';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register jsonb type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'jsonb';
     }

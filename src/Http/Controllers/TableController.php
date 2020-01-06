@@ -8,9 +8,13 @@ use Illuminate\Http\Request;
 
 class TableController extends Controller
 {
+    /**
+     * Get all Tables
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function all(Request $request)
     {
-        // return response()->json(['success' => false, 'data' => escapeshellarg($request->perPage)]);
         if ($request->ajax()) {
 
             if (($response = DBM::authorize('database.browse')) !== true) {
@@ -47,7 +51,11 @@ class TableController extends Controller
         }
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Get Table Details
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getTable(Request $request)
     {
         if ($request->ajax()) {
@@ -95,7 +103,11 @@ class TableController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Get Table Columns
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getTableColumns(Request $request)
     {
         if ($request->ajax()) {

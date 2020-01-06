@@ -6,7 +6,11 @@ use MongoDB\Model\IndexInfo;
 
 trait IndexTrait
 {
-
+    /**
+     * get common types
+     *
+     * @return  string
+     */
     protected static function getCommonType(IndexInfo $index)
     {
         $type = "";
@@ -23,7 +27,11 @@ trait IndexTrait
 
         return $type;
     }
-
+    /**
+     * get special types
+     *
+     * @return  string
+     */
     protected static function getSpecialType(IndexInfo $index)
     {
         if (static::checkUnique($index)) {
@@ -50,7 +58,11 @@ trait IndexTrait
 
         return "";
     }
-
+    /**
+     * get defaults types
+     *
+     * @return  string
+     */
     protected static function getDefaultType(IndexInfo $index)
     {
         $name     = $index->getName();
@@ -67,38 +79,66 @@ trait IndexTrait
 
         return "";
     }
-
-    protected static function checkUnique($index)
+    /**
+     * check Unique
+     *
+     * @return  bool
+     */
+    protected static function checkUnique(IndexInfo $index)
     {
         return $index->isUnique() && !$index->isSparse() && !static::checkDescending($index) ? true : false;
     }
-
-    protected static function checkUniqueDesc($index)
+    /**
+     * check Unique Descending
+     *
+     * @return  bool
+     */
+    protected static function checkUniqueDesc(IndexInfo $index)
     {
         return $index->isUnique() && !$index->isSparse() && static::checkDescending($index) ? true : false;
     }
-
-    protected static function checkSparse($index)
+    /**
+     * check Sparse
+     *
+     * @return  bool
+     */
+    protected static function checkSparse(IndexInfo $index)
     {
         return $index->isSparse() && !static::checkDescending($index) ? true : false;
     }
-
-    protected static function checkSparseUnique($index)
+    /**
+     * check Sparse Unique
+     *
+     * @return  bool
+     */
+    protected static function checkSparseUnique(IndexInfo $index)
     {
         return $index->isSparse() && $index->isUnique() && !static::checkDescending($index) ? true : false;
     }
-
-    protected static function checkSparseUniqueDesc($index)
+    /**
+     * check Sparse Unique Descending
+     *
+     * @return  bool
+     */
+    protected static function checkSparseUniqueDesc(IndexInfo $index)
     {
         return $index->isSparse() && $index->isUnique() && static::checkDescending($index) ? true : false;
     }
-
-    protected static function checkSparseDesc($index)
+    /**
+     * check Sparse Descending
+     *
+     * @return  bool
+     */
+    protected static function checkSparseDesc(IndexInfo $index)
     {
         return $index->isSparse() && static::checkDescending($index) ? true : false;
     }
-
-    protected static function checkDescending($index)
+    /**
+     * check Descending
+     *
+     * @return  bool
+     */
+    protected static function checkDescending(IndexInfo $index)
     {
         $keys = $index->getKey();
 

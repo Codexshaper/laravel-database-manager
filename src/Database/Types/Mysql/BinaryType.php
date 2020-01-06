@@ -9,10 +9,15 @@ class BinaryType extends Type
 {
     const NAME = 'binary';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register binary type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $field['length'] = empty($field['length']) ? 255 : $field['length'];
+        $fieldDeclaration['length'] = empty($fieldDeclaration['length']) ? 255 : $fieldDeclaration['length'];
 
-        return "binary({$field['length']})";
+        return "binary({$fieldDeclaration['length']})";
     }
 }

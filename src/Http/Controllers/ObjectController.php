@@ -11,7 +11,11 @@ use Illuminate\Support\Str;
 
 class ObjectController extends Controller
 {
-
+    /**
+     * Get all objects
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function all(Request $request)
     {
         if ($request->ajax()) {
@@ -37,7 +41,14 @@ class ObjectController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Filter CRUD Tables
+     * Check CRUD exists or not
+     *
+     * @param mixed $tables
+     *
+     * @return array
+     */
     public function filterCrudTables($tables)
     {
         $objects   = DBM::Object()->all();
@@ -62,7 +73,11 @@ class ObjectController extends Controller
 
         return $newTables;
     }
-
+    /**
+     * Get Object details
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getObjectDetails(Request $request)
     {
         if ($request->ajax()) {
@@ -101,7 +116,13 @@ class ObjectController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Get Object
+     *
+     * @param string $tableName
+     *
+     * @return array
+     */
     public function getObject($tableName)
     {
         $isCrudExists = false;
@@ -137,7 +158,13 @@ class ObjectController extends Controller
         ];
 
     }
-
+    /**
+     * Prepare Object Fields
+     *
+     * @param array $table
+     *
+     * @return array
+     */
     public function prepareFields($table)
     {
         $fields = [];
@@ -163,7 +190,13 @@ class ObjectController extends Controller
 
         return $fields;
     }
-
+    /**
+     * Get Relationship details
+     *
+     * @param string $tableName
+     *
+     * @return array
+     */
     public function getRelationshipDetails($tableName)
     {
         $tables = Table::all();
@@ -179,7 +212,13 @@ class ObjectController extends Controller
             'details' => $relationshipDetails,
         ];
     }
-
+    /**
+     * Get errors
+     *
+     * @param array $errors
+     *
+     * @return \Illuminate\Http\Response
+     */
     protected function generateError($errors)
     {
         return response()->json([

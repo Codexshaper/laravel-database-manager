@@ -17,6 +17,11 @@ use Illuminate\Pagination\Paginator;
 
 class Table
 {
+    /**
+     * Returns a list of all tables in the current database.
+     *
+     * @return array|string[]
+     */
     public static function all()
     {
         // MongoDb
@@ -25,7 +30,13 @@ class Table
         }
         return SchemaManager::getInstance()->listTableNames();
     }
-
+    /**
+     * Get table details
+     *
+     * @param string $tableName
+     *
+     * @return array
+     */
     public static function getTable($tableName)
     {
         if (Driver::isMongoDB()) {
@@ -48,7 +59,13 @@ class Table
             'options'        => $options,
         ];
     }
-
+    /**
+     * Get column names
+     *
+     * @param string $tableName
+     *
+     * @return array
+     */
     public static function getColumnsName($tableName)
     {
         $columns = static::getTable($tableName)['columns'];
@@ -61,7 +78,13 @@ class Table
 
         return $columnsName;
     }
-
+    /**
+     * Create new table
+     *
+     * @param array $table
+     *
+     * @return void
+     */
     public static function create($table = [])
     {
         if (!is_array($table)) {
@@ -76,9 +99,15 @@ class Table
         $newTable = self::prepareTable($table);
 
         $schema = SchemaManager::getInstance();
-        return $schema->createTable($newTable);
+        $schema->createTable($newTable);
     }
-
+    /**
+     * Update table
+     *
+     * @param array $table
+     *
+     * @return true|void
+     */
     public static function update($table = [])
     {
         if (!is_array($table)) {
@@ -91,7 +120,13 @@ class Table
 
         (new UpdateManager())->update($table);
     }
-
+    /**
+     * Drop table
+     *
+     * @param string $tableName
+     *
+     * @return true|void
+     */
     public static function drop($tableName)
     {
         if (Driver::isMongoDB()) {
@@ -100,7 +135,13 @@ class Table
 
         return SchemaManager::getInstance()->dropTable($tableName);
     }
-
+    /**
+     * Prepare table
+     *
+     * @param array $table
+     *
+     * @return \Doctrine\DBAL\Schema\Table
+     */
     public static function prepareTable($table = [])
     {
 
@@ -109,9 +150,6 @@ class Table
         }
 
         Type::registerCustomTypes();
-
-        // DoctrineType::addType('varchar', 'App\CodexShaper\Database\Types\Common\VarCharType');
-        // SchemaManager::getInstance()->getDatabasePlatform()->registerDoctrineTypeMapping('db_varchar', 'varchar');
 
         $conn = 'database.connections.' . config('database.default');
 
@@ -150,7 +188,11 @@ class Table
 
         return new DoctrineTable($tableName, $DoctrineColumns, $DoctrineIndexes, $DoctrineForeignKeys, false, $options);
     }
-
+    /**
+     * Get all columns
+     *
+     * @return array
+     */
     public static function getColumns(DoctrineTable $table)
     {
         $columns = [];
@@ -166,7 +208,11 @@ class Table
 
         return $columns;
     }
-
+    /**
+     * Get all indexes
+     *
+     * @return array
+     */
     public static function getIndexes(DoctrineTable $table)
     {
         $indexes = [];
@@ -180,7 +226,11 @@ class Table
 
         return $indexes;
     }
-
+    /**
+     * Get all foreign keys
+     *
+     * @return array
+     */
     public static function getForeignKeys(DoctrineTable $table)
     {
         $foreignKeys = [];
@@ -191,7 +241,13 @@ class Table
 
         return $foreignKeys;
     }
-
+    /**
+     * Check table exists or not
+     *
+     * @param string $tableName
+     *
+     * @return true
+     */
     public static function exists($tableName)
     {
         if (Driver::isMongoDB()) {
@@ -204,7 +260,16 @@ class Table
 
         return true;
     }
-
+    /**
+     * Get tables with pagination
+     *
+     * @param int $perPage
+     * @param string|null $page
+     * @param array $options
+     * @param string $query
+     *
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
     public static function paginate($perPage = 15, $page = null, $options = [], $query = "")
     {
         $page            = $page ?: (Paginator::resolveCurrentPage() ?: 1);

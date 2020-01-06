@@ -7,12 +7,20 @@ use Doctrine\DBAL\Types\Type as DoctrineType;
 
 abstract class Type extends DoctrineType
 {
-
+    /**
+     * Get type name
+     *
+     * @return string
+     */
     public function getName()
     {
         return static::NAME;
     }
-
+    /**
+     * Register Custom type
+     *
+     * @return void
+     */
     public static function registerCustomTypes()
     {
         $platform     = SchemaManager::getInstance()->getDatabasePlatform();
@@ -37,7 +45,13 @@ abstract class Type extends DoctrineType
             $platform->registerDoctrineTypeMapping($dbType, $name);
         }
     }
-
+    /**
+     * Get custom types
+     *
+     * @param string $platformName
+     *
+     * @return array
+     */
     protected static function getCustomTypes($platformName)
     {
         $customPlatformDir = __DIR__ . DIRECTORY_SEPARATOR . $platformName . DIRECTORY_SEPARATOR;
@@ -51,7 +65,11 @@ abstract class Type extends DoctrineType
 
         return $customTypes;
     }
-
+    /**
+     * Get Type categories
+     *
+     * @return array
+     */
     public static function getTypeCategories()
     {
 

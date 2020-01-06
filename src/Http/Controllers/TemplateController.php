@@ -7,7 +7,11 @@ use Illuminate\Http\Request;
 
 class TemplateController extends Controller
 {
-
+    /**
+     * Update Templates
+     *
+     * @return void
+     */
     public function updateTemplates(Request $request)
     {
         if (is_array($request->templates) && count($request->templates) > 0) {
@@ -31,7 +35,11 @@ class TemplateController extends Controller
             }
         }
     }
-
+    /**
+     * Create a new template
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function save(Request $request)
     {
         $field = $request->template;
@@ -67,7 +75,11 @@ class TemplateController extends Controller
         }
         return response()->json(['success' => true, 'template' => $request->all()]);
     }
-
+    /**
+     * Remove a template
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function remove(Request $request)
     {
         if ($template = DBM::Template()->where('name', $request->name)->first()) {

@@ -10,11 +10,16 @@ class SmallIntType extends Type
     const NAME   = 'smallint';
     const DBTYPE = 'int2';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register smallint type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $commonIntegerTypeDeclaration = call_protected_method($platform, '_getCommonIntegerTypeDeclarationSQL', $field);
+        $commonIntegerTypeDeclaration = call_protected_method($platform, '_getCommonIntegerTypeDeclarationSQL', $fieldDeclaration);
 
-        $type = $field['autoincrement'] ? 'smallserial' : 'smallint';
+        $type = $fieldDeclaration['autoincrement'] ? 'smallserial' : 'smallint';
 
         return $type . $commonIntegerTypeDeclaration;
     }

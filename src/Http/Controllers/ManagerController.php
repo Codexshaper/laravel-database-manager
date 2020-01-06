@@ -10,7 +10,7 @@ class ManagerController extends Controller
 {
 
     /**
-     * Load menu builder assests
+     * Load database manager assests
      *
      * @param  \Illuminate\Http\Request  $request
      *

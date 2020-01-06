@@ -9,7 +9,12 @@ class BlobType extends Type
 {
     const NAME = 'blob';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register blob type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'blob';
     }

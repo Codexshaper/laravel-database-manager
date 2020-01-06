@@ -15,30 +15,56 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 trait Relationships
 {
-    // Common
+    /*@var object*/
     protected $parent;
+    /*@var string|object*/
     protected $related;
+    /*@var string|null*/
     protected $foreignKey;
+    /*@var string|null*/
     protected $localKey;
+    /*@var string|null*/
     protected $relation;
-    // Many To Many
+    /*@var string|null*/
     protected $pivotTable;
+    /*@var string|null*/
     protected $parentPivotKey;
+    /*@var string|null*/
     protected $relatedPivotKey;
+    /*@var string|null*/
     protected $parentKey;
+    /*@var string|null*/
     protected $relatedKey;
-    // Has Through
+    /*@var string*/
     protected $through;
+    /*@var string|null*/
     protected $firstKey;
+    /*@var string|null*/
     protected $secondKey;
+    /*@var string|null*/
     protected $secondLocalKey;
-    // Morph
+    /*@var string*/
     protected $morphName;
+    /*@var string|null*/
     protected $morphType;
+    /*@var string|null*/
     protected $morphId;
+    /*@var string|null*/
     protected $morphLocalKey;
+    /*@var string|null*/
     protected $inverse;
 
+    /**
+     * Set Common Relation
+     *
+     * @param  object  $parent
+     * @param  string|object  $related
+     * @param  string|null  $foreignKey
+     * @param  string|null  $localKey
+     * @param  string|null  $relation
+     *
+     * @return $this
+     */
     public function setCommonRelation($parent, $related, $foreignKey = null, $localKey = null, $relation = null)
     {
 
@@ -50,7 +76,20 @@ trait Relationships
 
         return $this;
     }
-
+    /**
+     * Set Many to Many Relation
+     *
+     * @param  object  $parent
+     * @param  string|object  $related
+     * @param  string|null  $pivotTable
+     * @param  string|null  $parentPivotKey
+     * @param  string|null  $relatedPivotKey
+     * @param  string|null  $parentKey
+     * @param  string|null  $relatedKey
+     * @param  string|null  $relation
+     *
+     * @return $this
+     */
     public function setManyToManyRelation(
         $parent,
         $related,
@@ -72,7 +111,19 @@ trait Relationships
 
         return $this;
     }
-
+    /**
+     * Set Has Through Relation
+     *
+     * @param  object  $parent
+     * @param  string|object  $related
+     * @param  string  $through
+     * @param  string|null  $firstKey
+     * @param  string|null  $secondKey
+     * @param  string|null  $localKey
+     * @param  string|null  $secondLocalKey
+     *
+     * @return $this
+     */
     public function setHasThroughRelation(
         $parent,
         $related,
@@ -92,7 +143,18 @@ trait Relationships
 
         return $this;
     }
-
+    /**
+     * Set Morph Relation
+     *
+     * @param  object  $parent
+     * @param  string|object  $related
+     * @param  string  $morphName
+     * @param  string|null  $morphType
+     * @param  string|null  $morphId
+     * @param  string|null  $morphLocalKey
+     *
+     * @return $this
+     */
     public function setMorphRelation(
         $parent,
         $related,
@@ -110,7 +172,17 @@ trait Relationships
 
         return $this;
     }
-
+    /**
+     * Set MorphTo Relation
+     *
+     * @param  object  $parent
+     * @param  string|null  $morphName
+     * @param  string|null  $morphType
+     * @param  string|null  $morphId
+     * @param  string|null  $morphLocalKey
+     *
+     * @return $this
+     */
     public function setMorphToRelation(
         $parent,
         $morphName = null,
@@ -126,7 +198,21 @@ trait Relationships
 
         return $this;
     }
-
+    /**
+     * Set MorphToMany Relation
+     *
+     * @param  object  $parent
+     * @param  string|object  $related
+     * @param  string  $morphName
+     * @param  string|null  $pivotTable
+     * @param  string|null  $parentPivotKey
+     * @param  string|null  $relatedPivotKey
+     * @param  string|null  $parentKey
+     * @param  string|null  $relatedKey
+     * @param  string|null  $inverse
+     *
+     * @return $this
+     */
     public function setMorphToManyRelation(
         $parent,
         $related,
@@ -150,20 +236,17 @@ trait Relationships
 
         return $this;
     }
-
-    /**
-     * Get the phone record associated with the user.
+    /*
+     * Relationship
      */
     public function has_one(): HasOne
     {
         return $this->parent->hasOne($this->related, $this->foreignKey, $this->localKey);
     }
-
     public function has_many(): HasMany
     {
         return $this->parent->hasMany($this->related, $this->foreignKey, $this->localKey);
     }
-
     public function belongs_to_many(): BelongsToMany
     {
         return $this->parent->belongsToMany(
@@ -176,12 +259,10 @@ trait Relationships
             $this->relation
         );
     }
-
     public function belongs_to(): BelongsTo
     {
         return $this->parent->belongsTo($this->related, $this->foreignKey, $this->localKey, $this->relation);
     }
-
     public function has_one_through(): HasOneThrough
     {
         return $this->parent->hasOneThrough(
@@ -193,7 +274,6 @@ trait Relationships
             $this->secondLocalKey
         );
     }
-
     public function has_many_through(): HasManyThrough
     {
         return $this->parent->hasManyThrough(
@@ -205,7 +285,6 @@ trait Relationships
             $this->secondLocalKey
         );
     }
-
     public function morph_one(): MorphOne
     {
         return $this->parent->morphOne(
@@ -216,7 +295,6 @@ trait Relationships
             $this->morphLocalKey
         );
     }
-
     public function morph_to(): MorphTo
     {
         return $this->parent->morphTo(
@@ -226,7 +304,6 @@ trait Relationships
             $this->morphLocalKey
         );
     }
-
     public function morph_many(): MorphMany
     {
         return $this->parent->morphMany(
@@ -237,7 +314,6 @@ trait Relationships
             $this->morphLocalKey
         );
     }
-
     public function morph_to_many(): MorphToMany
     {
         return $this->parent->morphToMany(
@@ -251,7 +327,6 @@ trait Relationships
             $this->inverse
         );
     }
-
     public function morphed_by_many(): MorphToMany
     {
         return $this->parent->morphedByMany(

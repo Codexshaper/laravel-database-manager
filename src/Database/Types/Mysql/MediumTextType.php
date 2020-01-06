@@ -9,7 +9,12 @@ class MediumTextType extends Type
 {
     const NAME = 'mediumtext';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register mediumtext type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'mediumtext';
     }

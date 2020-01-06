@@ -11,6 +11,15 @@ trait RecordRelationship
     protected $belongs_to_many;
     protected $belongs_to;
 
+    /**
+     * Prepare Relationship data to view
+     *
+     * @param mixed $records
+     * @param \Illuminate\Support\Collection $browseFields
+     * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
+     *
+     * @return mixed
+     */
     public function prepareRelationshipData($records, $browseFields, $object)
     {
         foreach ($records as $item => $record) {
@@ -75,7 +84,16 @@ trait RecordRelationship
 
         return $records;
     }
-
+    /**
+     * Create new Relationship
+     *
+     * @param \Illuminate\Support\Collection $fields
+     * @param object $columns
+     * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
+     * @param  object $table
+     *
+     * @return void
+     */
     public function storeRelationshipData($fields, $columns, $object, $table)
     {
         foreach ($fields as $field) {
@@ -108,7 +126,16 @@ trait RecordRelationship
             }
         }
     }
-
+    /**
+     * Update Relationship
+     *
+     * @param \Illuminate\Support\Collection $fields
+     * @param object $columns
+     * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
+     * @param  object $table
+     *
+     * @return void
+     */
     public function updateRelationshipData($fields, $columns, $object, $table)
     {
         foreach ($fields as $field) {
@@ -144,7 +171,15 @@ trait RecordRelationship
             }
         }
     }
-
+    /**
+     * Remove Relationship
+     *
+     * @param object $field
+     * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
+     * @param  object $table
+     *
+     * @return void
+     */
     public function removeRelationshipData($field, $object, $table)
     {
         if ($field->type == 'relationship') {

@@ -22,11 +22,20 @@ use Illuminate\Support\Str;
 
 class Manager
 {
+    /**
+     * Include Web routes
+     *
+     * @return void
+     */
     public function webRoutes()
     {
         require __DIR__ . '/../routes/web.php';
     }
-
+    /**
+     * Include API routes
+     *
+     * @return void
+     */
     public function apiRoutes()
     {
         require __DIR__ . '/../routes/api.php';
@@ -72,17 +81,34 @@ class Manager
 
         return response('', 404);
     }
-
+    /**
+     * Get Model Namespace
+     *
+     * @return string
+     */
     public function getModelNamespace()
     {
         return trim(config('dbm.modal_namespace', App::getNamespace()), '\\');
     }
-
+    /**
+     * Get model name with namespace
+     *
+     * @param string $className
+     *
+     * @return string
+     */
     public function generateModelName($className)
     {
         return static::getModelNamespace() . '\\' . ucfirst(Str::singular($className));
     }
-
+    /**
+     * Make new model
+     *
+     * @param string $model
+     * @param string $table
+     *
+     * @return void
+     */
     public function makeModel($model, $table)
     {
         try {
@@ -118,7 +144,13 @@ class Manager
         }
 
     }
-
+    /**
+     * Make new controller
+     *
+     * @param string $controller
+     *
+     * @return void
+     */
     public function makeController($controller)
     {
         try {
@@ -131,7 +163,14 @@ class Manager
         }
 
     }
-
+    /**
+     * Create new model instance
+     *
+     * @param string $model
+     * @param string|null $table
+     *
+     * @return object
+     */
     public function model($model, $table = null)
     {
         if ($table == null) {
@@ -140,7 +179,11 @@ class Manager
 
         return (new $model)->setTable($table);
     }
-
+    /**
+     * Create new model instance
+     *
+     * @return \CodexShaper\DBM\Models\DBM_MongoObject|\CodexShaper\DBM\Models\DBM_Object
+     */
     public function Object()
     {
         if (Driver::isMongoDB()) {
@@ -149,7 +192,11 @@ class Manager
 
         return new DBM_Object;
     }
-
+    /**
+     * Create new model instance
+     *
+     * @return \CodexShaper\DBM\Models\DBM_MongoField|\CodexShaper\DBM\Models\DBM_Field
+     */
     public function Field()
     {
         if (Driver::isMongoDB()) {
@@ -158,7 +205,11 @@ class Manager
 
         return new DBM_Field;
     }
-
+    /**
+     * Create new model instance
+     *
+     * @return \CodexShaper\DBM\Models\DBM_MongoPermission|\CodexShaper\DBM\Models\DBM_Permission
+     */
     public function Permission()
     {
         if (Driver::isMongoDB()) {
@@ -167,7 +218,11 @@ class Manager
 
         return new DBM_Permission;
     }
-
+    /**
+     * Create new model instance
+     *
+     * @return \CodexShaper\DBM\Models\DBM_MongoTemplate|\CodexShaper\DBM\Models\DBM_Template
+     */
     public function Template()
     {
         if (Driver::isMongoDB()) {
@@ -176,7 +231,11 @@ class Manager
 
         return new DBM_Template;
     }
-
+    /**
+     * Get all templates
+     *
+     * @return array
+     */
     public function templates()
     {
         $templates    = static::Template()->get();
@@ -200,20 +259,22 @@ class Manager
 
         return $newTemplates;
     }
-
-    /*
-     * File System
+    /**
+     * Get file path prefix
+     *
+     * @param string @driver
+     *
+     * @return string
      */
-
     public function getPathPrefix($driver = 'local')
     {
         return trim(Storage::disk($driver)->getDriver()->getAdapter()->getPathPrefix(), DIRECTORY_SEPARATOR);
     }
-
-    /*
-     * Permission
+    /**
+     * Get all templates
+     *
+     * @return \Illuminate\Support\Collection
      */
-
     public function userPermissions()
     {
         $user = Auth::user();
@@ -228,7 +289,11 @@ class Manager
             )
             ->belongs_to_many;
     }
-
+    /**
+     * Check user loggedin or not
+     *
+     * @return \Illuminate\Http\Response|true
+     */
     public function isLoggedIn()
     {
         if (Auth::guest()) {
@@ -237,7 +302,14 @@ class Manager
 
         return true;
     }
-
+    /**
+     * Check user permission
+     *
+     * @param string $prefix
+     * @param string $slug
+     *
+     * @return string
+     */
     public function checkPermission($prefix, $slug)
     {
         if (Auth::guest()) {
@@ -260,7 +332,11 @@ class Manager
         return 'not_authorized';
 
     }
-
+    /**
+     * Check user authorization
+     *
+     * @return \Illuminate\Http\Response|true
+     */
     public function authorize($permission)
     {
         $permission = explode('.', $permission);

@@ -8,6 +8,11 @@ class NumericType extends DoctrineDecimalType
 {
     const NAME = 'numeric';
 
+    /**
+     * Register numeric type
+     *
+     * @return string
+     */
     public function getName()
     {
         return static::NAME;

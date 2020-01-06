@@ -9,9 +9,14 @@ class BitType extends Type
 {
     const NAME = 'bit';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register bit type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $length = empty($field['length']) ? 1 : $field['length'];
+        $length = empty($fieldDeclaration['length']) ? 1 : $fieldDeclaration['length'];
 
         return "bit({$length})";
     }

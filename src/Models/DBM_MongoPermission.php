@@ -6,12 +6,18 @@ use Jenssegers\Mongodb\Eloquent\Model;
 
 class DBM_MongoPermission extends Model
 {
+    /*@var string*/
     protected $collection = 'dbm_permissions';
-
+    /*@var array*/
     protected $fillable = [
         'name', 'slug', 'prefix',
     ];
 
+    /**
+     * Get all users for permission
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public function users()
     {
         return $this->belongsToMany(

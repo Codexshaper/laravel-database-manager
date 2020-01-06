@@ -10,6 +10,11 @@ class Index
 {
     use IndexTrait;
 
+    /**
+     * Get Indexes
+     *
+     * @return  array
+     */
     public static function getIndexes(Collection $collection)
     {
         $listIndexes = $collection->listIndexes();
@@ -31,7 +36,11 @@ class Index
 
         return $indexes;
     }
-
+    /**
+     * Get index type
+     *
+     * @return  string
+     */
     public static function getType(IndexInfo $index)
     {
         $type = static::getCommonType($index);
@@ -46,7 +55,14 @@ class Index
 
         return $type;
     }
-
+    /**
+     * Set Indexes
+     *
+     * @param   \MongoDB\Collection     $collection
+     * @param   array   $indexes
+     *
+     * @return  bool
+     */
     public static function setIndexes(Collection $collection, $indexes)
     {
 
@@ -76,7 +92,13 @@ class Index
 
         return true;
     }
-
+    /**
+     * Get Index Details
+     *
+     * @param   string   $type
+     *
+     * @return  array
+     */
     public static function getIndexDetails($type)
     {
         $indexType = 1;

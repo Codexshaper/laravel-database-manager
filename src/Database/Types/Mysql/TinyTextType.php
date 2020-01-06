@@ -9,7 +9,12 @@ class TinyTextType extends Type
 {
     const NAME = 'tinytext';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register tinytext type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'tinytext';
     }

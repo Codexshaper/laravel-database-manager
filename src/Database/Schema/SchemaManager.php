@@ -8,11 +8,20 @@ class SchemaManager
 {
     protected static $schemaManager;
 
+    /**
+     * Create SchemaManager instance
+     *
+     * @return void
+     */
     public function __construct()
     {
         self::$schemaManager = DB::connection()->getDoctrineSchemaManager();
     }
-
+    /**
+     * get SchemaManager instance
+     *
+     * @return \Doctrine\DBAL\Schema\AbstractSchemaManager
+     */
     public static function getInstance()
     {
         if (!self::$schemaManager) {

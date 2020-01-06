@@ -10,6 +10,11 @@ class SetType extends Type
 {
     const NAME = 'set';
 
+    /**
+     * Register set type
+     *
+     * @return string
+     */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         throw new \Exception('Set type is not supported');
@@ -23,6 +28,6 @@ class SetType extends Type
             return $pdo->quote(trim($value));
         }, $allowed);
 
-        return 'set(' . implode(', ', $field['allowed']) . ')';
+        return 'set(' . implode(', ', $fieldDeclaration['allowed']) . ')';
     }
 }

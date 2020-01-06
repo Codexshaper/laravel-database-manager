@@ -7,15 +7,30 @@ use CodexShaper\DBM\Models\DBM_Collection;
 
 class Collection
 {
+    /*@var string*/
     protected $collection;
+    /*@var array*/
     protected $columns = [];
+    /*@var string*/
     protected $name;
 
+    /**
+     * MongoDB collection constuctor
+     *
+     * @return void
+     */
     public function __construct($collection)
     {
         $this->collection = $collection;
     }
-
+    /**
+     * Add MongoDB collection column
+     *
+     * @param string $name
+     * @param string $type
+     *
+     * @return $this
+     */
     public function addColumn($name, $type)
     {
         $this->name = $name;
@@ -33,34 +48,56 @@ class Collection
 
         return $this;
     }
-
+    /**
+     * Add index
+     *
+     * @return $this
+     */
     public function index()
     {
         $this->columns[$this->name]['index'] = 'INDEX';
 
         return $this;
     }
-
+    /**
+     * Add unique key
+     *
+     * @return $this
+     */
     public function unique()
     {
         $this->columns[$this->name]['index'] = 'UNIQUE';
 
         return $this;
     }
-
+    /**
+     * Add default value
+     *
+     * @param string|bool|int|null $value
+     *
+     * @return $this
+     */
     function default($value) {
         $this->columns[$this->name]['default'] = $value;
 
         return $this;
     }
-
+    /**
+     * Add nullable column
+     *
+     * @return $this
+     */
     public function nullable()
     {
         $this->default(null);
 
         return $this;
     }
-
+    /**
+     * Save collection and fields
+     *
+     * @return void
+     */
     public function save()
     {
         if ($collection = DBM_Collection::where('name', $this->collection)->first()) {

@@ -11,6 +11,11 @@ use Illuminate\Support\Str;
 
 class RelationController extends Controller
 {
+    /**
+     * Get Relation
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function get(Request $request)
     {
         if ($request->ajax()) {
@@ -29,7 +34,14 @@ class RelationController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Prepare relationship field
+     *
+     * @param \Illuminate\Support\Collection $fields
+     * @param object $field
+     *
+     * @return object
+     */
     public function prepareRelationshipField($fields, $field)
     {
         $prefix = (Driver::isMongoDB()) ? "_" : "";
@@ -51,7 +63,11 @@ class RelationController extends Controller
 
         return $field;
     }
-
+    /**
+     * Create Relation
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function add(Request $request)
     {
         if ($request->ajax()) {
@@ -87,7 +103,11 @@ class RelationController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Check Errors
+     *
+     * @return \Illuminate\Http\Response|true
+     */
     public function checkErrors($relationship)
     {
         $localModel   = $relationship['localModel'];
@@ -105,7 +125,13 @@ class RelationController extends Controller
 
         return true;
     }
-
+    /**
+     * Get Field Name
+     *
+     * @param string $relationship
+     *
+     * @return string
+     */
     public function getFieldName($relationship)
     {
         $localTable   = Str::singular($relationship['localTable']);
@@ -114,7 +140,13 @@ class RelationController extends Controller
 
         return strtolower("{$localTable}_{$relationType}_{$foreignTable}_relationship");
     }
-
+    /**
+     * Prepare Settings
+     *
+     * @param array $relationship
+     *
+     * @return array
+     */
     public function prepareSettings($relationship)
     {
         return [
@@ -131,7 +163,11 @@ class RelationController extends Controller
             'relatedPivotKey' => $relationship['relatedPivotKey'],
         ];
     }
-
+    /**
+     * Update Relationship
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request)
     {
         if ($request->ajax()) {
@@ -158,7 +194,11 @@ class RelationController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Delete Relation
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function delete(Request $request)
     {
         if ($request->ajax()) {
@@ -179,7 +219,13 @@ class RelationController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Get Relation
+     *
+     * @param array $errors
+     *
+     * @return \Illuminate\Http\Response
+     */
     protected function generateError($errors)
     {
         return response()->json([

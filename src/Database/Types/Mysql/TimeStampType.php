@@ -9,9 +9,14 @@ class TimeStampType extends Type
 {
     const NAME = 'timestamp';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register timestamp type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        if (isset($field['default'])) {
+        if (isset($fieldDeclaration['default'])) {
             return 'timestamp';
         }
 

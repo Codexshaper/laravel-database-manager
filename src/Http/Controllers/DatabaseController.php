@@ -12,12 +12,20 @@ use Illuminate\Support\Str;
 
 class DatabaseController extends Controller
 {
-
+    /**
+     * Load all database tables
+     *
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function index()
     {
         return view('dbm::app');
     }
-
+    /**
+     * Create CRUD
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function create(Request $request)
     {
         if ($request->ajax()) {
@@ -64,7 +72,13 @@ class DatabaseController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Update MongoDB Collection
+     *
+     * @param array $table
+     *
+     * @return void
+     */
     public function updateMongoDbTable($table)
     {
         $tableName = $table['oldName'];
@@ -129,7 +143,15 @@ class DatabaseController extends Controller
 
         }
     }
-
+    /**
+     * Create|Update CRUD Field
+     *
+     * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
+     * @param array $column
+     * @param array $fieldNames
+     *
+     * @return \Illuminate\Http\Response|void
+     */
     public function addOrUpdateCrudField($object, $column, &$fieldNames)
     {
         $columnType = $column['type'];
@@ -177,7 +199,13 @@ class DatabaseController extends Controller
             $field->save();
         }
     }
-
+    /**
+     * Update CRUD Fields
+     *
+     * @param array $table
+     *
+     * @return void
+     */
     public function updateCrudFields($table)
     {
         $tableName = $table['oldName'];
@@ -218,7 +246,11 @@ class DatabaseController extends Controller
             }
         }
     }
-
+    /**
+     * Update Table
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request)
     {
         if ($request->ajax()) {
@@ -267,7 +299,11 @@ class DatabaseController extends Controller
         return response()->json(['success' => false]);
 
     }
-
+    /**
+     * Create Table
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function delete(Request $request)
     {
         if ($request->ajax()) {
@@ -311,7 +347,13 @@ class DatabaseController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Get input type
+     *
+     * @param string $name
+     *
+     * @return string
+     */
     public static function getInputType($name)
     {
         $types = static::inputTypes();
@@ -322,7 +364,11 @@ class DatabaseController extends Controller
         }
         return 'text';
     }
-
+    /**
+     * Input Types
+     *
+     * @return array
+     */
     public static function inputTypes()
     {
         return [

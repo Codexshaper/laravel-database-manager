@@ -7,6 +7,11 @@ use Illuminate\Support\Collection;
 
 abstract class Mysql extends Platform
 {
+    /**
+     * Get Types
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public static function getTypes(Collection $typeMapping)
     {
         $typeMapping->forget([
@@ -18,7 +23,11 @@ abstract class Mysql extends Platform
 
         return $typeMapping;
     }
-
+    /**
+     * Register Custom Type Options
+     *
+     * @return void
+     */
     public static function registerCustomTypeOptions()
     {
         // Not supported

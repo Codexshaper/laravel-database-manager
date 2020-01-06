@@ -12,12 +12,20 @@ use Illuminate\Http\Request;
 class RecordController extends Controller
 {
     use RecordTrait, RecordRelationship;
-
+    /**
+     * Get all permissions
+     *
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function index()
     {
         return view('dbm::app');
     }
-
+    /**
+     * Create Record
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
         if ($request->ajax()) {
@@ -58,7 +66,14 @@ class RecordController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Process data to store
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
+     *
+     * @return object
+     */
     public function processStoreData($request, $object)
     {
         $originalColumns = Table::getColumnsName($request->table);
@@ -85,7 +100,11 @@ class RecordController extends Controller
 
         return $table;
     }
-
+    /**
+     * Update Record
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function update(Request $request)
     {
         if ($request->ajax()) {
@@ -124,7 +143,14 @@ class RecordController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Process Data to update
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
+     *
+     * @return object
+     */
     public function processUpdateData($request, $object)
     {
         $originalColumns = Table::getColumnsName($request->table);
@@ -158,7 +184,11 @@ class RecordController extends Controller
         return $table;
 
     }
-
+    /**
+     * Delete Record
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function delete(Request $request)
     {
         if ($request->ajax()) {
@@ -201,7 +231,11 @@ class RecordController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Get Table Details
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getTableDetails(Request $request)
     {
         if ($request->ajax()) {
@@ -248,7 +282,7 @@ class RecordController extends Controller
             }
 
             $records       = $this->prepareRelationshipData($records, $browseFields, $object);
-            $recordsDetail = $this->prepareJsonFieldData($records, $fields, $object, $request->findValue);
+            $recordsDetail = $this->prepareRecordDetails($records, $fields, $object, $request->findValue);
 
             $objectDetails            = $object->details;
             $objectDetails['perPage'] = $perPage;

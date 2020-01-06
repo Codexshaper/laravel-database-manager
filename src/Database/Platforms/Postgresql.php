@@ -6,11 +6,13 @@ use Illuminate\Support\Collection;
 
 abstract class Postgresql extends Platform
 {
+    /**
+     * Get Types
+     *
+     * @return \Illuminate\Support\Collection
+     */
     public static function getTypes(Collection $typeMapping)
     {
-        // todo: need to create
-        // box, circle, line, lseg, path, pg_lsn, point, polygon
-
         $typeMapping->forget([
             'smallint',
             'serial',
@@ -36,6 +38,5 @@ abstract class Postgresql extends Platform
     }
 
     public static function registerCustomTypeOptions()
-    {
-    }
+    {}
 }

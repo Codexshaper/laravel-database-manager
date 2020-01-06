@@ -40,11 +40,8 @@ class ManagerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // $this->app->singleton('dbm', function () {
-        //     return new Manager();
-        // });
         $database = $this->app->config['database'];
-
+        // Bind Dumper to backup and and restore
         $this->app->bind(Dumper::class, function ($app) use ($database) {
             $connection = $database['default'];
             $options    = [
@@ -69,7 +66,7 @@ class ManagerServiceProvider extends ServiceProvider
                     break;
             }
         });
-
+        // Register aliases for mongoDB passport
         if ($database['default'] == 'mongodb') {
             if (class_exists('Illuminate\Foundation\AliasLoader')) {
                 $loader = \Illuminate\Foundation\AliasLoader::getInstance();
@@ -97,6 +94,11 @@ class ManagerServiceProvider extends ServiceProvider
         $this->registerCommands();
     }
 
+    /**
+     * Include helper files
+     *
+     * @return void
+     */
     protected function loadHelpers()
     {
         foreach (glob(__DIR__ . '/Helpers/*.php') as $filename) {
@@ -104,6 +106,11 @@ class ManagerServiceProvider extends ServiceProvider
         }
     }
 
+    /**
+     * Register the publishers.
+     *
+     * @return void
+     */
     protected function registerPublish()
     {
         $publishable = [
@@ -126,6 +133,11 @@ class ManagerServiceProvider extends ServiceProvider
         }
     }
 
+    /**
+     * Register commands.
+     *
+     * @return void
+     */
     private function registerCommands()
     {
         $this->commands(InstallDatabaseManager::class);

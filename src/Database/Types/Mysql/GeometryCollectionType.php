@@ -9,7 +9,12 @@ class GeometryCollectionType extends Type
 {
     const NAME = 'geometrycollection';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register geometrycollection type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'geometrycollection';
     }

@@ -10,11 +10,14 @@ class EnumType extends Type
 {
     const NAME = 'enum';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register enum type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         throw new \Exception('Enum type is not supported');
-        // get allowed from $column instance???
-        // learn more about this....
 
         $pdo = DB::connection()->getPdo();
 

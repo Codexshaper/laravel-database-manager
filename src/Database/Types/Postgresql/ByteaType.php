@@ -9,7 +9,12 @@ class ByteaType extends Type
 {
     const NAME = 'bytea';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register bytea type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'bytea';
     }

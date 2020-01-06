@@ -9,7 +9,12 @@ class TimeStampTzType extends Type
 {
     const NAME = 'timestamptz';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register timestamptz type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'timestamp(0) with time zone';
     }

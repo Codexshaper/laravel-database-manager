@@ -9,7 +9,12 @@ class MacAddrType extends Type
 {
     const NAME = 'macaddr';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register macaddr type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'macaddr';
     }

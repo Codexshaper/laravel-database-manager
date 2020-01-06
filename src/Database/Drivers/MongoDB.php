@@ -12,21 +12,35 @@ class MongoDB
 {
     use MongoConnection;
 
-    protected $db;
-    protected $collection;
-    protected $databaseName;
-    protected $collectionName;
-
+    /**
+     * Run MongoDB command
+     *
+     * @return  \MongoDB\Driver\Cursor
+     */
     public function command(array $command)
     {
         return static::getMongoClient()->{$this->admin}->command($command);
     }
-
+    /**
+     * Rename collection
+     *
+     * @param   string  $fromNs
+     * @param   string  $toNs
+     *
+     * @return  \MongoDB\Driver\Cursor
+     */
     public function renameCollection($fromNs, $toNs)
     {
         return $this->command(array('renameCollection' => $fromNs, 'to' => $toNs));
     }
-
+    /**
+     * Rename fields
+     *
+     * @param   string  $collectionName
+     * @param   array   $fields
+     *
+     * @return  void
+     */
     public function renameFields($collectionName, $fields)
     {
         $rename = [];
@@ -37,24 +51,42 @@ class MongoDB
             '$rename' => $rename,
         );
 
-        return $this->selectCollection($collectionName)->updateMany(array(), $update, array('upsert' => true));
+        $this->selectCollection($collectionName)->updateMany(array(), $update, array('upsert' => true));
     }
-
+    /**
+     * Get the MongoDB database object.
+     *
+     * @return  \MongoDB\Database
+     */
     public function getDB()
     {
         return DB::connection()->getMongoDB();
     }
-
+    /**
+     * Get the MongoDB collection namespace.
+     *
+     * @param   string  $databaseName
+     * @param   string  $collectionName
+     * @return string
+     */
     public function getNamespace($databaseName, $collectionName)
     {
         return $databaseName . '.' . $collectionName;
     }
-
+    /**
+     * Get the all collections.
+     *
+     * @return  \MongoDB\Model\CollectionInfoIterator
+     */
     public function getCollections()
     {
         return $this->getDB()->listCollections();
     }
-
+    /**
+     * Get the all collections name.
+     *
+     * @return  array
+     */
     public function getCollectionNames()
     {
         $collections     = $this->getCollections();
@@ -65,17 +97,35 @@ class MongoDB
 
         return $collectionNames;
     }
-
+    /**
+     * Check MongoDB collection
+     *
+     * @param   string $collectionName
+     *
+     * @return  bool
+     */
     public function hasCollection($collectionName)
     {
         return (in_array($collectionName, $this->getCollectionNames())) ? true : false;
     }
-
+    /**
+     * Create MongoDB colelction
+     *
+     * @param   string $collectionName
+     *
+     * @return  array|object Command result document
+     */
     public function createCollection($collectionName)
     {
         return $this->getDB()->createCollection($collectionName);
     }
-
+    /**
+     * Get MongoDB colelction
+     *
+     * @param   string $collectionName
+     *
+     * @return  array
+     */
     public function getCollection($collectionName)
     {
         return [
@@ -88,7 +138,13 @@ class MongoDB
             'options'        => [],
         ];
     }
-
+    /**
+     * Update MongoDB colelction
+     *
+     * @param   array $collection
+     *
+     * @return  bool
+     */
     public function updateCollection($collection)
     {
 
@@ -111,7 +167,14 @@ class MongoDB
         return true;
 
     }
-
+    /**
+     * Rename MongoDB colelction columns
+     *
+     * @param   string $collectionName
+     * @param   array $fields
+     *
+     * @return  void
+     */
     public function renameColumns($collectionName, $fields)
     {
         $collection = $this->selectCollection($collectionName);
@@ -139,7 +202,13 @@ class MongoDB
             }
         }
     }
-
+    /**
+     * Add MongoDB colelction columns
+     *
+     * @param   string $collectionName
+     *
+     * @return  void
+     */
     public function addColumns($collectionName)
     {
         $collection = $this->selectCollection($collectionName);
@@ -178,7 +247,13 @@ class MongoDB
 
         }
     }
-
+    /**
+     * Remove MongoDB colelction columns
+     *
+     * @param   string $collectionName
+     *
+     * @return  void
+     */
     public function removeColumns($collectionName)
     {
         $collection = $this->selectCollection($collectionName);
@@ -198,7 +273,14 @@ class MongoDB
             $collection->updateMany(array(), $update, array('upsert' => true));
         }
     }
-
+    /**
+     * Set MongoDB colelction fields
+     *
+     * @param   string $collectionName
+     * @param   array $fields
+     *
+     * @return  void
+     */
     public function setFields($collectionName, $fields)
     {
         /*
@@ -216,17 +298,35 @@ class MongoDB
         $this->removeColumns($collectionName);
         return true;
     }
-
+    /**
+     * Drop MongoDB colelction
+     *
+     * @param   string $collectionName
+     *
+     * @return  void
+     */
     public function dropCollection($collectionName)
     {
         $this->getDB()->dropCollection($collectionName);
     }
-
+    /**
+     * Select MongoDB colelction
+     *
+     * @param   string $collectionName
+     *
+     * @return  \MongoDB\Collection
+     */
     public function selectCollection($collectionName)
     {
         return $this->getDB()->selectCollection($collectionName);
     }
-
+    /**
+     * Get MongoDB colelction columns
+     *
+     * @param   string $collectionName
+     *
+     * @return  array
+     */
     public function getCollectionColumns($collectionName)
     {
         $cursor      = $this->selectCollection($collectionName)->find();
@@ -241,7 +341,13 @@ class MongoDB
 
         return array_values(array_unique($columnNames));
     }
-
+    /**
+     * Get MongoDB columns
+     *
+     * @param   string $collectionName
+     *
+     * @return  array
+     */
     public function getColumns($collectionName)
     {
         $columns = [];
@@ -279,7 +385,13 @@ class MongoDB
 
         return $columns;
     }
-
+    /**
+     * Get colelction ColumnsName
+     *
+     * @param   string $collectionName
+     *
+     * @return  \Illuminate\Support\Collection
+     */
     public function getColumnsName($collectionName)
     {
         return DBM_Collection::where('name', $collectionName)->first()->fields->pluck('name')->toArray();

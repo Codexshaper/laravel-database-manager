@@ -9,7 +9,12 @@ class XmlType extends Type
 {
     const NAME = 'xml';
 
-    public function getSQLDeclaration(array $field, AbstractPlatform $platform)
+    /**
+     * Register xml type
+     *
+     * @return string
+     */
+    public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         return 'xml';
     }

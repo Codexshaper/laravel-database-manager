@@ -10,12 +10,20 @@ use Illuminate\Support\Facades\Storage;
 
 class BackupController extends Controller
 {
-
+    /**
+     * Load backups
+     *
+     * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
+     */
     public function index()
     {
         return view('dbm::app');
     }
-
+    /**
+     * Get all backup files
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function backups(Request $request)
     {
         if ($request->ajax()) {
@@ -43,7 +51,11 @@ class BackupController extends Controller
         return response()->json(['success' => false]);
 
     }
-
+    /**
+     * Create new backup
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function backup(Request $request)
     {
         if ($request->ajax()) {
@@ -77,7 +89,11 @@ class BackupController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Restore from a specific backup
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function restore(Request $request)
     {
         if ($request->ajax()) {
@@ -105,7 +121,11 @@ class BackupController extends Controller
         return response()->json(['success' => false]);
 
     }
-
+    /**
+     * Return specific backup file for download
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function download(Request $request)
     {
         if ($request->ajax()) {
@@ -130,7 +150,11 @@ class BackupController extends Controller
 
         return response()->json(['success' => false]);
     }
-
+    /**
+     * Remove a backup
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function delete(Request $request)
     {
         if ($request->ajax()) {

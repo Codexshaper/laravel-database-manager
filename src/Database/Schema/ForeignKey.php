@@ -7,7 +7,14 @@ use Doctrine\DBAL\Schema\SchemaException;
 
 class ForeignKey
 {
-    public static function create(array $foreignKey)
+    /**
+     * Create foreign key
+     *
+     * @param array $foreignKey
+     *
+     * @return \Doctrine\DBAL\Schema\ForeignKeyConstraint
+     */
+    public static function create($foreignKey)
     {
         // Set the local table
         $localTable = null;
@@ -38,8 +45,16 @@ class ForeignKey
         }
         return $doctrineForeignKey;
     }
-
-    public static function createName(array $columns, $type, $table = null)
+    /**
+     * Get foreign key name
+     *
+     * @param array $columns
+     * @param string $type
+     * @param string|null $table
+     *
+     * @return string
+     */
+    public static function createName($columns, $type, $table = null)
     {
         $table = isset($table) ? trim($table) . '_' : '';
         $type  = trim($type);
@@ -47,7 +62,13 @@ class ForeignKey
 
         return str_replace(['-', '.'], '_', $name);
     }
-
+    /**
+     * Get doctrine table
+     *
+     * @param string $table
+     *
+     * @return \Doctrine\DBAL\Schema\Table
+     */
     public static function getDoctrineTable($table)
     {
         $table = trim($table);
@@ -58,7 +79,11 @@ class ForeignKey
 
         return static::manager()->listTableDetails($table);
     }
-
+    /**
+     * Get all foreignkeys as an array
+     *
+     * @return array
+     */
     public static function toArray(DoctrineForeignKey $foreignKey)
     {
         return [
