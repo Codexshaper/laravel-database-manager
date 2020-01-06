@@ -191,19 +191,4 @@ trait RecordRelationship
 
         }
     }
-
-    public function removeRelationshipKeyForBelongsTo($fields, $foreignKey)
-    {
-        $results = [];
-
-        foreach ($fields as $key => $field) {
-            if ($field->name == $foreignKey) {
-                unset($fields[$key]);
-                continue;
-            }
-            $results[] = $field;
-        }
-
-        return $results;
-    }
 }
