@@ -33,7 +33,7 @@ class CrudController extends Controller
             }
 
             if (!class_exists($table['controller'])) {
-                \DBM::makeController($table['controller']);
+                DBM::makeController($table['controller']);
             }
 
             try
@@ -65,7 +65,7 @@ class CrudController extends Controller
         }
 
         if ($table['makeModel'] && !class_exists($table['model'])) {
-            \DBM::makeModel($table['model'], $table['name']);
+            DBM::makeModel($table['model'], $table['name']);
         }
 
         if (!$table['makeModel'] && !class_exists($table['model'])) {

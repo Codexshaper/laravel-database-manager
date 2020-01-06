@@ -38,7 +38,7 @@ class RecordController extends Controller
 
             $object = DBM::Object()->where('name', $tableName)->first();
 
-            if (!class_exists($object->model)) {
+            if (is_string($object->model) && !class_exists($object->model)) {
                 return $this->generateError(["Model not found. Please create model first"]);
             }
 
@@ -106,7 +106,7 @@ class RecordController extends Controller
 
             $object = DBM::Object()->where('name', $tableName)->first();
 
-            if (!class_exists($object->model)) {
+            if (is_string($object->model) && !class_exists($object->model)) {
                 return $this->generateError(["Model not found. Please create model first"]);
             }
 
@@ -176,7 +176,7 @@ class RecordController extends Controller
             $details = $object->details;
             $key     = $details['findColumn'];
 
-            if (!class_exists($model)) {
+            if (is_string($model) && !class_exists($model)) {
                 return $this->generateError(["Model not found. Please create model first"]);
             }
 

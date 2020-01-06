@@ -52,7 +52,7 @@ class DatabaseAdmin extends Command
      *
      * @return void
      */
-    public function handle(Filesystem $filesystem)
+    public function handle()
     {
         $email          = $this->argument('email');
         $column         = $this->option('column');
