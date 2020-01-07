@@ -38,7 +38,7 @@ class TemplateController extends Controller
     /**
      * Create a new template
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function save(Request $request)
     {
@@ -78,7 +78,7 @@ class TemplateController extends Controller
     /**
      * Remove a template
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function remove(Request $request)
     {

@@ -24,7 +24,7 @@ class RecordController extends Controller
     /**
      * Create Record
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
@@ -103,7 +103,7 @@ class RecordController extends Controller
     /**
      * Update Record
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request)
     {
@@ -187,7 +187,7 @@ class RecordController extends Controller
     /**
      * Delete Record
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function delete(Request $request)
     {
@@ -234,7 +234,7 @@ class RecordController extends Controller
     /**
      * Get Table Details
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getTableDetails(Request $request)
     {

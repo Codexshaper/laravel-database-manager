@@ -24,7 +24,7 @@ class DatabaseController extends Controller
     /**
      * Create CRUD
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function create(Request $request)
     {
@@ -150,7 +150,7 @@ class DatabaseController extends Controller
      * @param array $column
      * @param array $fieldNames
      *
-     * @return \Illuminate\Http\Response|void
+     * @return \Illuminate\Http\JsonResponse|void
      */
     public function addOrUpdateCrudField($object, $column, &$fieldNames)
     {
@@ -249,7 +249,7 @@ class DatabaseController extends Controller
     /**
      * Update Table
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request)
     {
@@ -302,7 +302,7 @@ class DatabaseController extends Controller
     /**
      * Create Table
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function delete(Request $request)
     {

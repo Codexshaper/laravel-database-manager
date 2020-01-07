@@ -14,7 +14,7 @@ class RelationController extends Controller
     /**
      * Get Relation
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function get(Request $request)
     {
@@ -66,7 +66,7 @@ class RelationController extends Controller
     /**
      * Create Relation
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function add(Request $request)
     {
@@ -106,7 +106,7 @@ class RelationController extends Controller
     /**
      * Check Errors
      *
-     * @return \Illuminate\Http\Response|true
+     * @return \Illuminate\Http\JsonResponse|true
      */
     public function checkErrors($relationship)
     {
@@ -166,7 +166,7 @@ class RelationController extends Controller
     /**
      * Update Relationship
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request)
     {
@@ -197,7 +197,7 @@ class RelationController extends Controller
     /**
      * Delete Relation
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function delete(Request $request)
     {
@@ -224,7 +224,7 @@ class RelationController extends Controller
      *
      * @param array $errors
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     protected function generateError($errors)
     {

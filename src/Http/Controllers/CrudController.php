@@ -22,7 +22,7 @@ class CrudController extends Controller
     /**
      * Create|Update CRUD
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function storeOrUpdate(Request $request)
     {
@@ -70,7 +70,7 @@ class CrudController extends Controller
      *
      * @param array $table
      *
-     * @return \Illuminate\Http\Response|true
+     * @return \Illuminate\Http\JsonResponse|true
      */
     public function makeModel($table)
     {
@@ -163,7 +163,7 @@ class CrudController extends Controller
     /**
      * Delete CRUD
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function delete(Request $request)
     {
@@ -188,7 +188,7 @@ class CrudController extends Controller
      *
      * @param array $errors
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     protected function generateError($errors)
     {

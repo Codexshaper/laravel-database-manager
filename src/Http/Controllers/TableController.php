@@ -11,7 +11,7 @@ class TableController extends Controller
     /**
      * Get all Tables
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function all(Request $request)
     {
@@ -54,7 +54,7 @@ class TableController extends Controller
     /**
      * Get Table Details
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getTable(Request $request)
     {
@@ -106,7 +106,7 @@ class TableController extends Controller
     /**
      * Get Table Columns
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getTableColumns(Request $request)
     {

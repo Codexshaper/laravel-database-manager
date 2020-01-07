@@ -19,7 +19,7 @@ class PermissionController extends Controller
     /**
      * Get all users with permissions
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function all(Request $request)
     {
@@ -83,7 +83,7 @@ class PermissionController extends Controller
     /**
      * Assign Permissions to User
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function assignUserPermissions(Request $request)
     {
@@ -106,7 +106,7 @@ class PermissionController extends Controller
     /**
      * Update User Permissions
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function syncUserPermissions(Request $request)
     {
@@ -129,7 +129,7 @@ class PermissionController extends Controller
     /**
      * Delete User Permissions
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function deleteUserPermissions(Request $request)
     {

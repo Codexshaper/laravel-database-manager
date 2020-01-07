@@ -14,7 +14,7 @@ class ObjectController extends Controller
     /**
      * Get all objects
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function all(Request $request)
     {
@@ -76,7 +76,7 @@ class ObjectController extends Controller
     /**
      * Get Object details
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getObjectDetails(Request $request)
     {
@@ -217,7 +217,7 @@ class ObjectController extends Controller
      *
      * @param array $errors
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     protected function generateError($errors)
     {

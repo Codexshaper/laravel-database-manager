@@ -335,7 +335,7 @@ class Manager
     /**
      * Check user authorization
      *
-     * @return \Illuminate\Http\Response|true
+     * @return \Illuminate\Http\JsonResponse|true
      */
     public function authorize($permission)
     {

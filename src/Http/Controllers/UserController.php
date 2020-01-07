@@ -23,7 +23,7 @@ class UserController extends Controller
     /**
      * Login User for API
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function login(Request $request)
     {
@@ -61,7 +61,7 @@ class UserController extends Controller
     /**
      * Get access token for API
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function getPersonalAccessToken(Request $request)
     {
