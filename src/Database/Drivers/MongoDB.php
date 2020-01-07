@@ -390,7 +390,7 @@ class MongoDB
      *
      * @param   string $collectionName
      *
-     * @return  \Illuminate\Support\Collection
+     * @return  array
      */
     public function getColumnsName($collectionName)
     {

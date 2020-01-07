@@ -18,8 +18,8 @@ class CharType extends Type
      */
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
-        $field['length'] = empty($field['length']) ? 1 : $field['length'];
+        $fieldDeclaration['length'] = empty($fieldDeclaration['length']) ? 1 : $fieldDeclaration['length'];
 
-        return "char({$field['length']})";
+        return "char({$fieldDeclaration['length']})";
     }
 }

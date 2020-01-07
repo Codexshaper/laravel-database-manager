@@ -21,7 +21,7 @@ class UpdateManager
      *
      * @return void
      */
-    public function update($table = [])
+    public function update($table)
     {
         if (!is_array($table)) {
             $table = json_decode($table, true);

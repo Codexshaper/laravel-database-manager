@@ -4,3 +4,27 @@
 
 # laravel-database-manager
 Make your database simple and easyer
+
+# Install package
+
+```
+composer require codexshaper/laravel-database-manager
+```
+
+# Setup database manager
+
+```
+php artisan dbm:install
+```
+
+# Create admin account to access all features
+
+```
+php artisan dbm:admin 'user' 'action' 'options'
+```
+Example
+```
+php artisan admin@admin.com create --columns=email
+```
+
+In this case ```email``` must be exists in your users table and ```admin@admin.com``` must be a record

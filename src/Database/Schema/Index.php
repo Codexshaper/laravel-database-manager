@@ -64,7 +64,7 @@ class Index
      * @param string $type
      * @param string|null $table
      *
-     * @return \Doctrine\DBAL\Schema\Index
+     * @return string
      */
     public static function createName($columns, $type, $table = null)
     {

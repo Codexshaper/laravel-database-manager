@@ -22,7 +22,7 @@ class BackupController extends Controller
     /**
      * Get all backup files
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function backups(Request $request)
     {
@@ -54,7 +54,7 @@ class BackupController extends Controller
     /**
      * Create new backup
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function backup(Request $request)
     {
@@ -92,7 +92,7 @@ class BackupController extends Controller
     /**
      * Restore from a specific backup
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function restore(Request $request)
     {
@@ -124,7 +124,7 @@ class BackupController extends Controller
     /**
      * Return specific backup file for download
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function download(Request $request)
     {
@@ -153,7 +153,7 @@ class BackupController extends Controller
     /**
      * Remove a backup
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function delete(Request $request)
     {

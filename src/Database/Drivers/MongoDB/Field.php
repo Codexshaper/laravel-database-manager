@@ -10,7 +10,6 @@ class Field
      * Create MongoDB collection field
      *
      * @param string $collection
-     * @param clousure $clousure
      *
      * @return  \CodexShaper\DBM\Database\Drivers\MongoDB\Collection
      */

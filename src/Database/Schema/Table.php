@@ -83,9 +83,9 @@ class Table
      *
      * @param array $table
      *
-     * @return void
+     * @return array|object|void
      */
-    public static function create($table = [])
+    public static function create($table)
     {
         if (!is_array($table)) {
             $table = json_decode($table, true);
@@ -108,7 +108,7 @@ class Table
      *
      * @return true|void
      */
-    public static function update($table = [])
+    public static function update($table)
     {
         if (!is_array($table)) {
             $table = json_decode($table, true);
@@ -125,7 +125,7 @@ class Table
      *
      * @param string $tableName
      *
-     * @return true|void
+     * @return void
      */
     public static function drop($tableName)
     {
@@ -142,7 +142,7 @@ class Table
      *
      * @return \Doctrine\DBAL\Schema\Table
      */
-    public static function prepareTable($table = [])
+    public static function prepareTable($table)
     {
 
         if (!is_array($table)) {
@@ -246,7 +246,7 @@ class Table
      *
      * @param string $tableName
      *
-     * @return true
+     * @return boolean
      */
     public static function exists($tableName)
     {
@@ -264,7 +264,7 @@ class Table
      * Get tables with pagination
      *
      * @param int $perPage
-     * @param string|null $page
+     * @param int|null $page
      * @param array $options
      * @param string $query
      *

@@ -13,7 +13,7 @@ abstract class Platform
      *
      * @param string $platformName
      *
-     * @return \Illuminate\Support\Collection
+     * @return string
      */
     public static function getPlatform($platformName)
     {

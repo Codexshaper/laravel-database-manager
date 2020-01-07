@@ -56,18 +56,10 @@ class Type
     /**
      * Get javascript
      *
-     * @param   string  $code
-     * @param   array   $scope
-     *
      * @return  \MongoDB\BSON\Javascript
      */
-    public static function javascript(string $code, $scope = [])
+    public static function javascript(string $code, array $scope = [])
     {
-        if (!is_array($scope) || !is_array()) {
-            throw new \Exception($scope . " should be array or object");
-
-        }
-
         return new Javascript($code, $scope);
     }
     /**
@@ -102,9 +94,9 @@ class Type
      *
      * @return  \MongoDB\BSON\Regex
      */
-    public static function regex(string $pattern, string $flags)
+    public static function regex(string $pattern, string $flags = "")
     {
-        return new Regex($value);
+        return new Regex($pattern, $flags);
     }
     /**
      * Get timestamp
@@ -118,7 +110,7 @@ class Type
     /**
      * Get datetime
      *
-     * @param int|nul $milliseconds
+     * @param int|null $milliseconds
      *
      * @return  \MongoDB\BSON\UTCDateTime
      */
