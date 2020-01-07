@@ -27,4 +27,4 @@ Example
 php artisan admin@admin.com create --columns=email
 ```
 
-In this case ```email``` must be exists in your users table and ```admin@admin.com``` must be a record
+In this case ```email``` column must be exists in your users table and ```admin@admin.com``` must be a record

@@ -1,12 +1,36 @@
 {
     "name": "codexshaper/laravel-database-manager",
     "description": "Laravel Database Manager",
+    "keywords": [
+        "dbm",
+        "databse",
+        "CRUD",
+        "BREAD",
+        "mysql",
+        "sqlite",
+        "pgsql",
+        "mongodb",
+        "sqlsrv",
+        "laravel",
+        "vuejs2",
+        "databse-manager",
+        "laravel-databse-manager",
+        "dbm-manager",
+        "dumper",
+        "backup",
+        "restore",
+        "api",
+        "api-authentication",
+        "passport",
+    ],
     "type": "library",
     "license": "MIT",
+    "homepage": "https://github.com/Codexshaper/laravel-database-manager",
     "authors": [
         {
             "name": "Md Abu Ahsan Basir",
-            "email": "maab.career@gmail.com"
+            "email": "maab.career@gmail.com",
+            "homepage": "https://github.com/maab16"
         }
     ],
     "minimum-stability": "dev",
@@ -19,7 +43,6 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0",
-        "laravel/framework": "^6.0",
         "orchestra/testbench": "^4.0"
     },
     "autoload": {
