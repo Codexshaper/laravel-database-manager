@@ -117,7 +117,7 @@ class UserController extends Controller
     /**
      * Load API component
      *
-     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function api()
     {
