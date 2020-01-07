@@ -332,11 +332,6 @@ class Manager
         return 'not_authorized';
 
     }
-    /**
-     * Check user authorization
-     *
-     * @return \Illuminate\Http\JsonResponse|bool
-     */
     public function authorize($permission)
     {
         $permission = explode('.', $permission);
