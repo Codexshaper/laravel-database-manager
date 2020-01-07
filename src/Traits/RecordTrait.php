@@ -274,7 +274,7 @@ trait RecordTrait
      *
      * @param array $errors
      *
-     * @return \Illuminate\Http\Response
+     * @return Illuminate\Http\JsonResponse
      */
     public function generateError($errors)
     {
