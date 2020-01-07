@@ -21,7 +21,7 @@
         "restore",
         "api",
         "api-authentication",
-        "passport",
+        "passport"
     ],
     "type": "library",
     "license": "MIT",
