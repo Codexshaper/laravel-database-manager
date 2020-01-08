@@ -44,7 +44,7 @@ trait RecordTrait
         $values = [];
         foreach ($files as $file) {
             $fileName = Str::random(config('dbm.filesystem.random_length')) . '.' . $file->getClientOriginalExtension();
-            $path     = 'public/dbm/' . $tableName;
+            $path     = trim(config('dbm.filesystem.dir'), '/') . DIRECTORY_SEPARATOR . $tableName;
             $file->storeAs($path, $fileName);
             $values[] = $fileName;
         }

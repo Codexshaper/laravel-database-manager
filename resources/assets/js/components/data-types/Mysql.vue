@@ -60,21 +60,12 @@
 			notSupportIndexs: Array,
 			notSupportDefault: Array
 		},
-		created() {
-			// console.log(this.field);
-		},
 		methods: {
 			setOptionGroup: function(field, event){
 				const index = event.target.selectedIndex;
 				const selectedOption = event.target.options[index];
-				console.log( index );
-				//if ( index > -1) {
-		            const selectedOptgroup = selectedOption.parentElement;
-		            // console.log( parent.attributes.label.nodeValue );
-		            const selectedCategory = selectedOptgroup.getAttribute('label');
-		            // console.log(selectedCategory);
-		        //}
-				// console.log( event.target.optiongroups );
+		        const selectedOptgroup = selectedOption.parentElement;
+		        const selectedCategory = selectedOptgroup.getAttribute('label');
 				field.type.category = selectedCategory;
 
 				if(this.notSupportIndexs.includes(field.type.name)) {

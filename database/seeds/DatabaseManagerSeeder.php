@@ -5,6 +5,7 @@ use Illuminate\Database\Seeder;
 class DatabaseManagerSeeder extends Seeder
 {
     protected $seedersPath = __DIR__ . '/../../database/seeds/';
+
     /**
      * Seed the application's database.
      *
@@ -14,7 +15,6 @@ class DatabaseManagerSeeder extends Seeder
     {
         $seeds = [
             'DatabasePermissionSeeder',
-            // 'DatabaseUserPerissionsSeeder',
         ];
 
         foreach ($seeds as $class) {
