@@ -1,37 +1,77 @@
 <template>
 	<div class="rich-editor">
-		<editor-menu-bar v-if="isMenuBar" :editor="richEditor" v-slot="{ commands, isActive }">
+		<editor-menu-bar 
+			v-if="isMenuBar" 
+			:editor="richEditor" 
+			v-slot="{ commands, isActive }">
 		    <div class="rich-menu-bar">
 		    	<ul class="editor-element">
 		    		<li v-if="buttons.heading.length > 0">
-		    			<i class="fas fa-heading heading-icon" data-toggle="collapse" :data-target="'#'+name+'HeadingList'" role="button"></i> 
+		    			<i 
+		    				class="fas fa-heading heading-icon" 
+		    				data-toggle="collapse" 
+		    				:data-target="'#'+name+'HeadingList'" 
+		    				role="button"></i> 
 		    		</li>
 		    		<li v-if="buttons.table.length > 0" class="table-lists"> 
-		    			<i class="fas fa-table" data-toggle="collapse" :data-target="'#'+name+'TableList'" role="button"></i>
+		    			<i 
+		    				class="fas fa-table" 
+		    				data-toggle="collapse" 
+		    				:data-target="'#'+name+'TableList'" 
+		    				role="button"></i>
 		    		</li>
-		    		<li v-for="(button, index) in buttons" :key="index" v-if="index != 'heading' && index != 'table'">
-		    			<button v-if="button.method != ''" class="command" :class="{ 'is-active': isActive[button.method](button.levels) }" @click.prevent="command(commands, button)"><i :class="button.icon"></i>{{ button.text }}</button>
-		    			 <button v-else class="command" @click.prevent="command(commands, button)"><i :class="button.icon"></i>{{ button.text }}</button>
+		    		<li 
+		    			v-for="(button, index) in buttons" 
+		    			:key="index" 
+		    			v-if="index != 'heading' && index != 'table'">
+		    			<button 
+		    				v-if="button.method != ''" 
+		    				class="command" 
+		    				:class="{ 'is-active': isActive[button.method](button.levels) }" 
+		    				@click.prevent="command(commands, button)">
+		    				<i :class="button.icon"></i>{{ button.text }}</button>
+		    			 <button 
+		    			 	v-else 
+		    			 	class="command" 
+		    			 	@click.prevent="command(commands, button)">
+		    			 	<i :class="button.icon"></i>{{ button.text }}</button>
 		    		</li>
 		    	</ul>
 
 		    	<div class="collapse" :id="name+'HeadingList'">
     		    	<ul class="heading-lists">
-    		    		<li  v-for="(button, index) in buttons.heading" :key="index" class="heading-elements">
-    		    			<button class="command" :class="{ 'is-active': isActive[button.method](button.levels) }" @click.prevent="command(commands, button)"><i :class="button.icon"></i>{{ button.text }}</button>
+    		    		<li  
+    		    			v-for="(button, index) in buttons.heading" 
+    		    			:key="index" 
+    		    			class="heading-elements">
+    		    			<button 
+    		    				class="command" 
+    		    				:class="{ 'is-active': isActive[button.method](button.levels) }" 
+    		    				@click.prevent="command(commands, button)">
+    		    				<i :class="button.icon"></i>{{ button.text }}</button>
     		    		</li>
     		    	</ul>
 		    	</div>
 		    	<div class="collapse" :id="name+'TableList'">
     		    	<ul class="table-elements">
-    					<li  v-for="(button, index) in buttons.table" :key="index">
-    						<button class="command" :class="{ 'is-active': isActive[button.method](button.levels) }" @click.prevent="command(commands, button)"><i :class="button.icon"></i>{{ button.text }}</button>
+    					<li  
+    						v-for="(button, index) in buttons.table" 
+    						:key="index">
+    						<button 
+    							class="command" 
+    							:class="{ 'is-active': isActive[button.method](button.levels) }" 
+    							@click.prevent="command(commands, button)">
+    							<i :class="button.icon"></i>{{ button.text }}</button>
     					</li>
     				</ul>
 		    	</div>  
 		    </div>
 		</editor-menu-bar>
-		<editor-menu-bubble v-if="isMenuBubble" :editor="richEditor" :keep-in-bounds="keepInBounds" v-slot="{ commands, isActive, menu }">
+		<editor-menu-bubble 
+			v-if="isMenuBubble" 
+			:editor="richEditor" 
+			:keep-in-bounds="keepInBounds" 
+			v-slot="{ commands, isActive, menu }">
 		    <div
 		        class="menububble"
 		        :class="{ 'is-active': menu.isActive }"
@@ -39,28 +79,61 @@
       		    <div class="rich-menu-bar">
       		    	<ul class="editor-element">
       		    		<li v-if="buttons.heading.length > 0">
-      		    			<i class="fas fa-heading heading-icon" data-toggle="collapse" :data-target="'#'+name+'BubbleHeadingList'" role="button"></i> 
+      		    			<i 
+      		    				class="fas fa-heading heading-icon" 
+      		    				data-toggle="collapse" 
+      		    				:data-target="'#'+name+'BubbleHeadingList'" 
+      		    				role="button"></i> 
       		    		</li>
       		    		<li v-if="buttons.table.length > 0" class="table-lists"> 
-      		    			<i class="fas fa-table" data-toggle="collapse" :data-target="'#'+name+'BubbleTableList'" role="button"></i>
+      		    			<i 
+      		    				class="fas fa-table" 
+      		    				data-toggle="collapse" 
+      		    				:data-target="'#'+name+'BubbleTableList'" 
+      		    				role="button"></i>
       		    		</li>
-      		    		<li v-for="(button, index) in buttons" :key="index" v-if="index != 'heading' && index != 'table' && button.bubble">
-      		    			<button v-if="button.method != ''" class="command" :class="{ 'is-active': isActive[button.method](button.levels) }" @click.prevent="command(commands, button)"><i :class="button.icon"></i>{{ button.text }}</button>
-		    			 	<button v-else class="command" @click.prevent="command(commands, button)"><i :class="button.icon"></i>{{ button.text }}</button>
+      		    		<li 
+      		    			v-for="(button, index) in buttons" 
+      		    			:key="index" 
+      		    			v-if="index != 'heading' && index != 'table' && button.bubble">
+      		    			<button 
+      		    				v-if="button.method != ''" 
+      		    				class="command" 
+      		    				:class="{ 'is-active': isActive[button.method](button.levels) }" 
+      		    				@click.prevent="command(commands, button)">
+      		    				<i :class="button.icon"></i>{{ button.text }}</button>
+		    			 	<button 
+		    			 		v-else 
+		    			 		class="command" 
+		    			 		@click.prevent="command(commands, button)">
+		    			 		<i :class="button.icon"></i>{{ button.text }}</button>
       		    		</li>
       		    	</ul>
 
       		    	<div class="collapse" :id="name+'BubbleHeadingList'">
           		    	<ul class="heading-lists">
-          		    		<li  v-for="(button, index) in buttons.heading" :key="index" class="heading-elements">
-          		    			<button class="command" :class="{ 'is-active': isActive[button.method](button.levels) }" @click.prevent="command(commands, button)"><i :class="button.icon"></i>{{ button.text }}</button>
+          		    		<li  
+          		    			v-for="(button, index) in buttons.heading" 
+          		    			:key="index" 
+          		    			class="heading-elements">
+          		    			<button 
+          		    				class="command" 
+          		    				:class="{ 'is-active': isActive[button.method](button.levels) }" 
+          		    				@click.prevent="command(commands, button)">
+          		    				<i :class="button.icon"></i>{{ button.text }}</button>
           		    		</li>
           		    	</ul>
       		    	</div>
       		    	<div class="collapse" :id="name+'BubbleTableList'">
           		    	<ul class="table-elements">
-          					<li  v-for="(button, index) in buttons.table" :key="index">
-          						<button class="command" :class="{ 'is-active': isActive[button.method](button.levels) }" @click.prevent="command(commands, button)"><i :class="button.icon"></i>{{ button.text }}</button>
+          					<li  
+          						v-for="(button, index) in buttons.table" 
+          						:key="index">
+          						<button 
+          							class="command" 
+          							:class="{ 'is-active': isActive[button.method](button.levels) }" 
+          							@click.prevent="command(commands, button)">
+          							<i :class="button.icon"></i>{{ button.text }}</button>
           					</li>
           				</ul>
       		    	</div>  
@@ -458,7 +531,6 @@
         },
         methods: {
         	command: function(commands, button){
-        		console.log(commands);
         		if(button.commands == 'link') {
         			this.addLink(commands);
         		}else if(button.commands == 'image') {

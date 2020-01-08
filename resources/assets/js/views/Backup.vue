@@ -1,11 +1,10 @@
 <template>
     <div class="">
-        <vue-progress-bar></vue-progress-bar>
-        <!-- <div v-if="!isLoaded" class="loading">Loading</div> -->
         <div 
             class="database-error alert alert-danger" 
             role="alert" 
-            v-for="(databaseError,key) in databaseErrors" :key="key"> {{ databaseError }} </div>
+            v-for="(databaseError,key) in databaseErrors" 
+            :key="key"> {{ databaseError }} </div>
         <transition name="fade" mode="out-in">
             <div v-if="isLoaded" class="vue-content"> <!-- cs-content start -->
                 <div class="dbase-btn btn-area">
@@ -92,10 +91,8 @@
         },
         methods: {
             fetchDatabaseBackups: function() {
-
                 axios.get('/api'+this.prefix+'/database/getBackups')
                 .then(res => {
-                    console.log(res.data);
                     if( res.data.success == true ){
                         this.files = res.data.files;
                         this.userPermissions = res.data.userPermissions;
@@ -106,7 +103,6 @@
                     }
                 })
                 .catch(err => {
-                    console.log(err);
                     this.$Progress.finish()
                     this.displayError(err.response)
                 });
@@ -131,25 +127,18 @@
                   responseType: 'json',
                 })
                 .then(res => {
-                    console.log(res.data);
                     if( res.data.success == true ){
                         toastr.success('Database BackedUp Successfully.');
                         self.fetchDatabaseBackups();
                         this.$Progress.finish()
                     }
                 })
-                .catch(err => {
-                    console.log(err);
-                    this.displayError(err.response)
-                });
+                .catch(err => this.displayError(err.response));
             },
             restore: function(file) {
                 this.$Progress.start()
                 var url = '/api'+this.prefix+'/database/backup';
                 var self = this;
-
-                console.log(file.info.dirname+'/'+file.info.basename);
-
                 axios({
                   url: url,
                   method: 'PUT',
@@ -158,7 +147,6 @@
                   },
                   responseType: 'json',
                 }).then((res) => {
-                    // console.log(res.data);
                     if (res.data.success == true) {
                         toastr.success('Database Restored Successfully.');
                         this.databaseErrors = [];
@@ -174,7 +162,6 @@
                     path: file.info.dirname+'/'+file.info.basename
                   },
                 }).then((res) => {
-                    // console.log(response.data);
                     if(res.data.success == true) {
                         const url = window.URL.createObjectURL(new Blob([res.data.file]));
                         const link = document.createElement('a');
@@ -206,7 +193,6 @@
                           },
                           responseType: 'json',
                         }).then((res) => {
-                            // console.log(res.data);
                             if (res.data.success == true) {
                                 toastr.success('Database BackedUp Deleted Successfully.');
                                 this.fetchDatabaseBackups();

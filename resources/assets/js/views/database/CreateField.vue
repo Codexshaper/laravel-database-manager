@@ -147,14 +147,6 @@
         components: {
           draggable
         },
-        data(){
-          return {
-            // disableAutoIncrement : this.checkAutoIncrement()
-          };
-        },
-        created() {
-            // console.log(this.fields);
-        },
         computed: {
           draggingInfo() {
             return this.dragging ? "under drag" : "";
@@ -174,7 +166,7 @@
                 return () => import('../../components/data-types/Mysql.vue');
                 break;
             } 
-              return this.driver
+            return this.driver
           },
           isNotSupportedIndex:{
             get: function(){
@@ -238,29 +230,20 @@
                   this.disableAutoIncrement = true;
                 }
               }
-
               this.disableAutoIncrement = false;
             },
             checkSupportedIndex: function(field){
-              // console.log(field);
               if(this.notSupportIndexs.includes(field.type.name)) {
                 return false;
               }
-
               return true;
             },
             checkSupportedDefault: function(field) {
               if(this.notSupportDefault.includes(field.type.name)) {
                 return false;
               }
-
               return true;
             },
         }
     }
 </script>
-<style scoped>
-.ghost {
-  
-}
-</style>

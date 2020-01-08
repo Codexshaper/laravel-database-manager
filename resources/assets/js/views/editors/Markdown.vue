@@ -125,10 +125,6 @@
         	markdownContent(value) {
                 this.$emit('input', value);
             },
-        },
-        mounted(){
-
-        	// console.log(this.markdownContent);
         }
 	}
 </script>

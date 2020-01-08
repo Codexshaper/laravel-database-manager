@@ -2,7 +2,6 @@ import VueRouter from 'vue-router';
 
 // import App from './views/App'
 import Login from './views/Login'
-import Register from './views/Register'
 import Api from './views/Api'
 
 import Database from './views/Database.vue'
@@ -215,24 +214,7 @@ const router = new VueRouter({
                     }
                 ]
             }
-        },
-        {
-            path: prefix+'/register',
-            name: 'register',
-            component: Register,
-            meta: {
-                breadcrumbs: [
-                    {
-                        name: 'database',
-                        display: 'Database'
-                    },
-                    {
-                        name: 'register',
-                        display: 'Register'
-                    }
-                ]
-            }
-        },
+        }
      ],
  });
 

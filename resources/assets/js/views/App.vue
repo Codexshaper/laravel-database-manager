@@ -10,7 +10,6 @@
                     <i class="fas fa-arrow-left"></i>
                 </button>
             </div>
-            
                 <div id="navbar-menu">
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
@@ -24,8 +23,6 @@
                         </li>
                     </ul>
                 </div>
-
-
             </nav>
             <!-- END NAVBAR -->
             <div class="main-content">
@@ -74,7 +71,6 @@
             }
         },
         created(){
-            // console.log(this.$router);
             localStorage.setItem('dbm.prefix', '');
             if(localStorage.getItem('dbm.prefix') != null && localStorage.getItem('dbm.prefix') != this.prefix) {
                 localStorage.removeItem('dbm.prefix');
@@ -121,11 +117,9 @@
                         break
                     case 'load':
                         this.isLoaded = false;
-                        console.log('loading');
                         this.loadComponent();
                         break
                 }
-                
             },
             logout(){
                 localStorage.removeItem('dbm.authToken')
@@ -153,26 +147,6 @@
         color: #ffffff;
         transition: 0.5s;
     }
-    /*.fade-enter {
-        transform: translateX(10px);
-        opacity: 0;
-    }
-    .fade-enter-active {
-        transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-    }
-    .fade-leave-active, .fade-leave-to {
-        opacity: 0;
-    }*/
-    
-    /*.fade-enter-active{
-        transition: opacity 1.5s;
-    }
-    .fade-leave-active {
-        opacity: 0;
-    }
-    .fade-enter, .fade-leave-to {
-        opacity: 0;
-    }*/
 
     .fade-enter {
         transform: translateY(10px);

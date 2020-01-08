@@ -18,9 +18,6 @@
             Clients,
             AuthorizedClients,
             PersonalAccessTokens
-        },
-        created(){
-            console.log("Api called")
         }
     }
 </script>

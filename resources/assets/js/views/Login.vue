@@ -52,15 +52,10 @@
                 prefix: localStorage.getItem('dbm.prefix')
             }
         },
-        created(){
-            // console.log(this.$route);
-            // this.redirectTo();
-        },
         methods: {
             handleSubmit(e) {
                 e.preventDefault()
                 if (this.password.length > 0) {
-
                     axios.post('/api/database/login',{
                       data: {
                         email: this.email,
@@ -68,7 +63,6 @@
                       }
                     })
                     .then(res => {
-                        // console.log(res.data);
                         localStorage.setItem('dbm.user', JSON.stringify(res.data.user))
                         localStorage.setItem('dbm.authToken', res.data.token)
                         let now = new Date()
@@ -77,7 +71,6 @@
                         this.redirectTo()
                     })
                     .catch(err => {
-                        console.log(err)
                         this.displayError(err.response)
                     });
                 }

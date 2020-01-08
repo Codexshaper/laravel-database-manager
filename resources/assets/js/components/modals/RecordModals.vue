@@ -1,7 +1,13 @@
 <template>
 	<div class="row">
 		<!-- Add -->
-		<div v-if="hasPermission('record.create')" class="modal fade" id="recordModal" tabindex="-1" role="dialog" aria-labelledby="recordModalLebel"
+		<div 
+            v-if="hasPermission('record.create')" 
+            class="modal fade" 
+            id="recordModal" 
+            tabindex="-1" 
+            role="dialog" 
+            aria-labelledby="recordModalLebel"
 		    aria-hidden="true">
 		    <div class="modal-dialog" role="document">
 		      <div class="modal-content">
@@ -15,11 +21,9 @@
 		            <form @submit.prevent="(action == 'edit') ? updateRecord({...newRow}) : createRecord({...newRow})">
 		            	<!-- Stop autocomplete for password -->
            				<input type="password" style="display:none">
-
 		                <div class="form-group" v-for="(field,index) in fields" :key="field.id">
 		                	<label>{{ field.display_name }}</label>
 		                    <div v-if="field.type == 'relationship'">
-
 		                        <multiselect
 		                        	v-if="field.relationship.relationType != 'belongsToMany'"
 		                            v-model="newRow[field.relationship.foreignKey]" 
@@ -35,7 +39,6 @@
 		                            id="update_relation"
 		                          >
 		                          </multiselect>
-
 		                          <multiselect
 		                        	 v-if="field.relationship.relationType == 'belongsToMany'"
 		                            v-model="newRow[field.relationship.relatedPivotKey]" 
@@ -227,8 +230,6 @@
         	};
         },
         created() {
-        	// console.log(this.action);
-        	// console.log(this.row);
         	axios.defaults.headers.common['Content-Type'] = 'application/json'
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('dbm.authToken');
         },
@@ -243,24 +244,21 @@
         	        data: formData,
         	        responseType: 'json',
         	    }).then(res => {
-        	        console.log(res.data);
         	        if( res.data.success == true ){
-        	            toastr.success("Record Added successfully.");
-        	            this.$emit('fresh');
-        	            this.$emit('reset');
-        	            this.closeModal();
+        	            toastr.success("Record Added successfully.")
+        	            this.$emit('fresh')
+        	            this.$emit('reset')
+        	            this.closeModal()
                         this.$Progress.finish()
         	        }
         	        
         	    })
         	    .catch(err => {
-        	        console.log(err.response);
                     this.$Progress.fail()
-        	        this.displayError(err.response);                
+        	        this.displayError(err.response)              
         	    });
         	},
         	updateRecord: function(row){
-                // console.log(row);
                 this.$Progress.start()
                 let formData = this.prepareFormData(row, this.fields, 'update');
 
@@ -273,20 +271,18 @@
                     data: formData,
                     responseType: 'json',
                 }).then(res => {
-                    console.log(res.data);
                     if( res.data.success == true ){
                         toastr.success("Record Updated successfully.");
-                        this.$emit('fresh');
-        	            this.$emit('reset');
-        	            this.closeModal();
+                        this.$emit('fresh')
+        	            this.$emit('reset')
+        	            this.closeModal()
                         this.$Progress.finish()
                     }
                     
                 })
                 .catch(err => {
-                    console.log(err.response);
                     this.$Progress.fail()
-                    this.displayError(err.response);                
+                    this.displayError(err.response)               
                 });
             },
         	prepareFormData: function(row, fields, action = 'create') {
@@ -335,8 +331,6 @@
                 formData.append('fields', JSON.stringify(fields));
                 formData.append('columns', JSON.stringify(row));
 
-                console.log(row);
-
                 if(action == 'update') {
                     let record = this.record;
                     for(let column in row) {
@@ -351,7 +345,6 @@
             },
             getSelectOptions: function(row, fieldName, field = null){
                 let options = row[fieldName];
-                console.log(options);
                 if(Array.isArray(options)) {
                     row[fieldName] = [];
                     for(let option of options) {
@@ -372,7 +365,6 @@
                 return row;
             },
         	geType: function(field) {
-                // console.log(field);
         		if(field.type == 'file' || field.type == 'image' || field.type == 'multiple_images') {
         			return 'file';
         		}
@@ -380,13 +372,11 @@
         	getFile: function(field, e) {
         		var files = e.target.files;
         		this.newRow[field.name] = files;
-        		// console.log(this.newRow);
         	},
             getRelationshipOptions: function(field) {
                 let options = field.foreignTableData;
                 let results = [];
                 for(let option of options) {
-                    // console.log(option);
                     results.push({
                         name: option[field.relationship.displayLabel], 
                         value: option[field.relationship.localKey], 
@@ -446,9 +436,6 @@
                 $('.modal').modal('hide');
                 $('.modal-backdrop').remove();
             },
-        },
-        mounted() {
-        	// console.log(this.field);
         }
     }
 </script>

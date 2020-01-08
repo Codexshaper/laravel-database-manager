@@ -3,9 +3,21 @@
 		<editor-menu-bar v-if="isMenuBar" :editor="richEditor" v-slot="{ commands, isActive }">
 		    <div class="rich-menu-bar">
 		    	<ul class="editor-element">
-		    		<li v-for="(button, index) in buttons" :key="index" v-if="index != 'heading' && index != 'table'">
-		    			<button v-if="button.method != ''" class="command" :class="{ 'is-active': isActive[button.method](button.levels) }" @click.prevent="command(commands, button)"><i :class="button.icon"></i>{{ button.text }}</button>
-		    			 <button v-else class="command" @click.prevent="command(commands, button)"><i :class="button.icon"></i>{{ button.text }}</button>
+		    		<li 
+		    			v-for="(button, index) in buttons" 
+		    			:key="index" 
+		    			v-if="index != 'heading' && index != 'table'">
+		    			<button 
+		    				v-if="button.method != ''" 
+		    				class="command" 
+		    				:class="{ 'is-active': isActive[button.method](button.levels) }" 
+		    				@click.prevent="command(commands, button)">
+		    				<i :class="button.icon"></i>{{ button.text }}</button>
+		    			 <button 
+		    			 	v-else 
+		    			 	class="command" 
+		    			 	@click.prevent="command(commands, button)">
+		    			 	<i :class="button.icon"></i>{{ button.text }}</button>
 		    		</li>
 		    	</ul>  
 		    </div>
@@ -113,7 +125,6 @@
         },
         methods: {
         	command: function(commands, button){
-        		console.log(commands);
         		if(button.commands == 'link') {
         			this.addLink(commands);
         		}else if(button.commands == 'image') {

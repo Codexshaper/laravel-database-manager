@@ -1,10 +1,10 @@
 <template>
     <div class="">
-        <!-- <div v-if="!isLoaded" class="loading">Loading</div> -->
         <div 
             class="database-error alert alert-danger" 
             role="alert" 
-            v-for="(databaseError,key) in databaseErrors" :key="key"> {{ databaseError }} </div>
+            v-for="(databaseError,key) in databaseErrors" 
+            :key="key"> {{ databaseError }} </div>
         <transition name="fade" mode="out-in">
             <div v-if="isLoaded" class="vue-content">
                 <div class="btn-area">
@@ -122,22 +122,13 @@
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('dbm.authToken');
             this.fetchCrudTables();
         },
-        beforeMount(){
-            
-        },
-        mounted() {
-            // this.fetchCrudTables();
-        },
         methods: {
             fetchCrudTables: function(page = 1) {
-
                 axios.get(`/api/database/crud/tables?page=${page}&perPage=${this.perPage}&q=${this.search}`)
                 .then(res => {
-                    console.log(res.data);
                     if( res.data.success == true ){
                         this.tables = res.data.tables;
                         this.userPermissions = res.data.userPermissions;
-                        // this.initDataTables('.database-tables');
                         this.pagination = res.data.pagination;
                         this.databaseErrors = [];
                         this.loadComponent();
@@ -161,7 +152,6 @@
                     if (result.value) {
                         this.$Progress.start()
                         axios.delete('/api/database/crud/'+table).then(res => {
-                            // console.log(res.data);
                             if( res.data.success == true ){
                                 toastr.success("CRUD Deleted Successfully");
                                 self.fetchCrudTables()
@@ -190,9 +180,6 @@
                     });
                 },1);
             },
-        },
-        mounted() {
-            // console.log(this.field);
         }
     }
 </script>

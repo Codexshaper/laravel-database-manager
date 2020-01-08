@@ -41,14 +41,6 @@
 			data: Object,
 			change: Function
 		},
-		data(){
-			return {
-				// pagination: this.data
-			}
-		},
-		created(){
-			console.log(this.data);
-		},
 		computed: {
 			pagination: function(){
 				return {

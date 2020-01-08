@@ -10,21 +10,32 @@
           <div class="crud-btn-area">
             <p> {{ tableName | capitalize }} Details</p>
           </div>
-          <form v-on:submit.prevent="addOrEditCrud" v-if="hasPermission(isCrudExists ? 'crud.update' : 'crud.create')">
+          <form 
+            v-on:submit.prevent="addOrEditCrud" 
+            v-if="hasPermission(isCrudExists ? 'crud.update' : 'crud.create')">
               <!-- Object -->
               <div class="table-details">
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="form-group">
                       <label for="">Table Name</label> 
-                      <input type="text" disabled="disabled" class="form-control" :value="table.name">
+                      <input 
+                        type="text" 
+                        disabled="disabled" 
+                        class="form-control" 
+                        :value="table.name">
                     </div>
                   </div> 
                   <div class="col-sm-6">
                     <div class="form-group">
                       <p>Create Model</p> 
                       <div class="onoffswitch">
-                        <input type="checkbox" name="onoffswitch" v-model="table.makeModel" id="'makeModel" class="onoffswitch-checkbox">
+                        <input 
+                          type="checkbox" 
+                          name="onoffswitch" 
+                          v-model="table.makeModel" 
+                          id="'makeModel" 
+                          class="onoffswitch-checkbox">
                         <label for="'makeModel" class="onoffswitch-label">
                           <span class="onoffswitch-inner"></span>
                           <span class="onoffswitch-switch"></span>
@@ -144,7 +155,12 @@
                       :fetchDatabaseTables="fetchDatabaseTables"
                       :userPermissions="userPermissions"
                     ></crud-fields>
-                    <div class="text-right"><input type="submit" class="btn btn-info " :value="this.isCrudExists ? 'Update' : 'Save'"></div>
+                    <div class="text-right">
+                      <input 
+                        type="submit" 
+                        class="btn btn-info " 
+                        :value="this.isCrudExists ? 'Update' : 'Save'">
+                    </div>
               </div>
           </form>
 
@@ -223,7 +239,6 @@
             async fetchDatabaseTables() {
 
                 let res = await this.getData();
-                console.log(res);
                 // Set fetched data
                 this.userPermissions = res.userPermissions;
                 this.relationship.tables = res.relationship_tables;
@@ -271,7 +286,6 @@
 
                 axios.post('/api/database/crud',{isCrudExists, object, fields})
                 .then(res => {
-                    // console.log(res.data);
                     if( res.data.success == true){
                       // Refresh
                       this.fetchDatabaseTables();
@@ -286,7 +300,6 @@
                     
                 })
                 .catch(err => {
-                    // console.log(err.response);
                     this.$Progress.fail()
                     this.displayError(err.response);               
                 });
@@ -364,9 +377,6 @@
 
                 },500);
             }
-        },
-        mounted() {
-            // console.log(this.field);
         }
     }
 </script>

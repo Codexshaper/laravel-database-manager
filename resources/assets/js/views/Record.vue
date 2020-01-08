@@ -2,7 +2,8 @@
     <div class="">
         <div 
             class="database-error alert alert-danger" 
-            role="alert" v-for="(databaseError,key) in databaseErrors" 
+            role="alert" 
+            v-for="(databaseError,key) in databaseErrors" 
             :key="key"> {{ databaseError }}
         </div>
         <transition name="fade" mode="out-in">
@@ -80,7 +81,10 @@
                         </tbody>
                     </table>
                 </div>
-                <div v-else class="database-error alert alert-danger" role="alert">There is no record available for {{ tableName }}</div>
+                <div 
+                    v-else 
+                    class="database-error alert alert-danger" 
+                    role="alert">There is no record available for {{ tableName }}</div>
 
                 <div class="row">
                     <div class="col-sm-12 col-md-5">
@@ -161,10 +165,8 @@
         },
         methods: {
             fetchDatabaseTables: function(page = 1) {
-
                 axios.get(`/api/database/table/details/${this.tableName}?page=${page}&perPage=${this.perPage}&q=${this.search}`)
                 .then(res => {
-                    console.log(res.data);
                     if( res.data.success == true ){
                         this.userPermissions = res.data.userPermissions;
                         this.object = res.data.object;
@@ -183,18 +185,11 @@
 
                         this.pagination = res.data.pagination;
                         this.isRecordModal = res.data.isRecordModal;
-
                         this.databaseErrors = [];
-
                         this.loadComponent();
                     }
-                    
                 })
-                .catch(err => {
-                    console.log(err);
-                    this.displayError(err.response);             
-                });
-                
+                .catch(err => this.displayError(err.response)); 
             },
             reload: _.debounce(function() {
                 this.fetchDatabaseTables();
@@ -214,7 +209,6 @@
                 this.record = this.records[index];
 
                 for(var field of this.editFields) {
-
                     switch(field.type) {
                         case 'relationship':
                             this.setRelationshipValues(field);
@@ -237,7 +231,6 @@
                 this.forceToRerender();
             },
             removeRecord: function(index) {
-                // console.log(index);
                 var self = this;
                 Swal.fire({
                     title: 'Are you sure?',
@@ -263,13 +256,11 @@
                           responseType: 'json',
                         })
                         .then(res => {
-                            // console.log(res.data);
                             if( res.data.success == true ){
                                 toastr.success("Record Deleted Successfully");
                                 self.fetchDatabaseTables();
                                 this.$Progress.finish()
                             }
-                            
                         })
                         .catch(err => {
                             this.$Progress.fail()
@@ -288,7 +279,6 @@
             displayRecordItem: function(record, field) {
 
                 switch(field.type) {
-
                     case 'relationship':
                         if(Array.isArray(record[field.name])) {
 
@@ -308,9 +298,7 @@
                         }
                         break;
                     case 'multiple_images':
-                        // var images = JSON.parse(record[field.name]);
                         let images = record[field.name];
-                        // console.log(typeof images);
                         var html = '<ul class="record-list">';
 
                         if(images) {
@@ -425,19 +413,13 @@
                     switch(field.type) {
                         case 'relationship':
                             if(field.relationship.relationType == 'hasMany') {
-                                // console.log(field.relationship.foreignKey);
                                 this.row[field.relationship.foreignKey] = [];
-                                // this.relationshipValues[field.relationship.foreignKey] = [];
                                 
                             } else if(field.relationship.relationType == 'belongsToMany') {
-                                // console.log(field.relationship.relatedPivotKey);
                                 this.row[field.relationship.relatedPivotKey] = [];
-                                // console.log(field.relationship.relatedPivotKey);\
-                                // this.relationshipValues[field.relationship.relatedPivotKey] = [];
                                 
                             } else {
                                 this.row[field.relationship.foreignKey] = "";
-                                // this.relationshipValues[field.relationship.foreignKey] = "";
                             }
                             break;
                         case 'multiple_images':
@@ -454,7 +436,6 @@
             forceToRerender() {
                 // Remove my-component from the DOM
                 this.isRenderComponent = false;
-                
                 this.$nextTick(() => {
                   // Add the component back in
                   this.isRenderComponent = true;
@@ -463,9 +444,6 @@
             resetForm: function(){
                 this.row= {};
             },
-        },
-        mounted() {
-            // console.log(this.field);
         }
     }
 </script>

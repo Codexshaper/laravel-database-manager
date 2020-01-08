@@ -316,10 +316,10 @@ class Manager
             return 'not_logged_in';
         }
 
-        $user_model        = config('dbm.user.model');
-        $user_table        = config('dbm.user.table');
-        $user_local_key    = config('dbm.user.local_key');
-        $user_display_name = config('dbm.user.display_name');
+        $user_model        = config('dbm.auth.user.model');
+        $user_table        = config('dbm.auth.user.table');
+        $user_local_key    = config('dbm.auth.user.local_key');
+        $user_display_name = config('dbm.auth.user.display_name');
 
         $permissions = $this->userPermissions();
 

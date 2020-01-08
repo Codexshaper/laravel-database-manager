@@ -3,7 +3,8 @@
         <div 
             class="database-error alert alert-danger" 
             role="alert" 
-            v-for="(databaseError,key) in databaseErrors" :key="key"> {{ databaseError }} </div>
+            v-for="(databaseError,key) in databaseErrors" 
+            :key="key"> {{ databaseError }} </div>
         <transition name="fade" mode="out-in">
             <div v-if="isLoaded" class="vue-content">
                 <div class="btn-area"">
@@ -170,13 +171,10 @@
             fetchDatabaseTables: function(page=1) {
                 axios.get(`/api/database/tables?page=${page}&perPage=${this.perPage}&q=${this.search}`)
                 .then(res => {
-                    // console.log(res.data);
                     if( res.data.success == true ){
                         this.tables = res.data.tables;
                         this.pagination = res.data.pagination;
                         this.userPermissions = res.data.userPermissions;
-                        
-                        // this.initDataTables('.database-tables');
                         this.databaseErrors = [];
                         this.loadComponent();
                     } 
@@ -190,7 +188,6 @@
                 this.category = tableName;
                 axios.get('/api'+this.prefix+'/database/table/'+tableName)
                 .then(res => {
-                    // console.log(res.data);
                     if( res.data.success == true ){
                       // Set values
                       this.fields = res.data.table.columns;
@@ -213,10 +210,8 @@
                 this.forceToRender();
             },
             createTable: function(tableName) {
-
                 let columns = this.prepareColumns(this.fields);
                 let indexes = this.prepareIndexes(this.fields);
-
                 let table = JSON.stringify({
                     name: tableName,
                     oldName: "",
@@ -240,7 +235,6 @@
                   responseType: 'json',
                 })
                 .then(res => {
-                    // console.log(res.data);
                     if( res.data.success == true ){
                         toastr.success('Table Created Successfully.');
                         self.fetchDatabaseTables();
@@ -269,7 +263,6 @@
                         axios.delete('/api'+this.prefix+'/database/table',{
                           params: { table: tableName },
                         }).then(res => {
-                            // console.log(res.data);
                             if( res.data.success == true ){
                                 toastr.success("Table Deleted Successfully");
                                 this.search = "";
@@ -385,12 +378,9 @@
                 },1);
             },
             backupTable: function(table){
-                console.log(table);
                 this.$Progress.start()
                 var url = '/api'+this.prefix+'/database/backup';
                 var self = this;
-
-                console.log(url);
 
                 axios({
                   method: 'post',
@@ -402,7 +392,6 @@
                   responseType: 'json',
                 })
                 .then(res => {
-                    console.log(res.data);
                     if( res.data.success == true ){
                         toastr.success('Table BackedUp Successfully.');
                         this.$Progress.finish()

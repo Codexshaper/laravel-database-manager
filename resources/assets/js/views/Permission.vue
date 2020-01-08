@@ -3,7 +3,8 @@
         <div 
             class="database-error alert alert-danger" 
             role="alert" 
-            v-for="(databaseError,key) in databaseErrors" :key="key"> {{ databaseError }} </div>
+            v-for="(databaseError,key) in databaseErrors" 
+            :key="key"> {{ databaseError }} </div>
         <transition name="fade" mode="out-in">
             <div v-if="isLoaded" class="vue-content">
                 <div class="table-responsive">
@@ -178,7 +179,6 @@
                   responseType: 'json',
                 })
                 .then(res => {
-                    // console.log(res.data);
                     if( res.data.success == true ){
                         this.permissions = res.data.permissions;
                         this.all_privileges = res.data.privileges;
@@ -215,7 +215,6 @@
                 this.action = 'add';
             },
             addUserPermissions: function(privileges){
-                // console.log(privileges);
                 this.$Progress.start()
                 let url = '/api'+this.prefix+'/database/permissions/assignUserPermissions';
                 let self = this;
@@ -229,7 +228,6 @@
                     },
                     responseType: 'json',
                 }).then(res => {
-                    // console.log(res.data);
                     if( res.data.success == true ){
                         toastr.success("Permission assigned successfully.");
                         self.fetchDatabasePermissions();
@@ -255,7 +253,6 @@
                 }
             },
             updateUserPermissions: function(privileges) {
-                // console.log(privileges);
                 this.$Progress.start()
                 let url = '/api'+this.prefix+'/database/permissions/syncUserPermissions';
                 let self = this;
@@ -269,7 +266,6 @@
                     },
                     responseType: 'json',
                 }).then(res => {
-                    console.log(res.data);
                     if( res.data.success == true ){
                         toastr.success("Permission Updated successfully.");
                         self.fetchDatabasePermissions();
@@ -280,7 +276,6 @@
                     
                 })
                 .catch(err => {
-                    console.log(err);
                     this.$Progress.fail()
                     this.displayError(err.response)
                 });
@@ -308,7 +303,6 @@
                           responseType: 'json',
                         })
                         .then(res => {
-                            // console.log(res.data);
                             if( res.data.success == true ){
                                 toastr.success("User Permiussion Deleted Successfully");
                                 self.fetchDatabasePermissions();
@@ -331,7 +325,6 @@
                 });
             },
             selectAllPrevelege: function(value){
-                // console.log(value);
                 this.privileges = [];
                 if(value == true) {
                     let permissions = this.permissions;
@@ -341,7 +334,6 @@
                         }
                     }
                 }
-                
             },
             initDataTables: function(selector){
                 $(selector).dataTable().fnDestroy();
@@ -370,9 +362,6 @@
                 $('.modal').modal('hide');
                 $('.modal-backdrop').remove();
             },
-        },
-        mounted() {
-            // console.log(this.field);
         }
     }
 </script>

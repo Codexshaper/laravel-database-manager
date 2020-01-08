@@ -186,13 +186,8 @@
             return value.charAt(0).toUpperCase() + value.slice(1)
           }
         },
-        created(){
-          // axios.defaults.headers.common['Content-Type'] = 'application/json'
-          // axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('dbm.authToken');
-        },
         methods: {
           getId: function(field){
-              // console.log(this.driver);
               return (this.driver == 'mongodb') ? field._id : field.id;
           },
           showAddRelationForm: function(){
@@ -200,13 +195,11 @@
             this.fetchDatabaseTables();
           },
           addRelation: function(){
-              // console.log(this.relationship);
               this.$Progress.start()
               var relationship = this.relationship;
 
               axios.post('/api/database/relationship',{relationship})
               .then(res => {
-                  // console.log(res.data);
                   if( res.data.success == true ){
                     toastr.success("Relation Added successfully.",this.tableName);
                     this.fetchDatabaseTables();
@@ -216,7 +209,6 @@
                   
               })
               .catch(err => {
-                  // console.log(err.response);
                   this.$Progress.fail()
                   this.displayError(err.response);               
               });
@@ -233,7 +225,6 @@
                 }
               })
               .then(res => {
-                  // console.log(res.data);
                   if( res.data.success == true ){
 
                     var field = res.data.field;
@@ -254,10 +245,7 @@
                   }
                   
               })
-              .catch(err => {
-                  // console.log(err.response);
-                  this.displayError(err.response);              
-              });
+              .catch(err => this.displayError(err.response));
           },
           updateRelation: function(){
             this.$Progress.start()
@@ -266,18 +254,15 @@
 
             axios.put('/api/database/relationship', {field,relationship})
             .then(res => {
-                // console.log(res.data);
                 if( res.data.success == true ){
                   toastr.success("CRUD Update successfully.",this.tableName);
                   this.fetchDatabaseTables();
-                  // this.resetForm();
                   this.closeModal();
                   this.$Progress.finish()
                 }
                 
             })
             .catch(err => {
-                // console.log(err.response);
                 this.$Progress.fail()
                 this.displayError(err.response);
 
@@ -303,14 +288,12 @@
                       }
                     })
                     .then(res => {
-                        console.log(res.data);
                         if( res.data.success == true ){
                             toastr.success("Relation Deleted Successfully");
                             this.fetchDatabaseTables();
                         }
                     })
                     .catch(err => {
-                      console.log(err);
                       this.displayError(err.response);
                     });
 
@@ -337,14 +320,12 @@
           },
           changeForeignTable: function(event){
             this.getTableColumns(event.target.value).then(res => {
-              console.log(res.data)
-               this.relationship.foreignFields = res.data.fields;
+              this.relationship.foreignFields = res.data.fields;
             });
           },
           changePivotTable: function(event) {
             this.getTableColumns(this.relationship.pivotTable).then(res => {
-              console.log(res.data)
-               this.relationship.belongsToManyFields = res.data.fields;
+              this.relationship.belongsToManyFields = res.data.fields;
             });
           },
           getTableColumns: function(table) {
@@ -358,9 +339,6 @@
               $('.modal-backdrop').remove();
           },
             
-        },
-        mounted() {
-            // console.log(this.field);
         }
     }
 </script>

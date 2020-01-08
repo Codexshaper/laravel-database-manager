@@ -48,8 +48,14 @@
             </div>
         </div>
 	    <!--  create form modal -->
-	    <div v-if="hasPermission('database.create')" class="modal fade" id="createTableModal" tabindex="-1" role="dialog" aria-labelledby="createTableModal"
-	          aria-hidden="true">
+	    <div 
+	    	v-if="hasPermission('database.create')" 
+	    	class="modal fade" 
+	    	id="createTableModal" 
+	    	tabindex="-1" 
+	    	role="dialog" 
+	    	aria-labelledby="createTableModal"
+	        aria-hidden="true">
 	        <div class="modal-dialog" role="document">
 	            <div class="modal-content">
 	              <div class="modal-header">

@@ -249,7 +249,6 @@
 		},
         data() {
         	return {
-        		// isNotSupportedIndex: false,
         		driver: this.connection,
         	};
         },
@@ -287,9 +286,6 @@
         		return (this.connection == 'mongodb');
         	}
         },
-        created() {
-        	// console.log(this.isNotSupportedIndex);
-        },
         methods: {
         	addTemplate(template) {
         		let field = {...template};
@@ -312,7 +308,6 @@
         	  this.disableAutoIncrement = false;
         	},
         	checkSupportedIndex: function(field){
-        	  // console.log(field);
         	  if(this.notSupportIndexs.includes(field.type.name)) {
         	    return false;
         	  }
@@ -330,9 +325,6 @@
         	    $('.modal').modal('hide');
         	    $('.modal-backdrop').remove();
         	},
-        },
-        mounted() {
-        	// console.log(this.field);
         }
     }
 </script>

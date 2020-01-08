@@ -120,7 +120,6 @@
             };
         },
         created() {
-            // console.log(this.$route.params);
             toastr.options.closeButton = true;
             axios.defaults.headers.common['Content-Type'] = 'application/json'
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('dbm.authToken');
@@ -131,7 +130,6 @@
 
               axios.get('/api/database/table/'+this.tableName)
               .then(res => {
-                  console.log(res.data);
                   if( res.data.success == true ){
                     // Set values
                     this.userPermissions = res.data.userPermissions;
@@ -153,10 +151,7 @@
                     this.loadComponent();
                   }
               })
-              .catch(err => {
-                console.log(err);
-                this.displayError(err.response)
-              });
+              .catch(err => this.displayError(err.response));
             },
             updateTable: function(tableName) {
 
@@ -168,12 +163,6 @@
 
                 let columns = this.prepareColumns(this.fields);
                 let indexes = this.prepareIndexes(this.fields);
-                // let indexes = this.indexes;
-                // console.log(columns);
-                // console.log(indexes);
-
-                // console.log(this.templates);
-                
                 let table = JSON.stringify({
                     name: tableName,
                     oldName: this.oldTable,
@@ -184,7 +173,6 @@
                     options: this.options
                 });
                 this.$Progress.start();
-                // console.log(table);
                 let url = '/api/database/table';
                 let self = this;
 
@@ -198,7 +186,6 @@
                   responseType: 'json',
                 })
                 .then(res => {
-                    console.log(res.data);
                     if( res.data.success == true ){
                         toastr.success('Table Updated Successfully.');
                         if(this.oldTable != this.tableName) {
@@ -210,13 +197,11 @@
                     
                 })
                 .catch(err => {
-                  console.log(err);
                   this.$Progress.fail()
                   this.displayError(err.response)
                 });
             },
             prepareColumns: function(fields) {
-                // console.log(fields);
                 let columns = [];
                 for( var field of fields ) {
                     let column = {
@@ -254,7 +239,6 @@
 
               axios.post('/api/database/template', {template: field})
               .then(res =>{
-                console.log(res.data);
                 if(res.data.success == true) {
                   this.templates = res.data.templates;
                   // Switch tab
@@ -270,10 +254,8 @@
               
             },
             removeTemplate: function(field){
-              console.log(field.name);
               axios.delete('/api'+this.prefix+'/database/template',{params: {name: field.name}})
               .then(res =>{
-                console.log(res.data);
                 if(res.data.success == true) {
                   this.templates = res.data.templates;
                   toastr.success(' Template Deleted Successfully.');
@@ -283,7 +265,6 @@
               
             },
             getIndex: function(field) {
-              // console.log(field);
               for(var index of this.indexes) {
                   var columns = index.columns;
                   if(columns.includes(field.name)) {
@@ -330,7 +311,6 @@
                 this.indexes.push(index);
             },
             getDefaultLength: function(field){
-              // console.log(field.type.name);
               switch(field.type.name) {
                 case 'varchar':
                   return 191;

@@ -9,15 +9,21 @@
                 <div 
                     class="database-success alert alert-success" 
                     role="alert">
-                        <router-link v-if="action == 'edit'" :to="{ name: 'addditRecord', params:{tableName: tableName} }" class="btn btn-success cs-all-btn"><i class="fas fa-plus"></i>Create Record</router-link>
-                        <router-link :to="{ name: 'record', params:{tableName: tableName} }" class="btn btn-success cs-all-btn"><i class="fas fa-reply"></i> Records</router-link>
+                        <router-link 
+                            v-if="action == 'edit'" 
+                            :to="{ name: 'addditRecord', params:{tableName: tableName} }" 
+                            class="btn btn-success cs-all-btn">
+                            <i class="fas fa-plus"></i>Create Record</router-link>
+                        <router-link 
+                            :to="{ name: 'record', params:{tableName: tableName} }" 
+                            class="btn btn-success cs-all-btn">
+                            <i class="fas fa-reply"></i> Records</router-link>
                     </div>
                 <form 
                     v-on:submit.prevent="(action == 'edit') ? updateRecord(row) : createRecord(row)" 
                     autocomplete="off">
                     <!-- Stop autocomplete for password -->
                     <input type="password" style="display:none">
-
                     <div class="form-group" v-for="(field,index) in fields" :key="field.id">
                         <label>{{ field.display_name }}</label>
                         <div v-if="field.type == 'relationship'">
@@ -37,7 +43,6 @@
                                  @input="changeInputValue(field.relationship.foreignKey)"
                               >
                               </multiselect>
-
                               <multiselect
                                 v-if="field.relationship.relationType == 'belongsToMany'"
                                 v-model="row[field.relationship.relatedPivotKey]" 
@@ -241,7 +246,6 @@
             if(this.id) {
                 this.action = "edit";
             }
-            // console.log(this.id);
             toastr.options.closeButton = true;
             axios.defaults.headers.common['Content-Type'] = 'application/json'
             axios.defaults.headers.common['Authorization'] = 'Bearer ' + localStorage.getItem('dbm.authToken');
@@ -249,13 +253,11 @@
         },
         methods: {
             fetchTableDetails: function() {
-
                 axios(`/api/database/table/details/${this.tableName}`,{
                   params: {
                     findValue: this.action == 'edit' ? this.id : null
                   }
                 }).then(res => {
-                    console.log(res.data);
                     if( res.data.success == true ){
                         this.userPermissions = res.data.userPermissions;
                         this.createFields = res.data.createFields;
@@ -263,7 +265,6 @@
                         this.browseFields = res.data.browseFields;
                         this.deleteFields = res.data.deleteFields;
                         this.records = res.data.records;
-
                         this.row = {};
                         this.fields = this.action == 'edit' ? res.data.editFields : res.data.createFields;
                         this.setDefaultFormValue(this.fields);
@@ -277,16 +278,11 @@
                     }
                     
                 })
-                .catch(err => {
-                    console.log(err);
-                    this.displayError(err.response);             
-                });
+                .catch(err => this.displayError(err.response));
             },
             createRecord: function(row){
                 this.$Progress.start();
-
                 let formData = this.prepareFormData(row, this.createFields);
-
                 axios({
                     method: 'post',
                     url: '/api/database/record',
@@ -313,16 +309,13 @@
                     
                 })
                 .catch(err => {
-                    console.log(err.response);
                     this.$Progress.fail()
                     this.displayError(err.response);                
                 });
             },
             updateRecord: function(row){
-                // console.log(row);
                 this.$Progress.start()
                 let formData = this.prepareFormData(row, this.editFields, 'update');
-
                 axios({
                     method: 'post',
                     url: '/api/database/record',
@@ -332,7 +325,6 @@
                     data: formData,
                     responseType: 'json',
                 }).then(res => {
-                    console.log(res.data);
                     if( res.data.success == true ){
                         toastr.success("Record Updated successfully.");
                         this.fetchTableDetails();
@@ -341,17 +333,13 @@
                     
                 })
                 .catch(err => {
-                    console.log(err.response);
                     this.$Progress.fail()
                     this.displayError(err.response);                
                 });
             },
             prepareFormData: function(row, fields, action = 'create') {
-
                 let formData = new FormData();
-
                 for(let field of fields) {
-
                     switch(field.type) {
                         case 'file':
                         case 'image':
@@ -394,21 +382,19 @@
 
                 if(action == 'update') {
                     let record = this.record;
+
                     for(let column in row) {
                         record[column] = row[column];
                     }
 
-                    // console.log(record);
-
                     formData.append('columns', JSON.stringify(record));
                     formData.append('_method', 'put');
                 }
-
                 return formData;
             },
             getSelectOptions: function(row, fieldName, field = null){
                 let options = row[fieldName];
-                console.log(options);
+
                 if(Array.isArray(options)) {
                     row[fieldName] = [];
                     for(let option of options) {
@@ -429,8 +415,6 @@
                 return row;
             },
             setRelationshipValues: function(field){
-
-                // let index = this.currentIndex;
                 let relationshipValues = [];
 
                 switch(field.relationship.relationType) {
@@ -467,8 +451,6 @@
                 }
             },
             setDropdownValues: function(field){
-
-                // let index = this.currentIndex;
                 let options = field.settings.options;
                 let records = this.record[field.name];
 
@@ -501,27 +483,18 @@
                 }
             },
             setDefaultFormValue(fields) {
-
                 for(var key in fields) {
-
                     var field = fields[key];
-
                     switch(field.type) {
                         case 'relationship':
                             if(field.relationship.relationType == 'hasMany') {
-                                // console.log(field.relationship.foreignKey);
                                 this.row[field.relationship.foreignKey] = [];
-                                // this.relationshipValues[field.relationship.foreignKey] = [];
-                                
+
                             } else if(field.relationship.relationType == 'belongsToMany') {
-                                // console.log(field.relationship.relatedPivotKey);
                                 this.row[field.relationship.relatedPivotKey] = [];
-                                // console.log(field.relationship.relatedPivotKey);\
-                                // this.relationshipValues[field.relationship.relatedPivotKey] = [];
                                 
                             } else {
                                 this.row[field.relationship.foreignKey] = "";
-                                // this.relationshipValues[field.relationship.foreignKey] = "";
                             }
                             break;
                         case 'multiple_images':
@@ -537,9 +510,7 @@
             },
             setEditFormData: function(){
                 for(var field of this.editFields) {
-
                     let value = this.record[field.name];
-
                     switch(field.type) {
                         case 'relationship':
                             this.setRelationshipValues(field);
@@ -566,7 +537,6 @@
                 }
             },
             geType: function(field) {
-                // console.log(field);
                 if(field.type == 'file' || field.type == 'image' || field.type == 'multiple_images') {
                     return 'file';
                 }
@@ -574,13 +544,11 @@
             getFile: function(field, e) {
                 var files = e.target.files;
                 this.row[field.name] = files;
-                // console.log(this.row);
             },
             getRelationshipOptions: function(field) {
                 let options = field.foreignTableData;
                 let results = [];
                 for(let option of options) {
-                    // console.log(option);
                     results.push({
                         name: option[field.relationship.displayLabel], 
                         value: option[field.relationship.localKey], 
@@ -603,7 +571,6 @@
                 if(field.type == 'image' || field.type == 'multiple_images') {
                     return "image/*";
                 }
-
                 return false;
             },
             checkMultiple: function(field) {
@@ -614,7 +581,6 @@
                         this.row[field.name] = [];
                     }
                 }
-
                 return false;
             },
             unAvailableUniqueValues: function(field, current = null){
@@ -625,7 +591,6 @@
                     }
                     items.push(record[field.name]);
                 }
-
                 return items;
             },
             checkUniqueNumber: function(field) {
@@ -640,16 +605,10 @@
                 }
             },
             changeInputValue: function(fieldName) {
-                // console.log(this.row);
                 let row = {...this.row};
-                // this.row[field.name] = [];
                 Vue.delete(this.row, fieldName);
                 this.row[fieldName] = row[fieldName];
-                
-                // console.log(this.row);
             }
-        },
-        mounted() {
         },
     }
 </script>

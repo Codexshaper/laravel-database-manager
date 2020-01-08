@@ -31,10 +31,10 @@ class PermissionController extends Controller
 
             try
             {
-                $user_model        = config('dbm.user.model');
-                $user_table        = config('dbm.user.table');
-                $user_local_key    = config('dbm.user.local_key');
-                $user_display_name = config('dbm.user.display_name');
+                $user_model        = config('dbm.auth.user.model');
+                $user_table        = config('dbm.auth.user.table');
+                $user_local_key    = config('dbm.auth.user.local_key');
+                $user_display_name = config('dbm.auth.user.display_name');
 
                 $users = DBM::model($user_model, $user_table)->get();
 
@@ -157,10 +157,10 @@ class PermissionController extends Controller
      */
     protected function getRelation($user)
     {
-        $user_model        = config('dbm.user.model');
-        $user_table        = config('dbm.user.table');
-        $user_local_key    = config('dbm.user.local_key');
-        $user_display_name = config('dbm.user.display_name');
+        $user_model        = config('dbm.auth.user.model');
+        $user_table        = config('dbm.auth.user.table');
+        $user_local_key    = config('dbm.auth.user.local_key');
+        $user_display_name = config('dbm.auth.user.display_name');
 
         $localModel = DBM::model($user_model, $user_table)
             ->where($user_local_key, $user->{$user_local_key})
