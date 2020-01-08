@@ -292,7 +292,7 @@ class Manager
     /**
      * Check user loggedin or not
      *
-     * @return \Illuminate\Http\Response|true
+     * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\View\View
      */
     public function isLoggedIn()
     {
