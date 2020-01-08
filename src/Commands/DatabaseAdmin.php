@@ -64,8 +64,8 @@ class DatabaseAdmin extends Command
             $successMessage = "Admin Deleted successfully";
         }
 
-        $userModel   = config('dbm.user.model');
-        $userTable   = config('dbm.user.table');
+        $userModel   = config('dbm.auth.user.model');
+        $userTable   = config('dbm.auth.user.table');
         $localObject = Manager::model($userModel, $userTable)
             ->where($column, $email)
             ->first();

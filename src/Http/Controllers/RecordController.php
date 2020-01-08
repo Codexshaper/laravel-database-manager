@@ -8,6 +8,7 @@ use CodexShaper\DBM\Facades\Manager as DBM;
 use CodexShaper\DBM\Traits\RecordRelationship;
 use CodexShaper\DBM\Traits\RecordTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Config;
 
 class RecordController extends Controller
 {
@@ -300,6 +301,7 @@ class RecordController extends Controller
                 'foreignTableData' => $foreignTableData,
                 'userPermissions'  => DBM::userPermissions(),
                 'pagination'       => $records,
+                'isRecordModal'    => Config::get('dbm.crud.record.is_modal'),
             ]);
         }
 

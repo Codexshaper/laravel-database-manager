@@ -182,6 +182,7 @@
                         }
 
                         this.pagination = res.data.pagination;
+                        this.isRecordModal = res.data.isRecordModal;
 
                         this.databaseErrors = [];
 
