@@ -2,8 +2,10 @@
 [![Build Status](https://travis-ci.org/Codexshaper/laravel-database-manager.svg?branch=master)](https://travis-ci.org/Codexshaper/laravel-database-manager)
 [![Quality Score](https://img.shields.io/scrutinizer/g/Codexshaper/laravel-database-manager.svg?style=flat-square)](https://scrutinizer-ci.com/g/Codexshaper/laravel-database-manager)
 
-# laravel-database-manager
+# Description
 Make your database simple and easyer
+
+[Documentation](https://codexshaper.github.io/docs/laravel-database-manager/)
 
 # Install package
 
