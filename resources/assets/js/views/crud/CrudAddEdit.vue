@@ -18,7 +18,7 @@
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="form-group">
-                      <label for="">Table Name</label> 
+                      <label for="">Table Name <span class="badge badge-success">required</span></label> 
                       <input 
                         type="text" 
                         disabled="disabled" 
@@ -28,7 +28,7 @@
                   </div> 
                   <div class="col-sm-6">
                     <div class="form-group">
-                      <p>Create Model</p> 
+                      <p>Create Model <span class="badge badge-success">optional</span></p> 
                       <div class="onoffswitch">
                         <input 
                           type="checkbox" 
@@ -47,17 +47,17 @@
                 <div class="row">
                   <div class="col-sm-6">
                     <div class="form-group">
-                      <label for="">URL Slug (must be unique)</label> 
+                      <label for="">URL Slug (must be unique) <span class="badge badge-success">required</span></label> 
                       <input type="text" class="form-control" v-model="table.slug">
                     </div> 
                     <div class="form-group">
-                      <label for="model_name">Model Name </label> 
+                      <label for="model_name">Model Name <span class="badge badge-success">required</span></label> 
                       <input type="text" class="form-control" v-model="table.model">
                     </div>
                     <div class="row">
                       <div class="col-sm-4">
                         <div class="form-group">
-                          <label for="">Find Column </label>
+                          <label for="">Find Column <span class="badge badge-success">required</span></label>
                           <select class="form-control" v-model="table.findColumn">
                              <option 
                                v-for="(relationship_field,index) in relationship.localFields" 
@@ -68,7 +68,7 @@
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
-                          <label for="">Search Column </label> 
+                          <label for="">Search Column <span class="badge badge-success">optional</span></label> 
                           <select class="form-control" v-model="table.searchColumn">
                              <option value="">Select Field</option>
                              <option 
@@ -80,7 +80,7 @@
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
-                          <label for="">Pagination </label> 
+                          <label for="">Pagination <span class="badge badge-success">optional</span></label> 
                           <select class="form-control" v-model="table.perPage">
                              <option value="">Select Per Page</option>
                              <option value="1">1</option>
@@ -97,17 +97,17 @@
                   </div> 
                   <div class="col-sm-6">
                     <div class="form-group">
-                      <label>Display Name (Plural)</label> 
+                      <label>Display Name (Plural) <span class="badge badge-success">required</span></label> 
                       <input type="text" class="form-control" v-model="table.display_name">
                     </div> 
                     <div class="form-group">
-                      <label>Controller Name</label> 
+                      <label>Controller Name <span class="badge badge-success">optional</span></label> 
                       <input type="text" class="form-control" v-model="table.controller">
                     </div> 
                     <div class="row" style="margin-top: 15px;">
                       <div class="col-md-4">
                         <div class="form-group">
-                          <label for="policy_name">Order column  </label> 
+                          <label for="policy_name">Order column <span class="badge badge-success">required</span></label> 
                           <select class="form-control" v-model="table.orderColumn">
                             <option value="">Select Field</option>
                             <option 
@@ -119,7 +119,7 @@
                       </div> 
                       <div class="col-sm-4">
                         <div class="form-group">
-                          <label for="policy_name">Order display column   </label>
+                          <label for="policy_name">Order display column <span class="badge badge-success">optional</span></label>
                           <select class="form-control" v-model="table.orderDisplayColumn">
                              <option value="">Select Field</option>
                              <option 
@@ -131,7 +131,7 @@
                       </div>
                       <div class="col-sm-4">
                         <div class="form-group">
-                          <label for="">Order direction</label> 
+                          <label for="">Order direction <span class="badge badge-success">required</span></label> 
                           <select class="form-control" v-model="table.orderDirection">
                              <option value="ASC"> Ascending</option>
                              <option value="DESC" selected=""> Descending </option>

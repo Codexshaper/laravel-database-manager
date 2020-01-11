@@ -249,8 +249,11 @@ trait RecordTrait
             $rules          = $createSettings->rules;
         } else if ($action == 'update' && isset($settings->update)) {
             $updateSettings = $settings->update;
-            $localKey       = $updateSettings->localKey;
-            $rules          = $updateSettings->rules . ',' . $columns->{$localKey};
+            $rules          = $updateSettings->rules;
+            if (isset($updateSettings->localKey)) {
+                $localKey = $updateSettings->localKey;
+                $rules    = $updateSettings->rules . ',' . $columns->{$localKey};
+            }
         }
 
         return $rules;

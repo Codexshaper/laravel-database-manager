@@ -5,7 +5,7 @@
 		  <div class="modal-dialog" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h4 class="modal-title font-weight-bold">{{ (action =='edit') ? 'Update' : 'Make' }} a Relationship</h4>
+		        <h4 class="modal-title font-weight-bold">{{ (action =='edit') ? 'Update' : 'Make' }} a Relation</h4>
 		        <button type="button" style="color:#fff" class="close" data-dismiss="modal" aria-label="Close">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
@@ -51,7 +51,7 @@
 			        			placeholder="Fully Qualified Model Name" />
 			        	</div>
 			        	<div class="col-md-6" v-if="relationship.type == 'belongsToMany'">
-			        	     <label>Pivot Table:</label>
+			        	     <label>Pivot Table</label>
 			        	    <select class="form-control" @change = "changePivotTable($event)" v-model="relationship.pivotTable">
 			        	        <option 
 			        	        	v-for="(pivot_table,index) in relationship.tables" 

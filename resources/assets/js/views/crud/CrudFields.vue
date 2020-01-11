@@ -7,7 +7,7 @@
           v-on:click.prevent="showAddRelationForm"  
           class="btn btn-relationship" 
           data-toggle="modal" 
-          data-target="#relationshipModal">Make a Relationship</button>
+          data-target="#relationshipModal">Make a Relation</button>
     </div>
     <div class="panel-body">
       <div class="row cs-table-head">
@@ -126,9 +126,16 @@
                       </div>
 
                       <div class="col-sm-3 field-setting">
-                        <textarea v-model="field.settings"></textarea>
+                        <a href="#" class="btn-link field-setting-link" data-toggle="collapse" :data-target="'#'+field.name"
+                        :class="{active: field.isSettingsActive}" @click="fireSettingsToggle(field)">
+                          {{ field.isSettingsActive ? 'close' : 'open' }} settings <i class="fas " :class="field.isSettingsActive ? 'fa-angle-up' : 'fa-angle-down'"></i>
+                        </a>
                       </div>
-                      
+                    </div>
+                  </div>
+                  <div class="collapse" :id="field.name">
+                    <div class="card card-body">
+                      <textarea v-model="field.settings" class="field-setting-input"></textarea>
                     </div>
                   </div>
                 </li>
@@ -176,8 +183,15 @@
         data() {
             return {
               currentIndex: 0,
-              action: 'add'
+              action: 'add',
             };
+        },
+        created(){
+          for(let field of this.fields) {
+            if(field.isSettingsActive == undefined) {
+              field.isSettingsActive = false;
+            }
+          }
         },
         filters: {
           capitalize: function (value) {
@@ -331,6 +345,15 @@
           getTableColumns: function(table) {
               return axios.get(`/api/database/table/columns/${table}`)
           },
+          fireSettingsToggle: function(field){
+            let isSettingsActive = field.isSettingsActive;
+            Vue.delete(field, 'isSettingsActive');
+            if(isSettingsActive) {
+              field.isSettingsActive = false;
+            }else {
+              field.isSettingsActive = true;
+            }
+          },
           resetForm: function(){
               this.relationship= {};
           },
@@ -342,3 +365,20 @@
         }
     }
 </script>
+<style>
+  .card {
+    background: -webkit-linear-gradient(#fafafa 0%, #eee 100%);
+    background: -o-linear-gradient(#fafafa 0%, #eee 100%);
+    background: linear-gradient(#fafafa 0%, #eee 100%);
+    margin-top: -6px;
+    border-top: 0px;
+    padding: 0px;
+  }
+  .field-setting-link {
+    color: #676a6d;
+  }
+  .field-setting-input {
+    padding: 15px;
+    border: 0px;
+  }
+</style>

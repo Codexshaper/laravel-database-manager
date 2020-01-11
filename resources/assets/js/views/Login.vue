@@ -52,6 +52,9 @@
                 prefix: localStorage.getItem('dbm.prefix')
             }
         },
+        created(){
+            this.redirectTo()
+        },
         methods: {
             handleSubmit(e) {
                 e.preventDefault()
