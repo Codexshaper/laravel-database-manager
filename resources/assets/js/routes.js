@@ -2,7 +2,6 @@ import VueRouter from 'vue-router';
 
 // import App from './views/App'
 import Login from './views/Login'
-import Api from './views/Api'
 
 import Database from './views/Database.vue'
 import Builder from './views/database/Builder.vue'
@@ -177,23 +176,6 @@ const router = new VueRouter({
                     {
                         name: 'backup',
                         display: 'Backups'
-                    }
-                ]
-            }
-        },
-        {
-            path: prefix+'/api',
-            name: 'api',
-            component: Api,
-            meta: {
-                breadcrumbs: [
-                    {
-                        name: 'database',
-                        display: 'Database'
-                    },
-                    {
-                        name: 'api',
-                        display: 'Api'
                     }
                 ]
             }

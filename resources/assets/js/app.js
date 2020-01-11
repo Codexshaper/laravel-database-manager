@@ -16,10 +16,6 @@ import _ from 'lodash'
 import Multiselect from 'vue-multiselect';
 Vue.component('multiselect', Multiselect);
 
-// import hljs from 'highlight.js/lib/highlight';
-// import php from 'highlight.js/lib/languages/php';
-// hljs.registerLanguage('php', php);
-
 import 'v-markdown-editor/dist/index.css';
 
 import Editor from 'v-markdown-editor'
@@ -44,7 +40,6 @@ Vue.use(VueProgressBar, {
 })
 // Root Component
 Vue.component('database-app', require('./views/App.vue').default);
-Vue.component('database-api', require('./views/Api.vue').default);
 Vue.component('pagination', require('laravel-vue-pagination'));
 // Mixins
 import mixin from './mixin.js'

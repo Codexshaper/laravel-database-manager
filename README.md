@@ -3,7 +3,7 @@
 [![Quality Score](https://img.shields.io/scrutinizer/g/Codexshaper/laravel-database-manager.svg?style=flat-square)](https://scrutinizer-ci.com/g/Codexshaper/laravel-database-manager)
 
 # Description
-Make your database simple and easyer
+Make your database simple and easier.
 
 [Documentation](https://codexshaper.github.io/docs/laravel-database-manager/)
 

@@ -173,6 +173,7 @@
                 .then(res => {
                     if( res.data.success == true ){
                         this.tables = res.data.tables;
+                        this.coreTables = res.data.coreTables;
                         this.pagination = res.data.pagination;
                         this.userPermissions = res.data.userPermissions;
                         this.databaseErrors = [];

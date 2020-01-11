@@ -40,6 +40,7 @@ class TableController extends Controller
                     'tables'          => $newTables,
                     'pagination'      => $tables,
                     'userPermissions' => $userPermissions,
+                    'coreTables'      => config('dbm.core.tables', [])
                 ]);
 
             } catch (\Exception $e) {

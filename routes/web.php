@@ -15,10 +15,6 @@ Route::group(['prefix' => 'database', 'namespace' => config('dbm.controller_name
     Route::get('permission', 'PermissionController@index');
     //Backup
     Route::get('backup', 'BackupController@index');
-    //Api
-    Route::get('api', 'UserController@api');
     //Assets
     Route::get('assets', 'ManagerController@assets')->name('dbm.asset');
-
-    // Route::get('table/details/{table}', 'RecordController@getTableDetails');
 });

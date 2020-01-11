@@ -7,9 +7,6 @@
 	    <div class="sidebar-scroll">
 	        <nav>
 	            <ul class="nav">
-	                <li class="menu-title"> menus   </li>
-	                <li><a href="#" class="active"><i class="fas fa-desktop"></i><span>Dashboard</span></a></li>
-	                <li><router-link :to="{ name: 'api' }" class="nav-link"><i class="fas fa-desktop"></i> API</router-link></li>
 	                <li>
 	                    <a href="#database" data-toggle="collapse" class="collapsed"><i class="fas fa-th-large"></i> <span>Database</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
 	                    <div id="database" class="collapse ">
