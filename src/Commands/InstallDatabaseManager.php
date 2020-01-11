@@ -10,11 +10,11 @@ use Symfony\Component\Process\Process;
 class InstallDatabaseManager extends Command
 {
     /**
-     * The name and signature of the console command.
+     * The console command name.
      *
      * @var string
      */
-    protected $signature = 'dbm:install {mongodb?} {--force=}';
+    protected $name = 'dbm:install';
     /**
      * The console command description.
      *
@@ -62,32 +62,23 @@ class InstallDatabaseManager extends Command
      */
     public function handle(Filesystem $filesystem)
     {
-        $composer = $this->findComposer();
-        if ($this->argument('mongodb') == 'mongodb') {
-            $this->info('Installing MongoDB package');
-            $process = new Process($composer . ' require jenssegers/mongodb');
-            $process->setTimeout(null); // Setting timeout to null to prevent installation from stopping at a certain point in time
-            $process->setWorkingDirectory(base_path())->run();
-        }
         $this->info('Publishing the Database Manager assets, database, and config files');
         // Publish only relevant resources on install
         $tags = ['dbm.config'];
         $this->call('vendor:publish', ['--provider' => ManagerServiceProvider::class, '--tag' => $tags]);
-        // Generate Storage Link
-        $this->info('Generate storage symblink');
-        $this->call('storage:link');
-        // Dump autoload
-        $this->info('Dumping the autoloaded files and reloading all new files');
-        $process = new Process($composer . ' dump-autoload');
-        $process->setTimeout(null); // Setting timeout to null to prevent installation from stopping at a certain point in time
-        $process->setWorkingDirectory(base_path())->run();
-        // Migrate database
+
         $this->info('Migrating the database tables into your application');
         $this->call('migrate', ['--force' => $this->option('force')]);
-        // Install laravel passport
         $this->info('Install Passport');
         $this->call('passport:install', ['--force' => $this->option('force')]);
-        // Load Custom Database Manager routes
+
+        $this->info('Dumping the autoloaded files and reloading all new files');
+        $composer = $this->findComposer();
+        $process  = new Process($composer . ' dump-autoload');
+        $process->setTimeout(null); // Setting timeout to null to prevent installation from stopping at a certain point in time
+        $process->setWorkingDirectory(base_path())->run();
+
+        // Load Custom Database Manager routes into application's 'routes/web.php'
         $this->info('Adding Database Manager routes');
         $web_routes_contents = $filesystem->get(base_path('routes/web.php'));
         $api_routes_contents = $filesystem->get(base_path('routes/api.php'));
@@ -103,14 +94,16 @@ class InstallDatabaseManager extends Command
                 "\n\nDBM::apiRoutes();\n"
             );
         }
-        // Database seeder
+
         $this->info('Seeding...');
+        // Seeding Dummy Data
         $class = 'DatabaseManagerSeeder';
         $file  = $this->seedersPath . $class . '.php';
         if (file_exists($file) && !class_exists($class)) {
             require_once $file;
         }
         with(new $class())->run();
+
         $this->info('Seeding Completed');
     }
 }
