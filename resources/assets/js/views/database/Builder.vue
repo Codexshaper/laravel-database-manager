@@ -72,7 +72,7 @@
 
 <script>
     import TableBuilderModals from '../../components/modals/TableBuilderModals.vue';
-    import tableBuilder from './createField.vue';
+    import tableBuilder from './CreateField.vue';
 
     export default {
         props: ["name","prefix", "driver"],

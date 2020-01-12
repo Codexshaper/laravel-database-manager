@@ -191,6 +191,10 @@
             if(field.isSettingsActive == undefined) {
               field.isSettingsActive = false;
             }
+            field.create  = field.create == 1;
+            field.read    = field.read == 1;
+            field.edit    = field.edit == 1;
+            field.delete  = field.delete == 1;
           }
         },
         filters: {
@@ -366,6 +370,9 @@
     }
 </script>
 <style>
+  .field-setting {
+        text-align: center;
+    }
   .card {
     background: -webkit-linear-gradient(#fafafa 0%, #eee 100%);
     background: -o-linear-gradient(#fafafa 0%, #eee 100%);
