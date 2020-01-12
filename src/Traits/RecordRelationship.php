@@ -51,6 +51,17 @@ trait RecordRelationship
                         $field->foreignKey       = $foreignKey;
                         $field->relationshipType = $relationshipType;
 
+                    } else if ($relationshipType == 'hasOne') {
+
+                        $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
+                        $datas       = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->has_one;
+
+                        $record->{$field->name}  = $datas;
+                        $field->displayLabel     = $displayLabel;
+                        $field->localKey         = $localKey;
+                        $field->foreignKey       = $foreignKey;
+                        $field->relationshipType = $relationshipType;
+
                     } else if ($relationshipType == 'hasMany') {
 
                         $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
