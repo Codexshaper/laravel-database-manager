@@ -113,10 +113,22 @@ class Manager
     {
         try {
 
-            $partials = explode("\\", $model);
-
+            $partials  = explode("\\", $model);
             $className = array_pop($partials);
             $namespace = implode("\\", $partials);
+
+            $app       = array_shift($partials);
+            $directory = implode(DIRECTORY_SEPARATOR, $partials);
+            if (strtolower($app) != 'app') {
+                $namespace = "App\\" . $namespace;
+                $directory = $app . DIRECTORY_SEPARATOR . $directory;
+            }
+
+            $path = app_path() . DIRECTORY_SEPARATOR . $directory;
+
+            if (!File::isDirectory($path)) {
+                File::makeDirectory($path, 0777, true, true);
+            }
 
             $contents = "<?php\n\n";
             $contents .= "namespace " . $namespace . ";\n\n";
@@ -137,7 +149,8 @@ class Manager
             $contents .= "}\n";
 
             $filesystem = new Filesystem;
-            $filesystem->put(base_path($model . ".php"), $contents);
+            $filesystem->put($path . DIRECTORY_SEPARATOR . $className . ".php", $contents);
+
         } catch (\Exception $e) {
             throw new \Exception("There has an error when create model. The error is :" . $e->getMessage(), 1);
 

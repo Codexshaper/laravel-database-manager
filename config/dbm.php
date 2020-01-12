@@ -162,4 +162,23 @@ return [
         // Enable debug when developemnt mode. By default false
         'debug'                => false,
     ],
+    /*
+    |-------------------------------------------------------------
+    | Core
+    |-------------------------------------------------------------
+    |
+    | Here you can set backup config
+    |
+     */
+    'core'                 => [
+        'tables' => [
+            "dbm_objects",
+            "dbm_fields",
+            "dbm_permissions",
+            "dbm_user_permissions",
+            "dbm_collection_fields",
+            "dbm_collections",
+            "dbm_templates",
+        ],
+    ],
 ];

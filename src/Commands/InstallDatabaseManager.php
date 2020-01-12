@@ -66,9 +66,13 @@ class InstallDatabaseManager extends Command
         // Publish only relevant resources on install
         $tags = ['dbm.config'];
         $this->call('vendor:publish', ['--provider' => ManagerServiceProvider::class, '--tag' => $tags]);
-
+        // Create storage link
+        $this->info('Generate storage link');
+        $this->call('storage:link');
+        // Migrate Database
         $this->info('Migrating the database tables into your application');
         $this->call('migrate', ['--force' => $this->option('force')]);
+        //Install Passport
         $this->info('Install Passport');
         $this->call('passport:install', ['--force' => $this->option('force')]);
 
