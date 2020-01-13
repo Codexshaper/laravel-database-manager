@@ -130,13 +130,12 @@ class DatabaseBackup extends Command
             $directory = (config('dbm.backup.dir', 'backups') != '')
             ? DIRECTORY_SEPARATOR . config('dbm.backup.dir', 'backups')
             : '';
-            $directoryPath = DBM::getPathPrefix() . $directory . DIRECTORY_SEPARATOR . $driver;
+            $directoryPath = storage_path('app') . $directory . DIRECTORY_SEPARATOR . $driver;
             $filePath      = $directoryPath . DIRECTORY_SEPARATOR . $this->getFileName($table, $database);
 
             if (!File::isDirectory($directoryPath)) {
 
                 File::makeDirectory($directoryPath, 0777, true, true);
-
             }
 
             $this->backup($dumper, [

@@ -79,7 +79,7 @@ class DatabaseRestore extends Command
             $path  = $files[0];
         }
 
-        $filePath = DBM::getPathPrefix() . DIRECTORY_SEPARATOR . $path;
+        $filePath = storage_path('app') . DIRECTORY_SEPARATOR . $path;
 
         $isCompress         = config('dbm.backup.compress', false);
         $compressBinaryPath = config('dbm.backup.compress_binary_path', "");
