@@ -7,6 +7,7 @@ use CodexShaper\DBM\Facades\Manager as DBM;
 
 trait RecordRelationship
 {
+    protected $has_one;
     protected $has_many;
     protected $belongs_to_many;
     protected $belongs_to;
