@@ -29,18 +29,8 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             try {
-                $validator = Validator::make($request->data, [
-                    'email'    => 'required|email',
-                    'password' => 'required',
-
-                ]);
-
-                if ($validator->fails()) {
-                    $errors = [];
-                    foreach ($validator->errors()->all() as $error) {
-                        $errors[] = $error;
-                    }
-                    return $this->generateError($errors);
+                if (($response = $this->validation($request->data)) !== true) {
+                    return $response;
                 }
                 $credentials = [
                     'email'    => $request->data['email'],
@@ -69,6 +59,31 @@ class UserController extends Controller
         }
         return response()->json(["success" => false, "error" => "Unauthorised"], 401);
 
+    }
+    /**
+     * Validate Credentials
+     *
+     * @param array $data
+     *
+     * @return \Illuminate\Http\JsonResponse|true
+     */
+    public function validation($data)
+    {
+        $validator = Validator::make($data, [
+            'email'    => 'required|email',
+            'password' => 'required',
+
+        ]);
+
+        if ($validator->fails()) {
+            $errors = [];
+            foreach ($validator->errors()->all() as $error) {
+                $errors[] = $error;
+            }
+            return $this->generateError($errors);
+        }
+
+        return true;
     }
     /**
      * Generate errors and return response

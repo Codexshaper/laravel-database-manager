@@ -31,34 +31,7 @@ class PermissionController extends Controller
 
             try
             {
-                $user_model        = config('dbm.auth.user.model');
-                $user_table        = config('dbm.auth.user.table');
-                $user_local_key    = config('dbm.auth.user.local_key');
-                $user_display_name = config('dbm.auth.user.display_name');
-
-                $perPage = (int) $request->perPage;
-                $query   = $request->q;
-                $users   = DBM::model($user_model, $user_table)->paginate($perPage);
-
-                if (!empty($query)) {
-                    $users = DBM::model($user_model, $user_table)
-                        ->where('name', 'LIKE', '%' . $query . '%')
-                        ->paginate($perPage);
-                }
-
-                $users->getCollection()->transform(function ($user) use ($user_display_name) {
-                    $user->permissions = DBM::Object()
-                        ->setManyToManyRelation(
-                            $user,
-                            DBM::Permission(),
-                            'dbm_user_permissions',
-                            'user_id',
-                            'dbm_permission_id'
-                        )
-                        ->belongs_to_many;
-                    $user->display_name = $user_display_name;
-                    return $user;
-                });
+                $users = $this->getUsers($request);
 
                 $privileges = DBM::Permission()->all();
 
@@ -88,6 +61,44 @@ class PermissionController extends Controller
 
         return response()->json(['success' => false]);
 
+    }
+    /**
+     * get Permission Users
+     *
+     * @return \Illuminate\Support\Collection|array
+     */
+    public function getUsers(Request $request)
+    {
+        $user_model        = config('dbm.auth.user.model');
+        $user_table        = config('dbm.auth.user.table');
+        $user_local_key    = config('dbm.auth.user.local_key');
+        $user_display_name = config('dbm.auth.user.display_name');
+
+        $perPage = (int) $request->perPage;
+        $query   = $request->q;
+        $users   = DBM::model($user_model, $user_table)->paginate($perPage);
+
+        if (!empty($query)) {
+            $users = DBM::model($user_model, $user_table)
+                ->where('name', 'LIKE', '%' . $query . '%')
+                ->paginate($perPage);
+        }
+
+        $users->getCollection()->transform(function ($user) use ($user_display_name) {
+            $user->permissions = DBM::Object()
+                ->setManyToManyRelation(
+                    $user,
+                    DBM::Permission(),
+                    'dbm_user_permissions',
+                    'user_id',
+                    'dbm_permission_id'
+                )
+                ->belongs_to_many;
+            $user->display_name = $user_display_name;
+            return $user;
+        });
+
+        return $users;
     }
     /**
      * Assign Permissions to User

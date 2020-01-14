@@ -33,23 +33,8 @@ class BackupController extends Controller
             }
 
             $userPermissions = DBM::userPermissions();
-            $driver          = dbm_driver();
-            $directory       = 'backups' . DIRECTORY_SEPARATOR . $driver;
-            $page            = (int) $request->page ?: 1;
-            $files           = collect(Storage::allFiles($directory));
-            $query           = $request->q;
-            if (!empty($query)) {
-                $files = $files->filter(function ($file) use ($query) {
-                    $info = pathinfo($file);
-                    return false !== stristr($info['basename'], $query);
-                });
-            }
-            $perPage = (int) $request->perPage;
-            $slice   = $files->slice(($page - 1) * $perPage, $perPage);
-
-            $files = new \Illuminate\Pagination\LengthAwarePaginator($slice, $files->count(), $perPage);
-
-            $results = [];
+            $files           = $this->getPaginateFiles($request);
+            $results         = [];
             foreach ($files as $file) {
                 $results[] = (object) [
                     'info'         => pathinfo($file),
@@ -68,6 +53,30 @@ class BackupController extends Controller
 
         return response()->json(['success' => false]);
 
+    }
+    /**
+     * Get Pagination Data
+     *
+     * @return \Illuminate\Pagination\LengthAwarePaginator
+     */
+    public function getPaginateFiles(Request $request)
+    {
+        $driver    = dbm_driver();
+        $directory = 'backups' . DIRECTORY_SEPARATOR . $driver;
+        $files     = collect(Storage::allFiles($directory));
+
+        $query = $request->q;
+        if (!empty($query)) {
+            $files = $files->filter(function ($file) use ($query) {
+                $info = pathinfo($file);
+                return false !== stristr($info['basename'], $query);
+            });
+        }
+        $page    = (int) $request->page ?: 1;
+        $perPage = (int) $request->perPage;
+        $slice   = $files->slice(($page - 1) * $perPage, $perPage);
+
+        return new \Illuminate\Pagination\LengthAwarePaginator($slice, $files->count(), $perPage);
     }
     /**
      * Create new backup
