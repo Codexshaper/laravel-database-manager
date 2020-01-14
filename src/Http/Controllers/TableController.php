@@ -40,7 +40,8 @@ class TableController extends Controller
                     'tables'          => $newTables,
                     'pagination'      => $tables,
                     'userPermissions' => $userPermissions,
-                    'coreTables'      => config('dbm.core.tables', [])
+                    'coreTables'      => config('dbm.core.tables', []),
+                    'collation'       => config('dbm.collation', 'utf8mb4_unicode_ci'),
                 ]);
 
             } catch (\Exception $e) {

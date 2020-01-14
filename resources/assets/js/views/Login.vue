@@ -67,12 +67,14 @@
                       }
                     })
                     .then(res => {
-                        localStorage.setItem('dbm.user', JSON.stringify(res.data.user))
-                        localStorage.setItem('dbm.authToken', res.data.token)
-                        let now = new Date()
-                        let expiry = now.getTime() + res.data.expiry
-                        localStorage.setItem('dbm.authTokenExpiry', expiry)
-                        this.redirectTo()
+                        if(res.data.success == true) {
+                            localStorage.setItem('dbm.user', JSON.stringify(res.data.user))
+                            localStorage.setItem('dbm.authToken', res.data.token)
+                            let now = new Date()
+                            let expiry = now.getTime() + res.data.expiry
+                            localStorage.setItem('dbm.authTokenExpiry', expiry)
+                            this.redirectTo()
+                        }
                     })
                     .catch(err => {
                         this.displayError(err.response)

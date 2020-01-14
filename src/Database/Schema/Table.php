@@ -153,8 +153,10 @@ class Table
 
         $conn = 'database.connections.' . config('database.default');
 
-        $table['options']['collate'] = config($conn . '.collation', 'utf8mb4_unicode_ci');
-        $table['options']['charset'] = config($conn . '.charset', 'utf8mb4');
+        $table['options']['collate'] = $table['options']['collation'] ?? config($conn . '.collation', 'utf8mb4_unicode_ci');
+        if (Driver::isMysql()) {
+            $table['options']['charset'] = $table['options']['charset'] ?? config($conn . '.charset', 'utf8mb4');
+        }
 
         $tableName   = $table['name'];
         $columns     = $table['columns'];

@@ -68,7 +68,15 @@
 	                  <form action="" v-on:submit.prevent="createTable(table)">
 	                      <div class="form-group cs-form-group">
 	                          <label class="cs-label">Name</label>
-	                          <input type="text" name="name" v-model="table" class="form-control">
+	                          <input type="text" name="name" v-model="table.name" class="form-control">
+	                      </div>
+	                      <div class="form-group cs-form-group row">
+	                          <label class="col-md-12">Collation</label>
+	                          <div class="col-md-12">
+	                          	<component 
+                                  :is="loadTypeCompnent"
+                                  :table="table"></component>
+	                          </div>
 	                      </div>
 	                      <div class="m-footer text-right">
 	                          <button type="button" class="btn btn-danger " data-dismiss="modal">Close</button>
@@ -84,18 +92,45 @@
 	</div>
 </template>
 <script>
+	import Mysql from '../../components/collations/Mysql.vue';
+
 	export default {
 		props: {
 			category: String,
 			tableName: String,
+			collation: String,
+			charset: String,
 			fields: Array,
 			createTable: Function,
 			userPermissions: Array,
+			connection: String,
 		},
 		data(){
 			return {
-				table: this.tableName
+				table: {
+					name: this.tableName,
+					collation: this.collation,
+					charset: this.charset
+				}
 			}
+		},
+		computed: {
+			loadTypeCompnent () {
+			  switch(this.connection) {
+			    case 'mysql':
+			      return () => import('../../components/collations/Mysql.vue');
+			      break;
+			    case 'sqlite':
+			      return () => import('../../components/collations/Mysql.vue');
+			      break;
+			    case 'mongodb':
+			      return () => import('../../components/collations/Mysql.vue');
+			      break;
+			    default:
+			      return () => import('../../components/collations/Mysql.vue');
+			      break;
+			  } 
+			},
 		}
     }
 </script>

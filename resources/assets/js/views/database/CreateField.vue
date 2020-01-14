@@ -166,7 +166,6 @@
                 return () => import('../../components/data-types/Mysql.vue');
                 break;
             } 
-            return this.driver
           },
           isNotSupportedIndex:{
             get: function(){

@@ -114,7 +114,10 @@
                     v-if="isModalComponent"
                     :category="category"
                     :tableName="tableName"
+                    :collation="collation"
+                    :charset="charset"
                     :fields="fields"
+                    :connection="driver"
                     :userPermissions="userPermissions"
                     :create-table="createTable"></database-modals>
 
@@ -126,7 +129,7 @@
 <script>
     import DatabaseModals from '../components/modals/DatabaseModals.vue';
     export default {
-        props: ['prefix'],
+        props: ['prefix','driver'],
         components: {
             DatabaseModals,
         },
@@ -136,6 +139,8 @@
                 userPermissions: [],
                 category: "",
                 tableName: "",
+                collation: "utf8mb4_unicode_ci",
+                charset: "utf8mb4",
                 tables: [],
                 pagination: {},
                 perPage: 5,
@@ -158,6 +163,7 @@
         },
         created() {
             toastr.options.closeButton = true;
+            console.log(this.driver)
         },
         beforeMount(){
             axios.defaults.headers.common['Content-Type'] = 'application/json'
@@ -174,6 +180,7 @@
                     if( res.data.success == true ){
                         this.tables = res.data.tables;
                         this.coreTables = res.data.coreTables;
+                        this.collation = res.data.collation;
                         this.pagination = res.data.pagination;
                         this.userPermissions = res.data.userPermissions;
                         this.databaseErrors = [];
@@ -210,11 +217,15 @@
                 this.setDefaultFields();
                 this.forceToRender();
             },
-            createTable: function(tableName) {
+            createTable: function(table) {
+                this.options = {
+                    charset:table.charset,
+                    collation:table.collation
+                };
                 let columns = this.prepareColumns(this.fields);
                 let indexes = this.prepareIndexes(this.fields);
-                let table = JSON.stringify({
-                    name: tableName,
+                let tableData = JSON.stringify({
+                    name: table.name,
                     oldName: "",
                     columns: columns,
                     indexes: indexes,
@@ -231,11 +242,12 @@
                   method: 'post',
                   url: url,
                   data: {
-                    table: table
+                    table: tableData
                   },
                   responseType: 'json',
                 })
                 .then(res => {
+                    console.log(res.data);
                     if( res.data.success == true ){
                         toastr.success('Table Created Successfully.');
                         self.fetchDatabaseTables();
