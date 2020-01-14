@@ -370,14 +370,6 @@
             checkCoreTablePermission(tableName) {
                 return !this.coreTables.includes(tableName);
             },
-            initDataTables: function(selector){
-                $(selector).dataTable().fnDestroy();
-                setTimeout(function(){
-                    $(selector).DataTable({
-                        "ordering": false
-                    });
-                },1);
-            },
             backupTable: function(table){
                 this.$Progress.start()
                 var url = '/api'+this.prefix+'/database/backup';

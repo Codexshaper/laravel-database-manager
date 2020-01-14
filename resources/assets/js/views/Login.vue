@@ -58,6 +58,7 @@
         methods: {
             handleSubmit(e) {
                 e.preventDefault()
+                this.validation();
                 if (this.password.length > 0) {
                     axios.post('/api/database/login',{
                       data: {
@@ -87,7 +88,18 @@
                         this.$router.push({name: 'database'})
                     }
                 }
-            }, 
+            },
+            validation(){
+                this.databaseErrors = [];
+                    
+                if(this.email == "" || this.email == undefined) {
+                    this.databaseErrors.push("Email required");
+                }
+
+                if(this.password == "" || this.password == undefined) {
+                    this.databaseErrors.push("Password required");
+                }
+            } 
         }
     }
 </script>

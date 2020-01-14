@@ -36,9 +36,17 @@ class PermissionController extends Controller
                 $user_local_key    = config('dbm.auth.user.local_key');
                 $user_display_name = config('dbm.auth.user.display_name');
 
-                $users = DBM::model($user_model, $user_table)->get();
+                $perPage = (int) $request->perPage;
+                $query   = $request->q;
+                $users   = DBM::model($user_model, $user_table)->paginate($perPage);
 
-                foreach ($users as $user) {
+                if (!empty($query)) {
+                    $users = DBM::model($user_model, $user_table)
+                        ->where('name', 'LIKE', '%' . $query . '%')
+                        ->paginate($perPage);
+                }
+
+                $users->getCollection()->transform(function ($user) use ($user_display_name) {
                     $user->permissions = DBM::Object()
                         ->setManyToManyRelation(
                             $user,
@@ -49,7 +57,8 @@ class PermissionController extends Controller
                         )
                         ->belongs_to_many;
                     $user->display_name = $user_display_name;
-                }
+                    return $user;
+                });
 
                 $privileges = DBM::Permission()->all();
 
@@ -65,7 +74,7 @@ class PermissionController extends Controller
                     'success'     => true,
                     'privileges'  => $privileges,
                     'permissions' => $permissions,
-                    'users'       => $users,
+                    'pagination'  => $users,
                 ]);
 
             } catch (\Exception $e) {

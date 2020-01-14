@@ -40,7 +40,6 @@
     <script src="{{ dbm_asset('js/custom.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('#database-table').DataTable();
              // active class add in form label
             $('.cs-form-group').on('click',function(){
                $('.cs-form-group .cs-label').removeClass('active');

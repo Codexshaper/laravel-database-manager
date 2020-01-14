@@ -172,14 +172,6 @@
                     }
                 });
             },
-            initDataTables: function(selector){
-                $(selector).dataTable().fnDestroy();
-                setTimeout(function(){
-                    $(selector).DataTable({
-                        "ordering": false
-                    });
-                },1);
-            },
         }
     }
 </script>

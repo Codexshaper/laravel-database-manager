@@ -4,7 +4,6 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 require('./bootstrap');
-require('datatables.net-bs4');
 require('nestable2');
 window.Swal = require('sweetalert2');
 window.toastr = require('toastr');

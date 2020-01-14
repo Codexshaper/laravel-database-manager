@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -28,33 +29,59 @@ class UserController extends Controller
     {
         if ($request->ajax()) {
             try {
+                $validator = Validator::make($request->data, [
+                    'email'    => 'required|email',
+                    'password' => 'required',
+
+                ]);
+
+                if ($validator->fails()) {
+                    $errors = [];
+                    foreach ($validator->errors()->all() as $error) {
+                        $errors[] = $error;
+                    }
+                    return $this->generateError($errors);
+                }
                 $credentials = [
                     'email'    => $request->data['email'],
                     'password' => $request->data['password'],
                 ];
 
-                if (Auth::attempt($credentials)) {
-                    $user   = Auth::user();
-                    $expiry = Config::get('dbm.auth.token.expiry');
-                    if (count($user->tokens) > 0) {
-                        $user->tokens()->delete();
-                    }
-                    return response()->json([
-                        'success' => true,
-                        'user'    => $user,
-                        'token'   => $user->createToken('DBM')->accessToken,
-                        'expiry'  => $expiry,
-                    ]);
-
+                if (!Auth::attempt($credentials)) {
+                    return $this->generateError(["Email and password combination doesn't match"]);
                 }
-            } catch (\Exception $e) {
+
+                $user   = Auth::user();
+                $expiry = Config::get('dbm.auth.token.expiry');
+                if (count($user->tokens) > 0) {
+                    $user->tokens()->delete();
+                }
                 return response()->json([
-                    'success' => false,
-                    'errors'  => [$e->getMessage()],
-                ], 400);
+                    'success' => true,
+                    'user'    => $user,
+                    'token'   => $user->createToken('DBM')->accessToken,
+                    'expiry'  => $expiry,
+                ]);
+
+            } catch (\Exception $e) {
+                $this->generateError([$e->getMessage()]);
             }
         }
         return response()->json(["success" => false, "error" => "Unauthorised"], 401);
 
+    }
+    /**
+     * Generate errors and return response
+     *
+     * @param array $errors
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function generateError($errors)
+    {
+        return response()->json([
+            'success' => false,
+            'errors'  => $errors,
+        ], 400);
     }
 }

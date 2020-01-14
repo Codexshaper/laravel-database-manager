@@ -7,6 +7,28 @@
             :key="key"> {{ databaseError }} </div>
         <transition name="fade" mode="out-in">
             <div v-if="isLoaded" class="vue-content">
+                <div class="row search-area">
+                    <div class="col-sm-12 col-md-6">
+                        <div class="dataTables_length" id="database-table_length">
+                            <label>Show 
+                                <select v-model="perPage" @change="reload" class="custom-select custom-select-sm form-control form-control-sm">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="15">15</option>
+                                    <option value="20">20</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select> 
+                            entries</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <div id="database-table_filter" class="dataTables_filter search-bar text-right">
+                            <label>Search:<input type="search" v-model="search" @keyup="reload" @keydown="reload" class="form-control form-control-sm" placeholder="" aria-controls="database-table"></label>
+                        </div>
+                    </div>
+                </div>
                 <div class="table-responsive">
                     <table id="permission-table" class="table table-bordered permission">
                         <thead>
@@ -54,6 +76,19 @@
                             </tr>
                         </tfoot>
                     </table>
+                </div>
+
+                <div class="row">
+                    <div class="col-sm-12 col-md-5">
+                        <div class="dataTables_info" id="database-table_info" role="status" aria-live="polite">Showing {{ pagination.from }} to {{ pagination.to }} of {{ pagination.total }} entries</div>
+                    </div>
+                    <div class="col-sm-12 col-md-7">
+                        <pagination 
+                            :data="pagination" 
+                            :limit="2" 
+                            align="right" 
+                            @pagination-change-page="fetchDatabasePermissions"></pagination>
+                    </div>
                 </div>
 
                 <!-- View User Permissions -->
@@ -147,6 +182,9 @@
                 all_privileges: [],
                 users: [],
                 user: {},
+                pagination: {},
+                perPage: 5,
+                search: "",
                 isRender: false
             };
         },
@@ -168,9 +206,9 @@
             this.fetchDatabasePermissions();
         },
         methods: {
-            fetchDatabasePermissions: function() {
+            fetchDatabasePermissions: function(page=1) {
 
-                let url = '/api'+this.prefix+'/database/permissions';
+                let url = `/api/database/permissions?page=${page}&perPage=${this.perPage}&q=${this.search}`;
                 let self = this;
 
                 axios({
@@ -182,8 +220,8 @@
                     if( res.data.success == true ){
                         this.permissions = res.data.permissions;
                         this.all_privileges = res.data.privileges;
-                        this.users = res.data.users;
-                        this.initDataTables('#permission-table');
+                        this.users = res.data.pagination.data;
+                        this.pagination = res.data.pagination;
                         this.databaseErrors = [];
 
                         this.loadComponent();
@@ -192,6 +230,9 @@
                 })
                 .catch(err => this.displayError(err.response));
             },
+            reload: _.debounce(function() {
+                this.fetchDatabasePermissions();
+            }, 500),
             viewUserPermissions: function(user){
                 this.isRender = false;
                 this.user = user;
@@ -334,14 +375,6 @@
                         }
                     }
                 }
-            },
-            initDataTables: function(selector){
-                $(selector).dataTable().fnDestroy();
-                setTimeout(function(){
-                    $(selector).DataTable({
-                        "ordering": false
-                    });
-                },1);
             },
             getUserPermissions: function(user) {
 
