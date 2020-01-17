@@ -4,7 +4,7 @@
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/Codexshaper/laravel-database-manager.svg?style=flat-square)](https://packagist.org/packages/Codexshaper/laravel-database-manager)
 
 # Description
-Make your database simple and easier.
+Make your database simple, easier and faster with vuejs.
 
 [Documentation](https://codexshaper.github.io/docs/laravel-database-manager/)
 
