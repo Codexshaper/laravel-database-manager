@@ -17,6 +17,7 @@ let prefix = '/database';
 
 const router = new VueRouter({
      mode: 'history',
+     linkActiveClass: "active",
      routes: [
         {
             path: prefix,

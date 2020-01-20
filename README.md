@@ -18,4 +18,4 @@ Make your database simple, easier and faster with vuejs.
 ## License
 
 - **[MIT license](http://opensource.org/licenses/mit-license.php)**
-- Copyright 2019 © <a href="https://github.com/Codexshaper/laravel-database-manager/blob/master/LICENSE" target="_blank">CodexShaper</a>.
+- Copyright 2020 © <a href="https://github.com/Codexshaper/laravel-database-manager/blob/master/LICENSE" target="_blank">CodexShaper</a>.
