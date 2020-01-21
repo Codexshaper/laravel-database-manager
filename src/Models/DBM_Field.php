@@ -2,7 +2,6 @@
 
 namespace CodexShaper\DBM\Models;
 
-use CodexShaper\DBM\Models\DBM_Object;
 use Illuminate\Database\Eloquent\Model;
 
 class DBM_Field extends Model

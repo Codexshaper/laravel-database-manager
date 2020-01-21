@@ -1,4 +1,5 @@
 <?php
+
 namespace CodexShaper\DBM\Commands;
 
 use CodexShaper\DBM\ManagerServiceProvider;
@@ -50,6 +51,7 @@ class InstallDatabaseManager extends Command
         if (file_exists(getcwd().'/composer.phar')) {
             return '"'.PHP_BINARY.'" '.getcwd().'/composer.phar';
         }
+
         return 'composer';
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace CodexShaper\DBM\Facades;
 
 use CodexShaper\DBM\Database\Drivers\Driver as DatabaseDriver;

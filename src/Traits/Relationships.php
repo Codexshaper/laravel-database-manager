@@ -67,7 +67,6 @@ trait Relationships
      */
     public function setCommonRelation($parent, $related, $foreignKey = null, $localKey = null, $relation = null)
     {
-
         $this->parent = $parent;
         $this->related = $related;
         $this->foreignKey = $foreignKey;
@@ -99,8 +98,8 @@ trait Relationships
         $relatedPivotKey = null,
         $parentKey = null,
         $relatedKey = null,
-        $relation = null) {
-
+        $relation = null)
+    {
         $this->parent = $parent;
         $this->related = $related;
         $this->pivotTable = $pivotTable;
@@ -133,8 +132,8 @@ trait Relationships
         $firstKey = null,
         $secondKey = null,
         $localKey = null,
-        $secondLocalKey = null) {
-
+        $secondLocalKey = null)
+    {
         $this->parent = $parent;
         $this->related = $related;
         $this->through = $through;
@@ -164,8 +163,8 @@ trait Relationships
         $morphName,
         $morphType = null,
         $morphId = null,
-        $morphLocalKey = null) {
-
+        $morphLocalKey = null)
+    {
         $this->parent = $parent;
         $this->related = $related;
         $this->morphName = $morphName;
@@ -192,8 +191,8 @@ trait Relationships
         $morphName = null,
         $morphType = null,
         $morphId = null,
-        $morphLocalKey = null) {
-
+        $morphLocalKey = null)
+    {
         $this->parent = $parent;
         $this->morphName = $morphName;
         $this->morphType = $morphType;
@@ -227,8 +226,8 @@ trait Relationships
         $relatedPivotKey = null,
         $parentKey = null,
         $relatedKey = null,
-        $inverse = false) {
-
+        $inverse = false)
+    {
         $this->parent = $parent;
         $this->related = $related;
         $this->morphName = $morphName;

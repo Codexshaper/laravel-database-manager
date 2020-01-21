@@ -28,6 +28,6 @@ class SetType extends Type
             return $pdo->quote(trim($value));
         }, $allowed);
 
-        return 'set(' . implode(', ', $fieldDeclaration['allowed']) . ')';
+        return 'set('.implode(', ', $fieldDeclaration['allowed']).')';
     }
 }

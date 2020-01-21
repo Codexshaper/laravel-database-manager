@@ -4,7 +4,6 @@ namespace CodexShaper\DBM\Http\Controllers;
 
 use CodexShaper\DBM\Facades\Manager as DBM;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
 
 class ManagerController extends Controller
 {

@@ -2,7 +2,6 @@
 
 namespace CodexShaper\DBM\Models;
 
-use CodexShaper\DBM\Models\DBM_Collection;
 use Jenssegers\Mongodb\Eloquent\Model;
 
 class CollectionField extends Model

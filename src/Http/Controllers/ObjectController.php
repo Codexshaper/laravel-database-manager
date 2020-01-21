@@ -2,7 +2,6 @@
 
 namespace CodexShaper\DBM\Http\Controllers;
 
-use CodexShaper\DBM\Database\Drivers\MongoDB\Type;
 use CodexShaper\DBM\Database\Schema\Table;
 use CodexShaper\DBM\Facades\Driver;
 use CodexShaper\DBM\Facades\Manager as DBM;
@@ -19,7 +18,6 @@ class ObjectController extends Controller
     public function all(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('crud.browse')) !== true) {
                 return $response;
             }
@@ -83,11 +81,9 @@ class ObjectController extends Controller
     public function getObjectDetails(Request $request)
     {
         if ($request->ajax()) {
-
-            try
-            {
-                if (!Table::exists($request->table)) {
-                    throw new \Exception("Sorry! There is no table", 1);
+            try {
+                if (! Table::exists($request->table)) {
+                    throw new \Exception('Sorry! There is no table', 1);
                 }
 
                 $tableName = $request->table;
@@ -110,7 +106,6 @@ class ObjectController extends Controller
                     'userPermissions' => DBM::userPermissions(),
                     'driver' => Driver::getConnectionName(),
                 ]);
-
             } catch (\Exception $e) {
                 return $this->generateError([$e->getMessage()]);
             }
@@ -133,13 +128,13 @@ class ObjectController extends Controller
 
         if ($object = DBM::Object()->where('name', $tableName)->first()) {
             $isCrudExists = true;
-            if (!$object->model) {
+            if (! $object->model) {
                 $object->model = DBM::generateModelName($object->name);
             }
             $fields = $object->fields()->orderBy('order', 'ASC')->get();
         }
 
-        if (!$object) {
+        if (! $object) {
             $table = Table::getTable($tableName);
 
             $object = new \stdClass;
@@ -159,7 +154,6 @@ class ObjectController extends Controller
             'fields' => $fields,
             'isCrudExists' => $isCrudExists,
         ];
-
     }
 
     /**
@@ -175,7 +169,6 @@ class ObjectController extends Controller
         $order = 1;
 
         foreach ($table['columns'] as $column) {
-
             $fields[] = (object) [
                 'name' => $column->name,
                 'display_name' => ucfirst($column->name),

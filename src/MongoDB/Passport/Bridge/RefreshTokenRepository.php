@@ -33,7 +33,7 @@ class RefreshTokenRepository implements RefreshTokenRepositoryInterface
      */
     public function __construct(Connection $database, Dispatcher $events)
     {
-        $this->events   = $events;
+        $this->events = $events;
         $this->database = $database;
     }
 

@@ -2,7 +2,6 @@
 
 namespace CodexShaper\DBM\Http\Controllers;
 
-use CodexShaper\DBM\Database\Schema\Table;
 use CodexShaper\DBM\Facades\Manager as DBM;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
@@ -28,7 +27,6 @@ class BackupController extends Controller
     public function backups(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('backup.browse')) !== true) {
                 return $response;
             }
@@ -39,7 +37,7 @@ class BackupController extends Controller
             foreach ($files as $file) {
                 $results[] = (object) [
                     'info' => pathinfo($file),
-                    'lastModified' => date("F j, Y, g:i a", Storage::lastModified($file)),
+                    'lastModified' => date('F j, Y, g:i a', Storage::lastModified($file)),
                     'size' => Storage::size($file),
                 ];
             }
@@ -53,7 +51,6 @@ class BackupController extends Controller
         }
 
         return response()->json(['success' => false]);
-
     }
 
     /**
@@ -64,13 +61,14 @@ class BackupController extends Controller
     public function getPaginateFiles(Request $request)
     {
         $driver = dbm_driver();
-        $directory = 'backups' . DIRECTORY_SEPARATOR . $driver;
+        $directory = 'backups'.DIRECTORY_SEPARATOR.$driver;
         $files = collect(Storage::allFiles($directory));
 
         $query = $request->q;
-        if (!empty($query)) {
+        if (! empty($query)) {
             $files = $files->filter(function ($file) use ($query) {
                 $info = pathinfo($file);
+
                 return false !== stristr($info['basename'], $query);
             });
         }
@@ -89,13 +87,11 @@ class BackupController extends Controller
     public function backup(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('backup.create')) !== true) {
                 return $response;
             }
 
-            try
-            {
+            try {
                 $table = null;
 
                 if ($request->isTable) {
@@ -107,9 +103,7 @@ class BackupController extends Controller
                 ]);
 
                 return response()->json(['success' => true]);
-
             } catch (\Exception $e) {
-
                 return response()->json([
                     'success' => true,
                     'errors' => [$e->getMessage()],
@@ -128,20 +122,17 @@ class BackupController extends Controller
     public function restore(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('backup.restore')) !== true) {
                 return $response;
             }
 
-            try
-            {
+            try {
                 Artisan::call('dbm:restore', [
                     '--path' => $request->path,
                 ]);
+
                 return response()->json(['success' => true]);
-
             } catch (\Exception $e) {
-
                 return response()->json([
                     'success' => true,
                     'errors' => [$e->getMessage()],
@@ -160,18 +151,15 @@ class BackupController extends Controller
     public function download(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('backup.download')) !== true) {
                 return $response;
             }
 
-            try
-            {
+            try {
                 $file = Storage::get($request->path);
+
                 return response()->json(['success' => true, 'file' => $file]);
-
             } catch (\Exception $e) {
-
                 return response()->json([
                     'success' => true,
                     'errors' => [$e->getMessage()],
@@ -190,18 +178,15 @@ class BackupController extends Controller
     public function delete(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('backup.delete')) !== true) {
                 return $response;
             }
 
-            try
-            {
+            try {
                 Storage::delete($request->path);
+
                 return response()->json(['success' => true]);
-
             } catch (\Exception $e) {
-
                 return response()->json([
                     'success' => true,
                     'errors' => [$e->getMessage()],

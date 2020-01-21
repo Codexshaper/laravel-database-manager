@@ -25,7 +25,7 @@ class SchemaManager
      */
     public static function getInstance()
     {
-        if (!self::$schemaManager) {
+        if (! self::$schemaManager) {
             new self();
         }
 

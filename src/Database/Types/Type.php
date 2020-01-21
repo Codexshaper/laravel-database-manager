@@ -56,13 +56,13 @@ abstract class Type extends DoctrineType
      */
     protected static function getCustomTypes($platformName)
     {
-        $customPlatformDir = __DIR__ . DIRECTORY_SEPARATOR . $platformName . DIRECTORY_SEPARATOR;
+        $customPlatformDir = __DIR__.DIRECTORY_SEPARATOR.$platformName.DIRECTORY_SEPARATOR;
 
         $customTypes = [];
 
-        foreach (glob($customPlatformDir . '*.php') as $file) {
-            $className = basename($file, ".php");
-            $customTypes[] = __NAMESPACE__ . '\\' . $platformName . '\\' . $className;
+        foreach (glob($customPlatformDir.'*.php') as $file) {
+            $className = basename($file, '.php');
+            $customTypes[] = __NAMESPACE__.'\\'.$platformName.'\\'.$className;
         }
 
         return $customTypes;
@@ -75,7 +75,6 @@ abstract class Type extends DoctrineType
      */
     public static function getTypeCategories()
     {
-
         return [
             'numbers' => [
                 'boolean',
@@ -160,5 +159,4 @@ abstract class Type extends DoctrineType
             'objects' => ['object'],
         ];
     }
-
 }

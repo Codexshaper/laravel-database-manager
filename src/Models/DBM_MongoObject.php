@@ -2,7 +2,6 @@
 
 namespace CodexShaper\DBM\Models;
 
-use CodexShaper\DBM\Models\DBM_MongoField;
 use CodexShaper\DBM\Traits\Relationships;
 use Jenssegers\Mongodb\Eloquent\Model;
 
@@ -91,5 +90,4 @@ class DBM_MongoObject extends Model
     {
         return $this->fields()->where('delete', true)->orderBy($order_by, $direction)->get();
     }
-
 }

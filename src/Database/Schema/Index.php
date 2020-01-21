@@ -19,9 +19,8 @@ class Index
      */
     public static function create($index)
     {
-
         $indexColumns = $index['columns'];
-        if (!is_array($indexColumns)) {
+        if (! is_array($indexColumns)) {
             $indexColumns = [$indexColumns];
         }
 
@@ -55,7 +54,6 @@ class Index
         $options = $index['options'] ?? [];
 
         return new DoctrineIndex($indexName, $indexColumns, $isUnique, $isPrimary, $flags, $options);
-
     }
 
     /**
@@ -69,9 +67,9 @@ class Index
      */
     public static function createName($columns, $type, $table = null)
     {
-        $table = isset($table) ? trim($table) . '_' : '';
+        $table = isset($table) ? trim($table).'_' : '';
         $type = trim($type);
-        $name = strtolower($table . implode('_', $columns) . '_' . $type);
+        $name = strtolower($table.implode('_', $columns).'_'.$type);
 
         return str_replace(['-', '.'], '_', $name);
     }
@@ -84,15 +82,15 @@ class Index
     public static function toArray(DoctrineIndex $index)
     {
         return [
-            "name" => $index->getName(),
-            "oldName" => $index->getName(),
-            "columns" => $index->getColumns(),
-            "type" => static::getType($index),
-            "isPrimary" => $index->isPrimary(),
-            "isUnique" => $index->isUnique(),
-            "isComposite" => (count($index->getColumns()) > 1) ? true : false,
-            "flags" => $index->getFlags(),
-            "options" => $index->getOptions(),
+            'name' => $index->getName(),
+            'oldName' => $index->getName(),
+            'columns' => $index->getColumns(),
+            'type' => static::getType($index),
+            'isPrimary' => $index->isPrimary(),
+            'isUnique' => $index->isUnique(),
+            'isComposite' => (count($index->getColumns()) > 1) ? true : false,
+            'flags' => $index->getFlags(),
+            'options' => $index->getOptions(),
         ];
     }
 
@@ -105,9 +103,9 @@ class Index
     {
         if ($index->isPrimary()) {
             return static::PRIMARY;
-        } else if ($index->isUnique() && !$index->isPrimary()) {
+        } elseif ($index->isUnique() && ! $index->isPrimary()) {
             return static::UNIQUE;
-        } else if ($index->isSimpleIndex()) {
+        } elseif ($index->isSimpleIndex()) {
             return static::INDEX;
         }
     }

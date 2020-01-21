@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 abstract class Platform
 {
     abstract public static function getTypes(Collection $typeMapping);
+
     abstract public static function registerCustomTypeOptions();
 
     /**
@@ -18,9 +19,9 @@ abstract class Platform
      */
     public static function getPlatform($platformName)
     {
-        $platform = __NAMESPACE__ . '\\' . ucfirst($platformName);
+        $platform = __NAMESPACE__.'\\'.ucfirst($platformName);
 
-        if (!class_exists($platform)) {
+        if (! class_exists($platform)) {
             throw new \Exception("Platform {$platformName} doesn't exist");
         }
 

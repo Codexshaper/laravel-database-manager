@@ -16,7 +16,6 @@ class Column
      */
     public static function create($column)
     {
-
         $name = $column['name'];
         $type = $column['type'];
         $type = ($type instanceof DoctrineType) ? $type : DoctrineType::getType(trim($type['name']));

@@ -75,7 +75,7 @@ class MongoDB
      */
     public function getNamespace($databaseName, $collectionName)
     {
-        return $databaseName . '.' . $collectionName;
+        return $databaseName.'.'.$collectionName;
     }
 
     /**
@@ -157,12 +157,11 @@ class MongoDB
      */
     public function updateCollection($collection)
     {
-
         $newName = $collection['name'];
         $oldName = $collection['oldName'];
         $collectionName = $oldName;
         $connection = config('database.default');
-        $database = config('database.connections.' . $connection . '.database');
+        $database = config('database.connections.'.$connection.'.database');
         $fromNs = $this->getNamespace($database, $oldName);
         $toNs = $this->getNamespace($database, $newName);
 
@@ -175,7 +174,6 @@ class MongoDB
         Index::setIndexes($this->selectCollection($collectionName), $collection['indexes']);
 
         return true;
-
     }
 
     /**
@@ -195,7 +193,6 @@ class MongoDB
                 if ($field->oldName != $field->name) {
                     $renames[$field->oldName] = $field->name;
                 }
-
             }
         }
         $update = [];
@@ -246,7 +243,7 @@ class MongoDB
                         $columnNames[] = $columnName;
                     }
 
-                    if ($id != '' && !in_array($newField, $columnNames)) {
+                    if ($id != '' && ! in_array($newField, $columnNames)) {
                         $update['$set'] = [$newField => ''];
                         $collection->updateOne(
                             ['_id' => new \MongoDB\BSON\ObjectID($id)],
@@ -256,7 +253,6 @@ class MongoDB
                     }
                 }
             }
-
         }
     }
 
@@ -276,7 +272,7 @@ class MongoDB
         $unsets = [];
 
         foreach ($columns as $column) {
-            if (!in_array($column, $newFields)) {
+            if (! in_array($column, $newFields)) {
                 $unsets[$column] = '';
             }
         }
@@ -363,7 +359,6 @@ class MongoDB
         $columns = [];
 
         if ($collection = DBM_Collection::where('name', $collectionName)->first()) {
-
             $fields = $collection->fields;
             foreach ($fields as $field) {
                 $columns[] = (object) [
@@ -407,5 +402,4 @@ class MongoDB
     {
         return DBM_Collection::where('name', $collectionName)->first()->fields->pluck('name')->toArray();
     }
-
 }

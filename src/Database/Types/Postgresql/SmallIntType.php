@@ -21,6 +21,6 @@ class SmallIntType extends Type
 
         $type = $fieldDeclaration['autoincrement'] ? 'smallserial' : 'smallint';
 
-        return $type . $commonIntegerTypeDeclaration;
+        return $type.$commonIntegerTypeDeclaration;
     }
 }

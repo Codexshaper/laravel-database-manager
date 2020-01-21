@@ -1,4 +1,5 @@
 <?php
+
 namespace CodexShaper\DBM\Contracts;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

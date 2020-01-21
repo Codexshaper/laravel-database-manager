@@ -83,7 +83,7 @@ class Index
                 $indexType = $indexDetails['type'];
                 $options = $indexDetails['options'];
 
-                $options['name'] = strtolower($collection->getCollectionName() . '_' . $column . '_' . $type);
+                $options['name'] = strtolower($collection->getCollectionName().'_'.$column.'_'.$type);
 
                 $options['ns'] = $collection->getNamespace();
 
@@ -150,6 +150,7 @@ class Index
                 $indexType = -1;
                 break;
         }
+
         return ['type' => $indexType, 'options' => $options];
     }
 }
