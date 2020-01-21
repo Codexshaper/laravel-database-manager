@@ -10,7 +10,7 @@ class ByteaType extends Type
     const NAME = 'bytea';
 
     /**
-     * Register bytea type
+     * Register bytea type.
      *
      * @return string
      */

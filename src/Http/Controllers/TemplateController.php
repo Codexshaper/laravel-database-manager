@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class TemplateController extends Controller
 {
     /**
-     * Update Templates
+     * Update Templates.
      *
      * @return void
      */
@@ -20,14 +20,14 @@ class TemplateController extends Controller
 
                 if ($template = DBM::Template()->where('old_name', $field['oldName'])->first()) {
 
-                    $template->name           = $field['name'];
-                    $template->old_name       = $field['name'];
-                    $template->type           = $field['type']['name'];
-                    $template->length         = $field['length'];
-                    $template->index          = $field['index'];
-                    $template->default        = $field['default'];
-                    $template->notnull        = $field['notnull'];
-                    $template->unsigned       = $field['unsigned'];
+                    $template->name = $field['name'];
+                    $template->old_name = $field['name'];
+                    $template->type = $field['type']['name'];
+                    $template->length = $field['length'];
+                    $template->index = $field['index'];
+                    $template->default = $field['default'];
+                    $template->notnull = $field['notnull'];
+                    $template->unsigned = $field['unsigned'];
                     $template->auto_increment = $field['autoincrement'];
 
                     $template->update();
@@ -36,7 +36,7 @@ class TemplateController extends Controller
         }
     }
     /**
-     * Create a new template
+     * Create a new template.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -48,19 +48,19 @@ class TemplateController extends Controller
             if (DBM::Template()->where('name', $field['name'])->first()) {
                 return response()->json([
                     'success' => false,
-                    'errors'  => [" The template name must be unique. " . $field['name'] . " already exist."],
+                    'errors' => [" The template name must be unique. " . $field['name'] . " already exist."],
                 ], 400);
             }
 
-            $template                 = DBM::Template();
-            $template->name           = $field['name'];
-            $template->old_name       = $field['name'];
-            $template->type           = $field['type']['name'];
-            $template->length         = $field['length'];
-            $template->index          = $field['index'];
-            $template->default        = $field['default'];
-            $template->notnull        = $field['notnull'];
-            $template->unsigned       = $field['unsigned'];
+            $template = DBM::Template();
+            $template->name = $field['name'];
+            $template->old_name = $field['name'];
+            $template->type = $field['type']['name'];
+            $template->length = $field['length'];
+            $template->index = $field['index'];
+            $template->default = $field['default'];
+            $template->notnull = $field['notnull'];
+            $template->unsigned = $field['unsigned'];
             $template->auto_increment = $field['autoincrement'];
 
             if ($template->save()) {
@@ -70,13 +70,13 @@ class TemplateController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'errors'  => [$e->getMessage()],
+                'errors' => [$e->getMessage()],
             ], 400);
         }
         return response()->json(['success' => true, 'template' => $request->all()]);
     }
     /**
-     * Remove a template
+     * Remove a template.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -89,7 +89,7 @@ class TemplateController extends Controller
         }
         return response()->json([
             'success' => false,
-            'errors'  => ['The template '+$request->name . " not found"],
+            'errors' => ['The template '+$request->name . " not found"],
         ], 400);
     }
 }

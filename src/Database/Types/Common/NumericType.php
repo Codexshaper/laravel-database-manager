@@ -11,7 +11,7 @@ class NumericType extends DoctrineDecimalType
     /**
      * Register numeric type
      *
-     * @return string
+     * @return string.
      */
     public function getName()
     {

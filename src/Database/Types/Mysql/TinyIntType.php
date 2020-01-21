@@ -10,7 +10,7 @@ class TinyIntType extends Type
     const NAME = 'tinyint';
 
     /**
-     * Register tinyint type
+     * Register tinyint type.
      *
      * @return string
      */

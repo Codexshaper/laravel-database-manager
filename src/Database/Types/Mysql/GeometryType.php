@@ -10,7 +10,7 @@ class GeometryType extends Type
     const NAME = 'geometry';
 
     /**
-     * Register geometry type
+     * Register geometry type.
      *
      * @return string
      */

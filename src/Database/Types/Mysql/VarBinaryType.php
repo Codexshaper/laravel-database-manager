@@ -10,7 +10,7 @@ class VarBinaryType extends Type
     const NAME = 'varbinary';
 
     /**
-     * Register varbinary type
+     * Register varbinary type.
      *
      * @return string
      */

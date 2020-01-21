@@ -10,7 +10,7 @@ class BlobType extends Type
     const NAME = 'blob';
 
     /**
-     * Register blob type
+     * Register blob type.
      *
      * @return string
      */

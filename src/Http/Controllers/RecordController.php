@@ -13,8 +13,9 @@ use Illuminate\Support\Facades\Config;
 class RecordController extends Controller
 {
     use RecordTrait, RecordRelationship;
+
     /**
-     * Get all permissions
+     * Get all permissions.
      *
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
@@ -23,7 +24,7 @@ class RecordController extends Controller
         return view('dbm::app');
     }
     /**
-     * Create Record
+     * Create Record.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -36,8 +37,8 @@ class RecordController extends Controller
             }
 
             $tableName = $request->table;
-            $columns   = json_decode($request->columns);
-            $fields    = json_decode($request->fields);
+            $columns = json_decode($request->columns);
+            $fields = json_decode($request->fields);
 
             $errors = $this->validation($fields, $columns);
 
@@ -68,7 +69,7 @@ class RecordController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Process data to store
+     * Process data to store.
      *
      * @param \Illuminate\Http\Request $request
      * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
@@ -78,9 +79,9 @@ class RecordController extends Controller
     public function processStoreData($request, $object)
     {
         $originalColumns = Table::getColumnsName($request->table);
-        $columns         = json_decode($request->columns);
-        $fields          = json_decode($request->fields);
-        $table           = DBM::model($object->model, $request->table);
+        $columns = json_decode($request->columns);
+        $fields = json_decode($request->fields);
+        $table = DBM::model($object->model, $request->table);
 
         foreach ($columns as $column => $value) {
             if (in_array($column, $originalColumns)) {
@@ -102,7 +103,7 @@ class RecordController extends Controller
         return $table;
     }
     /**
-     * Update Record
+     * Update Record.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -115,8 +116,8 @@ class RecordController extends Controller
             }
 
             $tableName = $request->table;
-            $columns   = json_decode($request->columns);
-            $fields    = json_decode($request->fields);
+            $columns = json_decode($request->columns);
+            $fields = json_decode($request->fields);
 
             $errors = $this->validation($fields, $columns, 'update');
 
@@ -145,7 +146,7 @@ class RecordController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Process Data to update
+     * Process Data to update.
      *
      * @param \Illuminate\Http\Request $request
      * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
@@ -155,9 +156,9 @@ class RecordController extends Controller
     public function processUpdateData($request, $object)
     {
         $originalColumns = Table::getColumnsName($request->table);
-        $columns         = json_decode($request->columns);
-        $fields          = json_decode($request->fields);
-        $key             = $object->details['findColumn'];
+        $columns = json_decode($request->columns);
+        $fields = json_decode($request->fields);
+        $key = $object->details['findColumn'];
 
         $table = DBM::model($object->model, $request->table)->where($key, $columns->{$key})->first();
 
@@ -186,7 +187,7 @@ class RecordController extends Controller
 
     }
     /**
-     * Delete Record
+     * Delete Record.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -201,11 +202,11 @@ class RecordController extends Controller
             $tableName = $request->table;
             // $originalColumns = Table::getColumnsName($tableName);
             $columns = json_decode($request->columns);
-            $fields  = $request->fields;
-            $object  = DBM::Object()->where('name', $tableName)->first();
-            $model   = $object->model;
+            $fields = $request->fields;
+            $object = DBM::Object()->where('name', $tableName)->first();
+            $model = $object->model;
             $details = $object->details;
-            $key     = $details['findColumn'];
+            $key = $details['findColumn'];
 
             if (is_string($model) && !class_exists($model)) {
                 return $this->generateError(["Model not found. Please create model first"]);
@@ -233,7 +234,7 @@ class RecordController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Get Table Details
+     * Get Table Details.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -246,24 +247,24 @@ class RecordController extends Controller
             }
 
             $tableName = $request->table;
-            $object    = DBM::Object()->where('name', $tableName)->first();
+            $object = DBM::Object()->where('name', $tableName)->first();
 
             if (!$object) {
                 return response()->json([
                     'success' => false,
-                    'errors'  => ["There is no Object details"],
+                    'errors' => ["There is no Object details"],
                 ], 400);
             }
 
-            $createFields     = $object->createFields();
-            $browseFields     = $object->readFields();
-            $editFields       = $object->editFields();
-            $deleteFields     = $object->deleteFields();
-            $fields           = $object->allFields();
+            $createFields = $object->createFields();
+            $browseFields = $object->readFields();
+            $editFields = $object->editFields();
+            $deleteFields = $object->deleteFields();
+            $fields = $object->allFields();
             $foreignTableData = [];
 
             $createFields = $this->prepareRecordFields($createFields);
-            $editFields   = $this->prepareRecordFields($editFields);
+            $editFields = $this->prepareRecordFields($editFields);
 
             $model = $object->model;
 
@@ -271,10 +272,10 @@ class RecordController extends Controller
                 return $this->generateError(["Model not found. Please create model first"]);
             }
 
-            $perPage      = (int) $request->perPage;
-            $query        = $request->q;
+            $perPage = (int) $request->perPage;
+            $query = $request->q;
             $searchColumn = $object->details['searchColumn'];
-            $records      = DBM::model($model, $tableName)->paginate($perPage);
+            $records = DBM::model($model, $tableName)->paginate($perPage);
 
             if (!empty($query) && !empty($searchColumn)) {
                 $records = DBM::model($model, $tableName)
@@ -282,26 +283,26 @@ class RecordController extends Controller
                     ->paginate($perPage);
             }
 
-            $records       = $this->prepareRelationshipData($records, $browseFields, $object);
+            $records = $this->prepareRelationshipData($records, $browseFields, $object);
             $recordsDetail = $this->prepareRecordDetails($records, $fields, $object, $request->findValue);
 
-            $objectDetails            = $object->details;
+            $objectDetails = $object->details;
             $objectDetails['perPage'] = $perPage;
 
             return response()->json([
-                'success'          => true,
-                'object'           => $object,
-                'objectDetails'    => $objectDetails,
-                'createFields'     => $createFields,
-                'browseFields'     => $browseFields,
-                'editFields'       => $editFields,
-                'deleteFields'     => $deleteFields,
-                'records'          => $recordsDetail['records'],
-                'record'           => $recordsDetail['record'],
+                'success' => true,
+                'object' => $object,
+                'objectDetails' => $objectDetails,
+                'createFields' => $createFields,
+                'browseFields' => $browseFields,
+                'editFields' => $editFields,
+                'deleteFields' => $deleteFields,
+                'records' => $recordsDetail['records'],
+                'record' => $recordsDetail['record'],
                 'foreignTableData' => $foreignTableData,
-                'userPermissions'  => DBM::userPermissions(),
-                'pagination'       => $records,
-                'isRecordModal'    => Config::get('dbm.crud.record.is_modal'),
+                'userPermissions' => DBM::userPermissions(),
+                'pagination' => $records,
+                'isRecordModal' => Config::get('dbm.crud.record.is_modal'),
             ]);
         }
 

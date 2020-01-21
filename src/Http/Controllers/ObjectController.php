@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 class ObjectController extends Controller
 {
     /**
-     * Get all objects
+     * Get all objects.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -25,25 +25,25 @@ class ObjectController extends Controller
             }
 
             $perPage = (int) $request->perPage;
-            $query   = $request->q;
+            $query = $request->q;
 
             $userPermissions = DBM::userPermissions();
-            $tables          = Table::paginate($perPage, null, [], $query);
-            $newTables       = $this->filterCrudTables($tables);
+            $tables = Table::paginate($perPage, null, [], $query);
+            $newTables = $this->filterCrudTables($tables);
 
             return response()->json([
-                'success'         => true,
-                'tables'          => $newTables,
+                'success' => true,
+                'tables' => $newTables,
                 'userPermissions' => $userPermissions,
-                'pagination'      => $tables,
+                'pagination' => $tables,
             ]);
         }
 
         return response()->json(['success' => false]);
     }
     /**
-     * Filter CRUD Tables
-     * Check CRUD exists or not
+     * Filter CRUD Tables.
+     * Check CRUD exists or not.
      *
      * @param mixed $tables
      *
@@ -51,14 +51,14 @@ class ObjectController extends Controller
      */
     public function filterCrudTables($tables)
     {
-        $objects   = DBM::Object()->all();
+        $objects = DBM::Object()->all();
         $newTables = [];
 
         foreach ($tables as $table) {
             foreach ($objects as $object) {
                 if ($table == $object->name) {
                     $newTables[] = [
-                        'name'   => $table,
+                        'name' => $table,
                         'isCrud' => true,
                     ];
                     continue 2;
@@ -66,7 +66,7 @@ class ObjectController extends Controller
             }
 
             $newTables[] = [
-                'name'   => $table,
+                'name' => $table,
                 'isCrud' => false,
             ];
         }
@@ -74,7 +74,7 @@ class ObjectController extends Controller
         return $newTables;
     }
     /**
-     * Get Object details
+     * Get Object details.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -88,8 +88,8 @@ class ObjectController extends Controller
                     throw new \Exception("Sorry! There is no table", 1);
                 }
 
-                $tableName  = $request->table;
-                $details    = $this->getObject($tableName);
+                $tableName = $request->table;
+                $details = $this->getObject($tableName);
                 $permission = $details['isCrudExists'] ? 'update' : 'create';
 
                 if (($response = DBM::authorize("crud.{$permission}")) !== true) {
@@ -99,14 +99,14 @@ class ObjectController extends Controller
                 $relationship = $this->getRelationshipDetails($tableName);
 
                 return response()->json([
-                    'success'              => true,
-                    'relationship_tables'  => $relationship['tables'],
+                    'success' => true,
+                    'relationship_tables' => $relationship['tables'],
                     'relationship_details' => $relationship['details'],
-                    'object'               => $details['object'],
-                    'fields'               => $details['fields'],
-                    'isCrudExists'         => $details['isCrudExists'],
-                    'userPermissions'      => DBM::userPermissions(),
-                    'driver'               => Driver::getConnectionName(),
+                    'object' => $details['object'],
+                    'fields' => $details['fields'],
+                    'isCrudExists' => $details['isCrudExists'],
+                    'userPermissions' => DBM::userPermissions(),
+                    'driver' => Driver::getConnectionName(),
                 ]);
 
             } catch (\Exception $e) {
@@ -117,7 +117,7 @@ class ObjectController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Get Object
+     * Get Object.
      *
      * @param string $tableName
      *
@@ -126,7 +126,7 @@ class ObjectController extends Controller
     public function getObject($tableName)
     {
         $isCrudExists = false;
-        $fields       = [];
+        $fields = [];
 
         if ($object = DBM::Object()->where('name', $tableName)->first()) {
             $isCrudExists = true;
@@ -139,12 +139,12 @@ class ObjectController extends Controller
         if (!$object) {
             $table = Table::getTable($tableName);
 
-            $object               = new \stdClass;
-            $object->name         = $table['name'];
-            $object->slug         = Str::slug($table['name']);
+            $object = new \stdClass;
+            $object->name = $table['name'];
+            $object->slug = Str::slug($table['name']);
             $object->display_name = ucfirst($table['name']);
-            $object->model        = DBM::generateModelName($table['name']);
-            $object->controller   = '';
+            $object->model = DBM::generateModelName($table['name']);
+            $object->controller = '';
 
             $fields = $this->prepareFields($table);
         }
@@ -152,14 +152,14 @@ class ObjectController extends Controller
         $object->makeModel = false;
 
         return [
-            'object'       => $object,
-            'fields'       => $fields,
+            'object' => $object,
+            'fields' => $fields,
             'isCrudExists' => $isCrudExists,
         ];
 
     }
     /**
-     * Prepare Object Fields
+     * Prepare Object Fields.
      *
      * @param array $table
      *
@@ -168,21 +168,21 @@ class ObjectController extends Controller
     public function prepareFields($table)
     {
         $fields = [];
-        $order  = 1;
+        $order = 1;
 
         foreach ($table['columns'] as $column) {
 
             $fields[] = (object) [
-                'name'          => $column->name,
-                'display_name'  => ucfirst($column->name),
-                'type'          => DatabaseController::getInputType($column->type['name']),
-                'create'        => ($column->autoincrement) ? false : true,
-                'read'          => ($column->autoincrement) ? false : true,
-                'edit'          => ($column->autoincrement) ? false : true,
-                'delete'        => ($column->autoincrement) ? false : true,
+                'name' => $column->name,
+                'display_name' => ucfirst($column->name),
+                'type' => DatabaseController::getInputType($column->type['name']),
+                'create' => ($column->autoincrement) ? false : true,
+                'read' => ($column->autoincrement) ? false : true,
+                'edit' => ($column->autoincrement) ? false : true,
+                'delete' => ($column->autoincrement) ? false : true,
                 'function_name' => '',
-                'order'         => $order,
-                'settings'      => '{ }',
+                'order' => $order,
+                'settings' => '{ }',
             ];
 
             $order++;
@@ -191,7 +191,7 @@ class ObjectController extends Controller
         return $fields;
     }
     /**
-     * Get Relationship details
+     * Get Relationship details.
      *
      * @param string $tableName
      *
@@ -202,18 +202,18 @@ class ObjectController extends Controller
         $tables = Table::all();
 
         $relationshipDetails = (object) [
-            'type'                => 'hasOne',
+            'type' => 'hasOne',
             'foreignTableDetails' => Table::getTable($tables[0]),
-            'localTableDetails'   => Table::getTable($tableName),
+            'localTableDetails' => Table::getTable($tableName),
         ];
 
         return [
-            'tables'  => $tables,
+            'tables' => $tables,
             'details' => $relationshipDetails,
         ];
     }
     /**
-     * Get errors
+     * Get errors.
      *
      * @param array $errors
      *
@@ -223,7 +223,7 @@ class ObjectController extends Controller
     {
         return response()->json([
             'success' => false,
-            'errors'  => $errors,
+            'errors' => $errors,
         ], 400);
     }
 }

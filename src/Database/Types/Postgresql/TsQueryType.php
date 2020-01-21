@@ -10,7 +10,7 @@ class TsQueryType extends Type
     const NAME = 'tsquery';
 
     /**
-     * Register tsquery type
+     * Register tsquery type.
      *
      * @return string
      */

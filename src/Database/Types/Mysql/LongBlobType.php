@@ -10,7 +10,7 @@ class LongBlobType extends Type
     const NAME = 'longblob';
 
     /**
-     * Register longblob type
+     * Register longblob type.
      *
      * @return string
      */

@@ -14,7 +14,7 @@ class DBM_Permission extends Model
     ];
 
     /**
-     * Get all users for permission
+     * Get all users for permission.
      *
      * @return \Illuminate\Support\Collection
      */

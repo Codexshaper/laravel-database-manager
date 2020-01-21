@@ -10,7 +10,7 @@ class InetType extends Type
     const NAME = 'inet';
 
     /**
-     * Register inet type
+     * Register inet type.
      *
      * @return string
      */

@@ -10,7 +10,7 @@ class TimeStampType extends Type
     const NAME = 'timestamp';
 
     /**
-     * Register timestamp type
+     * Register timestamp type.
      *
      * @return string
      */

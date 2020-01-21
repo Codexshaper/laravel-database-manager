@@ -10,7 +10,7 @@ class MultiPointType extends Type
     const NAME = 'multipoint';
 
     /**
-     * Register multipoint type
+     * Register multipoint type.
      *
      * @return string
      */

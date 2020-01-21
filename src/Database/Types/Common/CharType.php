@@ -10,7 +10,7 @@ class CharType extends Type
     const NAME = 'char';
 
     /**
-     * Register char type
+     * Register char type.
      *
      * @param array $field
      *

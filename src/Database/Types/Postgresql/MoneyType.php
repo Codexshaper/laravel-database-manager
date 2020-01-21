@@ -10,7 +10,7 @@ class MoneyType extends Type
     const NAME = 'money';
 
     /**
-     * Register money type
+     * Register money type.
      *
      * @return string
      */

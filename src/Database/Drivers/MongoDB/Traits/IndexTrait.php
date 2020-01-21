@@ -7,7 +7,7 @@ use MongoDB\Model\IndexInfo;
 trait IndexTrait
 {
     /**
-     * get common types
+     * get common types.
      *
      * @return  string
      */
@@ -28,7 +28,7 @@ trait IndexTrait
         return $type;
     }
     /**
-     * get special types
+     * get special types.
      *
      * @return  string
      */
@@ -59,15 +59,15 @@ trait IndexTrait
         return "";
     }
     /**
-     * get defaults types
+     * get defaults types.
      *
      * @return  string
      */
     protected static function getDefaultType(IndexInfo $index)
     {
-        $name     = $index->getName();
+        $name = $index->getName();
         $partials = explode("_", $name);
-        $type     = end($partials);
+        $type = end($partials);
 
         if ($type == 'asc') {
             return "ASC";
@@ -80,7 +80,7 @@ trait IndexTrait
         return "";
     }
     /**
-     * check Unique
+     * check Unique.
      *
      * @return  bool
      */
@@ -89,7 +89,7 @@ trait IndexTrait
         return $index->isUnique() && !$index->isSparse() && !static::checkDescending($index) ? true : false;
     }
     /**
-     * check Unique Descending
+     * check Unique Descending.
      *
      * @return  bool
      */
@@ -98,7 +98,7 @@ trait IndexTrait
         return $index->isUnique() && !$index->isSparse() && static::checkDescending($index) ? true : false;
     }
     /**
-     * check Sparse
+     * check Sparse.
      *
      * @return  bool
      */
@@ -107,7 +107,7 @@ trait IndexTrait
         return $index->isSparse() && !static::checkDescending($index) ? true : false;
     }
     /**
-     * check Sparse Unique
+     * check Sparse Unique.
      *
      * @return  bool
      */
@@ -116,7 +116,7 @@ trait IndexTrait
         return $index->isSparse() && $index->isUnique() && !static::checkDescending($index) ? true : false;
     }
     /**
-     * check Sparse Unique Descending
+     * check Sparse Unique Descending.
      *
      * @return  bool
      */
@@ -125,7 +125,7 @@ trait IndexTrait
         return $index->isSparse() && $index->isUnique() && static::checkDescending($index) ? true : false;
     }
     /**
-     * check Sparse Descending
+     * check Sparse Descending.
      *
      * @return  bool
      */
@@ -134,7 +134,7 @@ trait IndexTrait
         return $index->isSparse() && static::checkDescending($index) ? true : false;
     }
     /**
-     * check Descending
+     * check Descending.
      *
      * @return  bool
      */

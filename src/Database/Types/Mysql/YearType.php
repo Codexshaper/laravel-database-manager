@@ -10,7 +10,7 @@ class YearType extends Type
     const NAME = 'year';
 
     /**
-     * Register year type
+     * Register year type.
      *
      * @return string
      */

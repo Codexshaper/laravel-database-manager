@@ -9,7 +9,7 @@ class SchemaManager
     protected static $schemaManager;
 
     /**
-     * Create SchemaManager instance
+     * Create SchemaManager instance.
      *
      * @return void
      */
@@ -18,7 +18,7 @@ class SchemaManager
         self::$schemaManager = DB::connection()->getDoctrineSchemaManager();
     }
     /**
-     * get SchemaManager instance
+     * get SchemaManager instance.
      *
      * @return \Doctrine\DBAL\Schema\AbstractSchemaManager
      */

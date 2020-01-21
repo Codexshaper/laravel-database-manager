@@ -10,7 +10,7 @@ class BinaryType extends Type
     const NAME = 'binary';
 
     /**
-     * Register binary type
+     * Register binary type.
      *
      * @return string
      */

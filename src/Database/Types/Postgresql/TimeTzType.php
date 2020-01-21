@@ -10,7 +10,7 @@ class TimeTzType extends Type
     const NAME = 'timetz';
 
     /**
-     * Register timetz type
+     * Register timetz type.
      *
      * @return string
      */

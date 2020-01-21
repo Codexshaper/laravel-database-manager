@@ -9,7 +9,7 @@ class VarCharType extends DoctrineStringType
     const NAME = 'varchar';
 
     /**
-     * Register varchar type
+     * Register varchar type.
      *
      * @return string
      */

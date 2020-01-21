@@ -8,8 +8,9 @@ abstract class Platform
 {
     abstract public static function getTypes(Collection $typeMapping);
     abstract public static function registerCustomTypeOptions();
+
     /**
-     * Get platform with namespace
+     * Get platform with namespace.
      *
      * @param string $platformName
      *
@@ -26,7 +27,7 @@ abstract class Platform
         return $platform;
     }
     /**
-     * Get platform types
+     * Get platform types.
      *
      * @param string $platformName
      *
@@ -39,7 +40,7 @@ abstract class Platform
         return $platform::getTypes($typeMapping);
     }
     /**
-     * Register platform custom type options
+     * Register platform custom type options.
      *
      * @param string $platformName
      *

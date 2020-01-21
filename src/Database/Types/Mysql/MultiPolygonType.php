@@ -10,7 +10,7 @@ class MultiPolygonType extends Type
     const NAME = 'multipolygon';
 
     /**
-     * Register multipolygon type
+     * Register multipolygon type.
      *
      * @return string
      */

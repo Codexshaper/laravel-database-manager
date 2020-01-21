@@ -11,33 +11,33 @@ class Index
     use IndexTrait;
 
     /**
-     * Get Indexes
+     * Get Indexes.
      *
      * @return  array
      */
     public static function getIndexes(Collection $collection)
     {
         $listIndexes = $collection->listIndexes();
-        $indexes     = [];
+        $indexes = [];
         foreach ($listIndexes as $index) {
             $indexes[] = [
-                "name"        => $index->getName(),
-                "oldName"     => $index->getName(),
-                "columns"     => array_keys($index->getKey()),
-                "type"        => static::getType($index),
-                "isPrimary"   => false,
-                "isUnique"    => $index->isUnique(),
-                "isComposite" => (count($index->getKey()) > 1) ? true : false,
-                "flags"       => [],
-                "options"     => [],
-                "namespace"   => $index->getNamespace(),
+                'name' => $index->getName(),
+                'oldName' => $index->getName(),
+                'columns' => array_keys($index->getKey()),
+                'type' => static::getType($index),
+                'isPrimary' => false,
+                'isUnique' => $index->isUnique(),
+                'isComposite' => (count($index->getKey()) > 1) ? true : false,
+                'flags' => [],
+                'options' => [],
+                'namespace' => $index->getNamespace(),
             ];
         }
 
         return $indexes;
     }
     /**
-     * Get index type
+     * Get index type.
      *
      * @return  string
      */
@@ -56,7 +56,7 @@ class Index
         return $type;
     }
     /**
-     * Set Indexes
+     * Set Indexes.
      *
      * @param   \MongoDB\Collection     $collection
      * @param   array   $indexes
@@ -70,8 +70,8 @@ class Index
 
         foreach ($indexes as $index) {
             $columns = $index['columns'];
-            $name    = $index['name'];
-            $type    = $index['type'];
+            $name = $index['name'];
+            $type = $index['type'];
 
             foreach ($columns as $column) {
                 if ($column == '_id') {
@@ -79,10 +79,10 @@ class Index
                 }
 
                 $indexDetails = static::getIndexDetails($type);
-                $indexType    = $indexDetails['type'];
-                $options      = $indexDetails['options'];
+                $indexType = $indexDetails['type'];
+                $options = $indexDetails['options'];
 
-                $options['name'] = strtolower($collection->getCollectionName() . "_" . $column . "_" . $type);
+                $options['name'] = strtolower($collection->getCollectionName() . '_' . $column . '_' . $type);
 
                 $options['ns'] = $collection->getNamespace();
 
@@ -93,7 +93,7 @@ class Index
         return true;
     }
     /**
-     * Get Index Details
+     * Get Index Details.
      *
      * @param   string   $type
      *
@@ -102,7 +102,7 @@ class Index
     public static function getIndexDetails($type)
     {
         $indexType = 1;
-        $options   = [];
+        $options = [];
 
         switch ($type) {
 
@@ -113,31 +113,31 @@ class Index
                 $indexType = 1;
                 break;
             case 'UNIQUE':
-                $indexType         = 1;
+                $indexType = 1;
                 $options['unique'] = true;
                 break;
             case 'UNIQUE_DESC':
-                $indexType         = -1;
+                $indexType = -1;
                 $options['unique'] = true;
                 break;
             case 'TTL':
-                $indexType                     = 1;
+                $indexType = 1;
                 $options['expireAfterSeconds'] = 3600;
                 break;
             case 'SPARSE':
-                $indexType         = 1;
+                $indexType = 1;
                 $options['sparse'] = true;
                 break;
             case 'SPARSE_DESC':
-                $indexType         = -1;
+                $indexType = -1;
                 $options['sparse'] = true;
                 break;
             case 'SPARSE_UNIQUE':
-                $indexType         = 1;
+                $indexType = 1;
                 $options['sparse'] = true;
                 $options['unique'] = true;
             case 'SPARSE_UNIQUE_DESC':
-                $indexType         = -1;
+                $indexType = -1;
                 $options['sparse'] = true;
                 $options['unique'] = true;
                 break;
@@ -149,6 +149,6 @@ class Index
                 break;
         }
 
-        return ["type" => $indexType, "options" => $options];
+        return ['type' => $indexType, 'options' => $options];
     }
 }

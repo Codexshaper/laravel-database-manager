@@ -10,7 +10,7 @@ class PointType extends Type
     const NAME = 'point';
 
     /**
-     * Register point type
+     * Register point type.
      *
      * @return string
      */

@@ -10,7 +10,7 @@ class PolygonType extends Type
     const NAME = 'polygon';
 
     /**
-     * Register polygon type
+     * Register polygon type.
      *
      * @return string
      */

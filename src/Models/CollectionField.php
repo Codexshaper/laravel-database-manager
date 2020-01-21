@@ -15,7 +15,7 @@ class CollectionField extends Model
     ];
 
     /**
-     * Get collection for individual field
+     * Get collection for individual field.
      *
      * @return \Illuminate\Support\Collection
      */

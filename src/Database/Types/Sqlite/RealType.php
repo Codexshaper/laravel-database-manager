@@ -10,7 +10,7 @@ class RealType extends Type
     const NAME = 'real';
 
     /**
-     * Register real type
+     * Register real type.
      *
      * @return string
      */

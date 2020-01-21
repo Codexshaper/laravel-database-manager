@@ -10,7 +10,7 @@ class TxidSnapshotType extends Type
     const NAME = 'txid_snapshot';
 
     /**
-     * Register txid_snapshot type
+     * Register txid_snapshot type.
      *
      * @return string
      */

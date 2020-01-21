@@ -15,7 +15,7 @@ class DBM_MongoField extends Model
     ];
 
     /**
-     * Get object for individual field
+     * Get object for individual field.
      *
      * @return \Illuminate\Support\Collection
      */

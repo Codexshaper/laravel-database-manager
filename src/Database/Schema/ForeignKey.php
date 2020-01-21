@@ -8,7 +8,7 @@ use Doctrine\DBAL\Schema\SchemaException;
 class ForeignKey
 {
     /**
-     * Create foreign key
+     * Create foreign key.
      *
      * @param array $foreignKey
      *
@@ -22,16 +22,16 @@ class ForeignKey
             $localTable = static::getDoctrineTable($foreignKey['localTable']);
         }
 
-        $localColumns   = $foreignKey['localColumns'];
-        $foreignTable   = $foreignKey['foreignTable'];
+        $localColumns = $foreignKey['localColumns'];
+        $foreignTable = $foreignKey['foreignTable'];
         $foreignColumns = $foreignKey['foreignColumns'];
-        $options        = $foreignKey['options'] ?? [];
+        $options = $foreignKey['options'] ?? [];
 
         // Set the name
         $name = isset($foreignKey['name']) ? trim($foreignKey['name']) : '';
         if (empty($name)) {
             $table = isset($localTable) ? $localTable->getName() : null;
-            $name  = static::createName($localColumns, 'foreign', $table);
+            $name = static::createName($localColumns, 'foreign', $table);
         } else {
             // $name = Identifier::validate($name, 'Foreign Key');
         }
@@ -46,7 +46,7 @@ class ForeignKey
         return $doctrineForeignKey;
     }
     /**
-     * Get foreign key name
+     * Get foreign key name.
      *
      * @param array $columns
      * @param string $type
@@ -57,13 +57,13 @@ class ForeignKey
     public static function createName($columns, $type, $table = null)
     {
         $table = isset($table) ? trim($table) . '_' : '';
-        $type  = trim($type);
-        $name  = strtolower($table . implode('_', $columns) . '_' . $type);
+        $type = trim($type);
+        $name = strtolower($table . implode('_', $columns) . '_' . $type);
 
         return str_replace(['-', '.'], '_', $name);
     }
     /**
-     * Get doctrine table
+     * Get doctrine table.
      *
      * @param string $table
      *
@@ -80,19 +80,19 @@ class ForeignKey
         return static::manager()->listTableDetails($table);
     }
     /**
-     * Get all foreignkeys as an array
+     * Get all foreignkeys as an array.
      *
      * @return array
      */
     public static function toArray(DoctrineForeignKey $foreignKey)
     {
         return [
-            'name'           => $foreignKey->getName(),
-            'localTable'     => $foreignKey->getLocalTableName(),
-            'localColumns'   => $foreignKey->getLocalColumns(),
-            'foreignTable'   => $foreignKey->getForeignTableName(),
+            'name' => $foreignKey->getName(),
+            'localTable' => $foreignKey->getLocalTableName(),
+            'localColumns' => $foreignKey->getLocalColumns(),
+            'foreignTable' => $foreignKey->getForeignTableName(),
             'foreignColumns' => $foreignKey->getForeignColumns(),
-            'options'        => $foreignKey->getOptions(),
+            'options' => $foreignKey->getOptions(),
         ];
     }
 }

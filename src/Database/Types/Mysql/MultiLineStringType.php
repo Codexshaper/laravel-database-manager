@@ -10,7 +10,7 @@ class MultiLineStringType extends Type
     const NAME = 'multilinestring';
 
     /**
-     * Register multilinestring type
+     * Register multilinestring type.
      *
      * @return string
      */

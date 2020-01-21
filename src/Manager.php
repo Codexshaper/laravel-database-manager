@@ -23,7 +23,7 @@ use Illuminate\Support\Str;
 class Manager
 {
     /**
-     * Include Web routes
+     * Include Web routes.
      *
      * @return void
      */
@@ -32,7 +32,7 @@ class Manager
         require __DIR__ . '/../routes/web.php';
     }
     /**
-     * Include API routes
+     * Include API routes.
      *
      * @return void
      */
@@ -42,7 +42,7 @@ class Manager
     }
 
     /**
-     * Load assests
+     * Load assests.
      *
      * @param  string $path
      *
@@ -82,7 +82,7 @@ class Manager
         return response('', 404);
     }
     /**
-     * Get Model Namespace
+     * Get Model Namespace.
      *
      * @return string
      */
@@ -91,7 +91,7 @@ class Manager
         return trim(config('dbm.modal_namespace', App::getNamespace()), '\\');
     }
     /**
-     * Get model name with namespace
+     * Get model name with namespace.
      *
      * @param string $className
      *
@@ -102,7 +102,7 @@ class Manager
         return static::getModelNamespace() . '\\' . ucfirst(Str::singular($className));
     }
     /**
-     * Make new model
+     * Make new model.
      *
      * @param string $model
      * @param string $table
@@ -113,11 +113,11 @@ class Manager
     {
         try {
 
-            $partials  = explode("\\", $model);
+            $partials = explode("\\", $model);
             $className = array_pop($partials);
             $namespace = implode("\\", $partials);
 
-            $app       = array_shift($partials);
+            $app = array_shift($partials);
             $directory = implode(DIRECTORY_SEPARATOR, $partials);
             if (strtolower($app) != 'app') {
                 $namespace = "App\\" . $namespace;
@@ -158,7 +158,7 @@ class Manager
 
     }
     /**
-     * Make new controller
+     * Make new controller.
      *
      * @param string $controller
      *
@@ -177,7 +177,7 @@ class Manager
 
     }
     /**
-     * Create new model instance
+     * Create new model instance.
      *
      * @param string $model
      * @param string|null $table
@@ -193,7 +193,7 @@ class Manager
         return (new $model)->setTable($table);
     }
     /**
-     * Create new model instance
+     * Create new model instance.
      *
      * @return \CodexShaper\DBM\Models\DBM_MongoObject|\CodexShaper\DBM\Models\DBM_Object
      */
@@ -206,7 +206,7 @@ class Manager
         return new DBM_Object;
     }
     /**
-     * Create new model instance
+     * Create new model instance.
      *
      * @return \CodexShaper\DBM\Models\DBM_MongoField|\CodexShaper\DBM\Models\DBM_Field
      */
@@ -219,7 +219,7 @@ class Manager
         return new DBM_Field;
     }
     /**
-     * Create new model instance
+     * Create new model instance.
      *
      * @return \CodexShaper\DBM\Models\DBM_MongoPermission|\CodexShaper\DBM\Models\DBM_Permission
      */
@@ -232,7 +232,7 @@ class Manager
         return new DBM_Permission;
     }
     /**
-     * Create new model instance
+     * Create new model instance.
      *
      * @return \CodexShaper\DBM\Models\DBM_MongoTemplate|\CodexShaper\DBM\Models\DBM_Template
      */
@@ -245,35 +245,35 @@ class Manager
         return new DBM_Template;
     }
     /**
-     * Get all templates
+     * Get all templates.
      *
      * @return array
      */
     public function templates()
     {
-        $templates    = static::Template()->get();
+        $templates = static::Template()->get();
         $newTemplates = [];
 
         foreach ($templates as $template) {
             $newTemplates[] = (object) [
-                "name"          => $template->name,
-                "oldName"       => $template->old_name,
-                "type"          => [
+                "name" => $template->name,
+                "oldName" => $template->old_name,
+                "type" => [
                     "name" => $template->type,
                 ],
-                "notnull"       => $template->notnull,
-                "unsigned"      => $template->unsigned,
+                "notnull" => $template->notnull,
+                "unsigned" => $template->unsigned,
                 "autoincrement" => $template->auto_increment,
-                "default"       => $template->default,
-                "length"        => $template->length,
-                "index"         => ($template->index != null) ? $template->index : "",
+                "default" => $template->default,
+                "length" => $template->length,
+                "index" => ($template->index != null) ? $template->index : "",
             ];
         }
 
         return $newTemplates;
     }
     /**
-     * Get file path prefix
+     * Get file path prefix.
      *
      * @param string @driver
      *
@@ -284,7 +284,7 @@ class Manager
         return trim(Storage::disk($driver)->getDriver()->getAdapter()->getPathPrefix(), DIRECTORY_SEPARATOR);
     }
     /**
-     * Get all templates
+     * Get all templates.
      *
      * @return \Illuminate\Support\Collection
      */
@@ -303,7 +303,7 @@ class Manager
             ->belongs_to_many;
     }
     /**
-     * Check user loggedin or not
+     * Check user loggedin or not.
      *
      * @return \Illuminate\Routing\Redirector|\Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|\Illuminate\View\View
      */
@@ -316,7 +316,7 @@ class Manager
         return true;
     }
     /**
-     * Check user permission
+     * Check user permission.
      *
      * @param string $prefix
      * @param string $slug
@@ -329,9 +329,9 @@ class Manager
             return 'not_logged_in';
         }
 
-        $user_model        = config('dbm.auth.user.model');
-        $user_table        = config('dbm.auth.user.table');
-        $user_local_key    = config('dbm.auth.user.local_key');
+        $user_model = config('dbm.auth.user.model');
+        $user_table = config('dbm.auth.user.table');
+        $user_local_key = config('dbm.auth.user.local_key');
         $user_display_name = config('dbm.auth.user.display_name');
 
         $permissions = $this->userPermissions();
@@ -345,25 +345,32 @@ class Manager
         return 'not_authorized';
 
     }
+    /**
+     * Check user aurization.
+     *
+     * @param string $permission
+     *
+     * @return \Illuminate\Http\JsonResponse|true
+     */
     public function authorize($permission)
     {
         $permission = explode('.', $permission);
 
         $prefix = $permission[0];
-        $slug   = $permission[1];
+        $slug = $permission[1];
 
         switch ($this->checkPermission($prefix, $slug)) {
             case 'not_logged_in':
                 return response()->json([
                     'success' => false,
-                    'url'     => route('login'),
+                    'url' => route('login'),
                 ]);
                 break;
 
             case 'not_authorized':
                 return response()->json([
                     'success' => false,
-                    'errors'  => ["You don't have permission to " . $slug . " " . $prefix],
+                    'errors' => ["You don't have permission to " . $slug . " " . $prefix],
                 ], 401);
                 break;
             case 'authorized':

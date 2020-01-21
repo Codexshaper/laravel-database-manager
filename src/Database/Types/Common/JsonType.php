@@ -10,7 +10,7 @@ class JsonType extends Type
     const NAME = 'json';
 
     /**
-     * Register json type
+     * Register json type.
      *
      * @return string
      */

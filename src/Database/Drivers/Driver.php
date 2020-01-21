@@ -5,7 +5,7 @@ namespace CodexShaper\DBM\Database\Drivers;
 class Driver
 {
     /**
-     * Get connection name
+     * Get connection name.
      *
      * @return string
      */
@@ -14,7 +14,7 @@ class Driver
         return config('database.default', 'mysql');
     }
     /**
-     * Check driver is MongoDB
+     * Check driver is MongoDB.
      *
      * @return bool
      */
@@ -23,7 +23,7 @@ class Driver
         return (config('database.default') == 'mongodb') ? true : false;
     }
     /**
-     * Check driver is Mysql
+     * Check driver is Mysql.
      *
      * @return bool
      */
@@ -32,7 +32,7 @@ class Driver
         return (config('database.default') == 'mysql') ? true : false;
     }
     /**
-     * Check driver is Postgresql
+     * Check driver is Postgresql.
      *
      * @return bool
      */
@@ -41,7 +41,7 @@ class Driver
         return (config('database.default') == 'pgsql') ? true : false;
     }
     /**
-     * Check driver is Sqlsrv
+     * Check driver is Sqlsrv.
      *
      * @return bool
      */
@@ -50,7 +50,7 @@ class Driver
         return (config('database.default') == 'sqlsrv') ? true : false;
     }
     /**
-     * Check driver is Sqlite
+     * Check driver is Sqlite.
      *
      * @return bool
      */

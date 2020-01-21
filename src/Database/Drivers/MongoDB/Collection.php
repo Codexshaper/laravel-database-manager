@@ -15,7 +15,7 @@ class Collection
     protected $name;
 
     /**
-     * MongoDB collection constuctor
+     * MongoDB collection constuctor.
      *
      * @return void
      */
@@ -24,7 +24,7 @@ class Collection
         $this->collection = $collection;
     }
     /**
-     * Add MongoDB collection column
+     * Add MongoDB collection column.
      *
      * @param string $name
      * @param string $type
@@ -36,20 +36,20 @@ class Collection
         $this->name = $name;
 
         $this->columns[$name] = [
-            'name'       => $name,
-            'old_name'   => $name,
-            'type'       => $type,
-            'index'      => "",
-            "default"    => null,
-            "extra"      => "",
-            "created_at" => now(),
-            "updated_at" => now(),
+            'name' => $name,
+            'old_name' => $name,
+            'type' => $type,
+            'index' => '',
+            'default' => null,
+            'extra' => '',
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
 
         return $this;
     }
     /**
-     * Add index
+     * Add index.
      *
      * @return $this
      */
@@ -60,7 +60,7 @@ class Collection
         return $this;
     }
     /**
-     * Add unique key
+     * Add unique key.
      *
      * @return $this
      */
@@ -71,7 +71,7 @@ class Collection
         return $this;
     }
     /**
-     * Add default value
+     * Add default value.
      *
      * @param string|bool|int|null $value
      *
@@ -83,7 +83,7 @@ class Collection
         return $this;
     }
     /**
-     * Add nullable column
+     * Add nullable column.
      *
      * @return $this
      */
@@ -94,7 +94,7 @@ class Collection
         return $this;
     }
     /**
-     * Save collection and fields
+     * Save collection and fields.
      *
      * @return void
      */
@@ -105,16 +105,16 @@ class Collection
             $collection->delete();
         }
 
-        $collection             = new DBM_Collection;
-        $collection->name       = $this->collection;
-        $collection->old_name   = $this->collection;
-        $collection->extra      = "";
+        $collection = new DBM_Collection;
+        $collection->name = $this->collection;
+        $collection->old_name = $this->collection;
+        $collection->extra = '';
         $collection->created_at = now();
         $collection->updated_at = now();
         $collection->save();
 
         foreach ($this->columns as $column) {
-            $field                    = new CollectionField;
+            $field = new CollectionField;
             $field->dbm_collection_id = $collection->_id;
             foreach ($column as $key => $value) {
                 $field->{$key} = $value;
@@ -124,6 +124,6 @@ class Collection
         }
 
         $this->columns = [];
-        $this->name    = "";
+        $this->name = '';
     }
 }

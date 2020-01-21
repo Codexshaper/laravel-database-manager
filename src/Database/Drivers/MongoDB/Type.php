@@ -36,7 +36,7 @@ class Type
     ];
 
     /**
-     * Get binary
+     * Get binary.
      *
      * @return  \MongoDB\BSON\Binary
      */
@@ -45,7 +45,7 @@ class Type
         return new Binary($value, $type);
     }
     /**
-     * Get decimal
+     * Get decimal.
      *
      * @return  \MongoDB\BSON\Decimal128
      */
@@ -54,7 +54,7 @@ class Type
         return new Decimal($value);
     }
     /**
-     * Get javascript
+     * Get javascript.
      *
      * @return  \MongoDB\BSON\Javascript
      */
@@ -63,7 +63,7 @@ class Type
         return new Javascript($code, $scope);
     }
     /**
-     * Get max key
+     * Get max key.
      *
      * @return  \MongoDB\BSON\MaxKey
      */
@@ -72,7 +72,7 @@ class Type
         return new MaxKey();
     }
     /**
-     * Get min key
+     * Get min key.
      *
      * @return  \MongoDB\BSON\MinKey
      */
@@ -81,7 +81,7 @@ class Type
         return new MinKey();
     }
     /**
-     * Get ObjectId
+     * Get ObjectId.
      *
      * @return  \MongoDB\BSON\ObjectId
      */
@@ -90,7 +90,7 @@ class Type
         return new ObjectId($value);
     }
     /**
-     * Get regular expression
+     * Get regular expression.
      *
      * @return  \MongoDB\BSON\Regex
      */
@@ -99,7 +99,7 @@ class Type
         return new Regex($pattern, $flags);
     }
     /**
-     * Get timestamp
+     * Get timestamp.
      *
      * @return  \MongoDB\BSON\Timestamp
      */
@@ -108,7 +108,7 @@ class Type
         return new Timestamp($increment, $timestamp);
     }
     /**
-     * Get datetime
+     * Get datetime.
      *
      * @param int|null $milliseconds
      *
@@ -123,7 +123,7 @@ class Type
         return new UTCDateTime($milliseconds);
     }
     /**
-     * Get string
+     * Get string.
      *
      * @param string $value
      *
@@ -134,7 +134,7 @@ class Type
         return (string) $value;
     }
     /**
-     * Get array
+     * Get array.
      *
      * @param array $value
      *
@@ -145,7 +145,7 @@ class Type
         return (array) $value;
     }
     /**
-     * Get object
+     * Get object.
      *
      * @param object $value
      *
@@ -156,7 +156,7 @@ class Type
         return (object) $value;
     }
     /**
-     * Get boolean
+     * Get boolean.
      *
      * @param bool $value
      *
@@ -167,7 +167,7 @@ class Type
         return (boolean) $value;
     }
     /**
-     * Get double
+     * Get double.
      *
      * @param double $value
      *
@@ -178,7 +178,7 @@ class Type
         return (double) $value;
     }
     /**
-     * Get null
+     * Get null.
      *
      * @return  null
      */
@@ -187,7 +187,7 @@ class Type
         return null;
     }
     /**
-     * Get integer
+     * Get integer.
      *
      * @param int $value
      *
@@ -198,7 +198,7 @@ class Type
         return (int) $value;
     }
     /**
-     * Get long integer
+     * Get long integer.
      *
      * @param int $value
      *
@@ -209,7 +209,7 @@ class Type
         return (int) $value;
     }
     /**
-     * Get types
+     * Get types.
      *
      * @return  array
      */

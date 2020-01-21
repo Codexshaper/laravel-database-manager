@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 abstract class Postgresql extends Platform
 {
     /**
-     * Get Types
+     * Get Types.
      *
      * @return \Illuminate\Support\Collection
      */

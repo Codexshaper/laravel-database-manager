@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Validator;
 class UserController extends Controller
 {
     /**
-     * Show login form
+     * Show login form.
      *
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
@@ -21,7 +21,7 @@ class UserController extends Controller
         return view('dbm::admin');
     }
     /**
-     * Login User for API
+     * Login User for API.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -33,7 +33,7 @@ class UserController extends Controller
                     return $response;
                 }
                 $credentials = [
-                    'email'    => $request->data['email'],
+                    'email' => $request->data['email'],
                     'password' => $request->data['password'],
                 ];
 
@@ -41,16 +41,16 @@ class UserController extends Controller
                     return $this->generateError(["Email and password combination doesn't match"]);
                 }
 
-                $user   = Auth::user();
+                $user = Auth::user();
                 $expiry = Config::get('dbm.auth.token.expiry');
                 if (count($user->tokens) > 0) {
                     $user->tokens()->delete();
                 }
                 return response()->json([
                     'success' => true,
-                    'user'    => $user,
-                    'token'   => $user->createToken('DBM')->accessToken,
-                    'expiry'  => $expiry,
+                    'user' => $user,
+                    'token' => $user->createToken('DBM')->accessToken,
+                    'expiry' => $expiry,
                 ]);
 
             } catch (\Exception $e) {
@@ -61,7 +61,7 @@ class UserController extends Controller
 
     }
     /**
-     * Validate Credentials
+     * Validate Credentials.
      *
      * @param array $data
      *
@@ -70,7 +70,7 @@ class UserController extends Controller
     public function validation($data)
     {
         $validator = Validator::make($data, [
-            'email'    => 'required|email',
+            'email' => 'required|email',
             'password' => 'required',
 
         ]);
@@ -86,7 +86,7 @@ class UserController extends Controller
         return true;
     }
     /**
-     * Generate errors and return response
+     * Generate errors and return response.
      *
      * @param array $errors
      *
@@ -96,7 +96,7 @@ class UserController extends Controller
     {
         return response()->json([
             'success' => false,
-            'errors'  => $errors,
+            'errors' => $errors,
         ], 400);
     }
 }

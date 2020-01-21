@@ -10,7 +10,7 @@ class BitType extends Type
     const NAME = 'bit';
 
     /**
-     * Register bit type
+     * Register bit type.
      *
      * @return string
      */

@@ -30,7 +30,7 @@ trait RecordTrait
     protected $localTable;
 
     /**
-     * Store files in storage
+     * Store files in storage.
      *
      * @param \Illuminate\Http\Request $request
      * @param string $column
@@ -40,11 +40,11 @@ trait RecordTrait
      */
     public function saveFiles($request, $column, $tableName)
     {
-        $files  = $request->file($column);
+        $files = $request->file($column);
         $values = [];
         foreach ($files as $file) {
             $fileName = Str::random(config('dbm.filesystem.random_length')) . '.' . $file->getClientOriginalExtension();
-            $path     = trim(config('dbm.filesystem.dir'), '/') . DIRECTORY_SEPARATOR . $tableName;
+            $path = trim(config('dbm.filesystem.dir'), '/') . DIRECTORY_SEPARATOR . $tableName;
             $file->storeAs($path, $fileName);
             $values[] = $fileName;
         }
@@ -61,7 +61,7 @@ trait RecordTrait
         return $value;
     }
     /**
-     * Prepare fields to store
+     * Prepare fields to store.
      *
      * @param array|string|int|double|bool $request
      * @param string $tableName
@@ -90,7 +90,7 @@ trait RecordTrait
         return $value;
     }
     /**
-     * Prepare record fields
+     * Prepare record fields.
      *
      * @param \Illuminate\Support\Collection $fields
      *
@@ -102,12 +102,12 @@ trait RecordTrait
 
             if ($field->type == 'relationship') {
 
-                $relationship            = $field->settings;
-                $foreignModel            = $relationship['foreignModel'];
-                $foreignKey              = $relationship['foreignKey'];
-                $fields                  = $this->removeRelationshipKeyForBelongsTo($fields, $foreignKey);
+                $relationship = $field->settings;
+                $foreignModel = $relationship['foreignModel'];
+                $foreignKey = $relationship['foreignKey'];
+                $fields = $this->removeRelationshipKeyForBelongsTo($fields, $foreignKey);
                 $field->foreignTableData = $foreignModel::all();
-                $field->relationship     = $relationship;
+                $field->relationship = $relationship;
                 continue;
             }
 
@@ -122,7 +122,7 @@ trait RecordTrait
         return $fields;
     }
     /**
-     * Remove field when belongs_to relation
+     * Remove field when belongs_to relation.
      *
      * @param \Illuminate\Support\Collection $fields
      * @param string $foreignKey
@@ -144,7 +144,7 @@ trait RecordTrait
         return $results;
     }
     /**
-     * Prepare Record Details
+     * Prepare Record Details.
      *
      * @param mixed $records
      * @param \Illuminate\Support\Collection $fields
@@ -156,7 +156,7 @@ trait RecordTrait
     public function prepareRecordDetails($records, $fields, $object, $findValue)
     {
         $newRecords = [];
-        $newRecord  = new \stdClass();
+        $newRecord = new \stdClass();
 
         foreach ($records as $item => $record) {
 
@@ -177,11 +177,11 @@ trait RecordTrait
 
         return [
             "records" => $newRecords,
-            "record"  => $newRecord,
+            "record" => $newRecord,
         ];
     }
     /**
-     * Get options for Dropdown, Selectbox, Radio button and other fields via controller
+     * Get options for Dropdown, Selectbox, Radio button and other fields via controller.
      *
      * @param object $field
      *
@@ -191,15 +191,15 @@ trait RecordTrait
     {
         $options = $field->settings['options'];
         if (isset($options['controller'])) {
-            $partials       = explode('@', $options['controller']);
+            $partials = explode('@', $options['controller']);
             $controllerName = $partials[0];
-            $methodName     = $partials[1];
+            $methodName = $partials[1];
 
             return app($controllerName)->{$methodName}();
         }
     }
     /**
-     * Check validation and return errors if fails
+     * Check validation and return errors if fails.
      *
      * @param array $fields
      * @param object $columns
@@ -216,9 +216,9 @@ trait RecordTrait
             if (is_object($field->settings) && property_exists($field->settings, 'validation') !== false) {
 
                 $validationSettings = $field->settings->validation;
-                $rules              = $this->prepareRules($columns, $action, $validationSettings);
-                $data               = [$name => $columns->{$name}];
-                $validator          = Validator::make($data, [$name => $rules]);
+                $rules = $this->prepareRules($columns, $action, $validationSettings);
+                $data = [$name => $columns->{$name}];
+                $validator = Validator::make($data, [$name => $rules]);
                 if ($validator->fails()) {
                     foreach ($validator->errors()->all() as $error) {
                         $errors[] = $error;
@@ -230,7 +230,7 @@ trait RecordTrait
         return $errors;
     }
     /**
-     * Prepare validation rules
+     * Prepare validation rules.
      *
      * @param object $columns
      * @param string $action
@@ -246,20 +246,20 @@ trait RecordTrait
             $rules = $settings;
         } else if ($action == 'create' && isset($settings->create)) {
             $createSettings = $settings->create;
-            $rules          = $createSettings->rules;
+            $rules = $createSettings->rules;
         } else if ($action == 'update' && isset($settings->update)) {
             $updateSettings = $settings->update;
-            $rules          = $updateSettings->rules;
+            $rules = $updateSettings->rules;
             if (isset($updateSettings->localKey)) {
                 $localKey = $updateSettings->localKey;
-                $rules    = $updateSettings->rules . ',' . $columns->{$localKey};
+                $rules = $updateSettings->rules . ',' . $columns->{$localKey};
             }
         }
 
         return $rules;
     }
     /**
-     * Get field name
+     * Get field name.
      *
      * @param string $collectionName
      * @param string $fieldName
@@ -273,7 +273,7 @@ trait RecordTrait
         return $collection->fields()->where('name', $fieldName)->first()->type;
     }
     /**
-     * Generate errors and return response
+     * Generate errors and return response.
      *
      * @param array $errors
      *
@@ -283,11 +283,11 @@ trait RecordTrait
     {
         return response()->json([
             'success' => false,
-            'errors'  => $errors,
+            'errors' => $errors,
         ], 400);
     }
     /**
-     * Check Function name is available for MySQL
+     * Check Function name is available for MySQL.
      *
      * @param array $fields
      * @param string $column
@@ -305,7 +305,7 @@ trait RecordTrait
         return false;
     }
     /**
-     * Execute MySQL Function
+     * Execute MySQL Function.
      *
      * @param string $functionName
      * @param string|int|double|bool|null $column
@@ -315,7 +315,7 @@ trait RecordTrait
     public function executeFunction($functionName, $value = null)
     {
         $signature = ($value != null) ? "{$functionName}('{$value}')" : "{$functionName}()";
-        $result    = DB::raw("{$signature}");
+        $result = DB::raw("{$signature}");
         return $result;
     }
 }

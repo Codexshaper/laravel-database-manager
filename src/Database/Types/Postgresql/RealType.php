@@ -7,11 +7,11 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 class RealType extends Type
 {
-    const NAME   = 'real';
+    const NAME = 'real';
     const DBTYPE = 'float4';
 
     /**
-     * Register real type
+     * Register real type.
      *
      * @return string
      */

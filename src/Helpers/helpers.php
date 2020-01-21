@@ -32,7 +32,7 @@ if (!function_exists('save_json')) {
     function save_json(array $arr)
     {
         $jsonArr = [];
-        $i       = 1;
+        $i = 1;
         foreach ($arr as $key => $value) {
             $jsonArr['key_' . $i++] = $value;
         }
@@ -43,7 +43,7 @@ if (!function_exists('save_json')) {
 if (!function_exists('retreive_json')) {
     function retreive_json(string $str)
     {
-        $jsonData    = json_decode($str, true);
+        $jsonData = json_decode($str, true);
         $jsonResults = [];
 
         foreach ($jsonData as $data) {

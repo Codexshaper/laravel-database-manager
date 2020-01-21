@@ -8,7 +8,7 @@ use Doctrine\DBAL\Types\Type as DoctrineType;
 abstract class Type extends DoctrineType
 {
     /**
-     * Get type name
+     * Get type name.
      *
      * @return string
      */
@@ -17,13 +17,13 @@ abstract class Type extends DoctrineType
         return static::NAME;
     }
     /**
-     * Register Custom type
+     * Register Custom type.
      *
      * @return void
      */
     public static function registerCustomTypes()
     {
-        $platform     = SchemaManager::getInstance()->getDatabasePlatform();
+        $platform = SchemaManager::getInstance()->getDatabasePlatform();
         $platformName = ucfirst($platform->getName());
 
         $customTypes = array_merge(
@@ -46,7 +46,7 @@ abstract class Type extends DoctrineType
         }
     }
     /**
-     * Get custom types
+     * Get custom types.
      *
      * @param string $platformName
      *
@@ -59,14 +59,14 @@ abstract class Type extends DoctrineType
         $customTypes = [];
 
         foreach (glob($customPlatformDir . '*.php') as $file) {
-            $className     = basename($file, ".php");
+            $className = basename($file, ".php");
             $customTypes[] = __NAMESPACE__ . '\\' . $platformName . '\\' . $className;
         }
 
         return $customTypes;
     }
     /**
-     * Get Type categories
+     * Get Type categories.
      *
      * @return array
      */
@@ -74,7 +74,7 @@ abstract class Type extends DoctrineType
     {
 
         return [
-            'numbers'  => [
+            'numbers' => [
                 'boolean',
                 'tinyint',
                 'smallint',
@@ -90,7 +90,7 @@ abstract class Type extends DoctrineType
                 'double',
                 'double precision',
             ],
-            'strings'  => [
+            'strings' => [
                 'char',
                 'character',
                 'varchar',
@@ -118,7 +118,7 @@ abstract class Type extends DoctrineType
                 'dateinterval',
                 'interval',
             ],
-            'lists'    => [
+            'lists' => [
                 'enum',
                 'set',
                 'simple_array',
@@ -127,7 +127,7 @@ abstract class Type extends DoctrineType
                 'jsonb',
                 'json_array',
             ],
-            'binary'   => [
+            'binary' => [
                 'bit',
                 'bit varying',
                 'binary',
@@ -138,7 +138,7 @@ abstract class Type extends DoctrineType
                 'longblob',
                 'bytea',
             ],
-            'network'  => [
+            'network' => [
                 'cidr',
                 'inet',
                 'macaddr',
@@ -154,7 +154,7 @@ abstract class Type extends DoctrineType
                 'multipolygon',
                 'geometrycollection',
             ],
-            'objects'  => ['object'],
+            'objects' => ['object'],
         ];
     }
 

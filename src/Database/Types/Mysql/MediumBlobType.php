@@ -10,7 +10,7 @@ class MediumBlobType extends Type
     const NAME = 'mediumblob';
 
     /**
-     * Register mediumblob type
+     * Register mediumblob type.
      *
      * @return string
      */

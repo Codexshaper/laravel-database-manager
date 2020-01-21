@@ -10,7 +10,7 @@ class TinyTextType extends Type
     const NAME = 'tinytext';
 
     /**
-     * Register tinytext type
+     * Register tinytext type.
      *
      * @return string
      */

@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 abstract class Mysql extends Platform
 {
     /**
-     * Get Types
+     * Get Types.
      *
      * @return \Illuminate\Support\Collection
      */
@@ -24,7 +24,7 @@ abstract class Mysql extends Platform
         return $typeMapping;
     }
     /**
-     * Register Custom Type Options
+     * Register Custom Type Options.
      *
      * @return void
      */

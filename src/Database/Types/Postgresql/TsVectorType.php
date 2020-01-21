@@ -10,7 +10,7 @@ class TsVectorType extends Type
     const NAME = 'tsvector';
 
     /**
-     * Register tsvector type
+     * Register tsvector type.
      *
      * @return string
      */

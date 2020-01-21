@@ -55,7 +55,7 @@ trait Relationships
     protected $inverse;
 
     /**
-     * Set Common Relation
+     * Set Common Relation.
      *
      * @param  object  $parent
      * @param  string|object  $related
@@ -68,16 +68,16 @@ trait Relationships
     public function setCommonRelation($parent, $related, $foreignKey = null, $localKey = null, $relation = null)
     {
 
-        $this->parent     = $parent;
-        $this->related    = $related;
+        $this->parent = $parent;
+        $this->related = $related;
         $this->foreignKey = $foreignKey;
-        $this->localKey   = $localKey;
-        $this->relation   = $relation;
+        $this->localKey = $localKey;
+        $this->relation = $relation;
 
         return $this;
     }
     /**
-     * Set Many to Many Relation
+     * Set Many to Many Relation.
      *
      * @param  object  $parent
      * @param  string|object  $related
@@ -100,19 +100,19 @@ trait Relationships
         $relatedKey = null,
         $relation = null) {
 
-        $this->parent          = $parent;
-        $this->related         = $related;
-        $this->pivotTable      = $pivotTable;
-        $this->parentPivotKey  = $parentPivotKey;
+        $this->parent = $parent;
+        $this->related = $related;
+        $this->pivotTable = $pivotTable;
+        $this->parentPivotKey = $parentPivotKey;
         $this->relatedPivotKey = $relatedPivotKey;
-        $this->parentKey       = $parentKey;
-        $this->relatedKey      = $relatedKey;
-        $this->relation        = $relation;
+        $this->parentKey = $parentKey;
+        $this->relatedKey = $relatedKey;
+        $this->relation = $relation;
 
         return $this;
     }
     /**
-     * Set Has Through Relation
+     * Set Has Through Relation.
      *
      * @param  object  $parent
      * @param  string|object  $related
@@ -133,18 +133,18 @@ trait Relationships
         $localKey = null,
         $secondLocalKey = null) {
 
-        $this->parent         = $parent;
-        $this->related        = $related;
-        $this->through        = $through;
-        $this->firstKey       = $firstKey;
-        $this->secondKey      = $secondKey;
-        $this->localKey       = $localKey;
+        $this->parent = $parent;
+        $this->related = $related;
+        $this->through = $through;
+        $this->firstKey = $firstKey;
+        $this->secondKey = $secondKey;
+        $this->localKey = $localKey;
         $this->secondLocalKey = $secondLocalKey;
 
         return $this;
     }
     /**
-     * Set Morph Relation
+     * Set Morph Relation.
      *
      * @param  object  $parent
      * @param  string|object  $related
@@ -163,17 +163,17 @@ trait Relationships
         $morphId = null,
         $morphLocalKey = null) {
 
-        $this->parent        = $parent;
-        $this->related       = $related;
-        $this->morphName     = $morphName;
-        $this->morphType     = $morphType;
-        $this->morphId       = $morphId;
+        $this->parent = $parent;
+        $this->related = $related;
+        $this->morphName = $morphName;
+        $this->morphType = $morphType;
+        $this->morphId = $morphId;
         $this->morphLocalKey = $morphLocalKey;
 
         return $this;
     }
     /**
-     * Set MorphTo Relation
+     * Set MorphTo Relation.
      *
      * @param  object  $parent
      * @param  string|null  $morphName
@@ -190,16 +190,16 @@ trait Relationships
         $morphId = null,
         $morphLocalKey = null) {
 
-        $this->parent        = $parent;
-        $this->morphName     = $morphName;
-        $this->morphType     = $morphType;
-        $this->morphId       = $morphId;
+        $this->parent = $parent;
+        $this->morphName = $morphName;
+        $this->morphType = $morphType;
+        $this->morphId = $morphId;
         $this->morphLocalKey = $morphLocalKey;
 
         return $this;
     }
     /**
-     * Set MorphToMany Relation
+     * Set MorphToMany Relation.
      *
      * @param  object  $parent
      * @param  string|object  $related
@@ -224,20 +224,20 @@ trait Relationships
         $relatedKey = null,
         $inverse = false) {
 
-        $this->parent          = $parent;
-        $this->related         = $related;
-        $this->morphName       = $morphName;
-        $this->pivotTable      = $pivotTable;
-        $this->parentPivotKey  = $parentPivotKey;
+        $this->parent = $parent;
+        $this->related = $related;
+        $this->morphName = $morphName;
+        $this->pivotTable = $pivotTable;
+        $this->parentPivotKey = $parentPivotKey;
         $this->relatedPivotKey = $relatedPivotKey;
-        $this->parentKey       = $parentKey;
-        $this->relatedKey      = $relatedKey;
-        $this->inverse         = $inverse;
+        $this->parentKey = $parentKey;
+        $this->relatedKey = $relatedKey;
+        $this->inverse = $inverse;
 
         return $this;
     }
     /*
-     * Relationship
+     * Relationship.
      */
     public function has_one(): HasOne
     {

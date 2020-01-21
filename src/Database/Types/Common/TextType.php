@@ -10,7 +10,7 @@ class TextType extends Type
     const NAME = 'text';
 
     /**
-     * Register text type
+     * Register text type.
      *
      * @return string
      */

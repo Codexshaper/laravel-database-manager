@@ -7,11 +7,11 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 class BitVaryingType extends Type
 {
-    const NAME   = 'bit varying';
+    const NAME = 'bit varying';
     const DBTYPE = 'varbit';
 
     /**
-     * Register bit varying type
+     * Register bit varying type.
      *
      * @return string
      */

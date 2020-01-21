@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 class PermissionController extends Controller
 {
     /**
-     * Get all permissions
+     * Get all permissions.
      *
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
@@ -17,7 +17,7 @@ class PermissionController extends Controller
         return view('dbm::app');
     }
     /**
-     * Get all users with permissions
+     * Get all users with permissions.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -35,25 +35,25 @@ class PermissionController extends Controller
 
                 $privileges = DBM::Permission()->all();
 
-                $permissions               = new \StdClass;
-                $permissions->database     = DBM::Permission()->where('prefix', 'database')->get();
-                $permissions->crud         = DBM::Permission()->where('prefix', 'crud')->get();
+                $permissions = new \StdClass;
+                $permissions->database = DBM::Permission()->where('prefix', 'database')->get();
+                $permissions->crud = DBM::Permission()->where('prefix', 'crud')->get();
                 $permissions->relationship = DBM::Permission()->where('prefix', 'relationship')->get();
-                $permissions->record       = DBM::Permission()->where('prefix', 'record')->get();
-                $permissions->backup       = DBM::Permission()->where('prefix', 'backup')->get();
-                $permissions->permission   = DBM::Permission()->where('prefix', 'permission')->get();
+                $permissions->record = DBM::Permission()->where('prefix', 'record')->get();
+                $permissions->backup = DBM::Permission()->where('prefix', 'backup')->get();
+                $permissions->permission = DBM::Permission()->where('prefix', 'permission')->get();
 
                 return response()->json([
-                    'success'     => true,
-                    'privileges'  => $privileges,
+                    'success' => true,
+                    'privileges' => $privileges,
                     'permissions' => $permissions,
-                    'pagination'  => $users,
+                    'pagination' => $users,
                 ]);
 
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
-                    'errors'  => [$e->getMessage()],
+                    'errors' => [$e->getMessage()],
                 ], 200);
             }
 
@@ -63,20 +63,20 @@ class PermissionController extends Controller
 
     }
     /**
-     * get Permission Users
+     * get Permission Users.
      *
      * @return \Illuminate\Support\Collection|array
      */
     public function getUsers(Request $request)
     {
-        $user_model        = config('dbm.auth.user.model');
-        $user_table        = config('dbm.auth.user.table');
-        $user_local_key    = config('dbm.auth.user.local_key');
+        $user_model = config('dbm.auth.user.model');
+        $user_table = config('dbm.auth.user.table');
+        $user_local_key = config('dbm.auth.user.local_key');
         $user_display_name = config('dbm.auth.user.display_name');
 
         $perPage = (int) $request->perPage;
-        $query   = $request->q;
-        $users   = DBM::model($user_model, $user_table)->paginate($perPage);
+        $query = $request->q;
+        $users = DBM::model($user_model, $user_table)->paginate($perPage);
 
         if (!empty($query)) {
             $users = DBM::model($user_model, $user_table)
@@ -101,7 +101,7 @@ class PermissionController extends Controller
         return $users;
     }
     /**
-     * Assign Permissions to User
+     * Assign Permissions to User.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -114,7 +114,7 @@ class PermissionController extends Controller
             }
 
             $privileges = $request->privileges;
-            $user       = (object) $request->user;
+            $user = (object) $request->user;
 
             $this->getRelation($user)->attach($privileges);
 
@@ -124,7 +124,7 @@ class PermissionController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Update User Permissions
+     * Update User Permissions.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -137,7 +137,7 @@ class PermissionController extends Controller
             }
 
             $privileges = $request->privileges;
-            $user       = (object) $request->user;
+            $user = (object) $request->user;
 
             $this->getRelation($user)->sync($privileges);
 
@@ -147,7 +147,7 @@ class PermissionController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Delete User Permissions
+     * Delete User Permissions.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -169,7 +169,7 @@ class PermissionController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Get User Relation
+     * Get User Relation.
      *
      * @param object $user
      *
@@ -177,9 +177,9 @@ class PermissionController extends Controller
      */
     protected function getRelation($user)
     {
-        $user_model        = config('dbm.auth.user.model');
-        $user_table        = config('dbm.auth.user.table');
-        $user_local_key    = config('dbm.auth.user.local_key');
+        $user_model = config('dbm.auth.user.model');
+        $user_table = config('dbm.auth.user.table');
+        $user_local_key = config('dbm.auth.user.local_key');
         $user_display_name = config('dbm.auth.user.display_name');
 
         $localModel = DBM::model($user_model, $user_table)

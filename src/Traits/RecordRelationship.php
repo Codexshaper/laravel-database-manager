@@ -13,7 +13,7 @@ trait RecordRelationship
     protected $belongs_to;
 
     /**
-     * Prepare Relationship data to view
+     * Prepare Relationship data to view.
      *
      * @param mixed $records
      * @param \Illuminate\Support\Collection $browseFields
@@ -33,12 +33,12 @@ trait RecordRelationship
 
                     $findColumn = $object->details['findColumn'];
 
-                    $localModel       = $relationship['localModel'];
-                    $localKey         = $relationship['localKey'];
-                    $foreignModel     = $relationship['foreignModel'];
-                    $foreignKey       = $relationship['foreignKey'];
+                    $localModel = $relationship['localModel'];
+                    $localKey = $relationship['localKey'];
+                    $foreignModel = $relationship['foreignModel'];
+                    $foreignKey = $relationship['foreignKey'];
                     $relationshipType = $relationship['relationType'];
-                    $displayLabel     = $relationship['displayLabel'];
+                    $displayLabel = $relationship['displayLabel'];
 
                     if ($relationshipType == 'belongsTo') {
 
@@ -46,48 +46,48 @@ trait RecordRelationship
 
                         $datas = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->belongs_to;
 
-                        $record->{$field->name}  = $datas;
-                        $field->displayLabel     = $displayLabel;
-                        $field->localKey         = $localKey;
-                        $field->foreignKey       = $foreignKey;
+                        $record->{$field->name} = $datas;
+                        $field->displayLabel = $displayLabel;
+                        $field->localKey = $localKey;
+                        $field->foreignKey = $foreignKey;
                         $field->relationshipType = $relationshipType;
 
                     } else if ($relationshipType == 'hasOne') {
 
                         $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
-                        $datas       = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->has_one;
+                        $datas = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->has_one;
 
-                        $record->{$field->name}  = $datas;
-                        $field->displayLabel     = $displayLabel;
-                        $field->localKey         = $localKey;
-                        $field->foreignKey       = $foreignKey;
+                        $record->{$field->name} = $datas;
+                        $field->displayLabel = $displayLabel;
+                        $field->localKey = $localKey;
+                        $field->foreignKey = $foreignKey;
                         $field->relationshipType = $relationshipType;
 
                     } else if ($relationshipType == 'hasMany') {
 
                         $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
-                        $datas       = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->has_many;
+                        $datas = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->has_many;
 
-                        $record->{$field->name}  = $datas;
-                        $field->displayLabel     = $displayLabel;
-                        $field->localKey         = $localKey;
-                        $field->foreignKey       = $foreignKey;
+                        $record->{$field->name} = $datas;
+                        $field->displayLabel = $displayLabel;
+                        $field->localKey = $localKey;
+                        $field->foreignKey = $foreignKey;
                         $field->relationshipType = $relationshipType;
 
                     } else if ($relationshipType == 'belongsToMany') {
 
-                        $pivotTable      = $relationship['pivotTable'];
-                        $parentPivotKey  = $relationship['parentPivotKey'];
+                        $pivotTable = $relationship['pivotTable'];
+                        $parentPivotKey = $relationship['parentPivotKey'];
                         $relatedPivotKey = $relationship['relatedPivotKey'];
 
                         $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
 
                         $datas = DBM::Object()->setManyToManyRelation($localObject, $foreignModel, $pivotTable, $parentPivotKey, $relatedPivotKey)->belongs_to_many;
 
-                        $record->{$field->name}  = $datas;
-                        $field->displayLabel     = $displayLabel;
-                        $field->localKey         = $localKey;
-                        $field->foreignKey       = $foreignKey;
+                        $record->{$field->name} = $datas;
+                        $field->displayLabel = $displayLabel;
+                        $field->localKey = $localKey;
+                        $field->foreignKey = $foreignKey;
                         $field->relationshipType = $relationshipType;
                     }
                 }
@@ -97,7 +97,7 @@ trait RecordRelationship
         return $records;
     }
     /**
-     * Create new Relationship
+     * Create new Relationship.
      *
      * @param \Illuminate\Support\Collection $fields
      * @param object $columns
@@ -114,11 +114,11 @@ trait RecordRelationship
 
                 $relationship = $field->relationship;
 
-                $localModel      = $relationship->localModel;
-                $localTable      = $relationship->localTable;
-                $foreignModel    = $relationship->foreignModel;
-                $pivotTable      = $relationship->pivotTable;
-                $parentPivotKey  = $relationship->parentPivotKey;
+                $localModel = $relationship->localModel;
+                $localTable = $relationship->localTable;
+                $foreignModel = $relationship->foreignModel;
+                $pivotTable = $relationship->pivotTable;
+                $parentPivotKey = $relationship->parentPivotKey;
                 $relatedPivotKey = $relationship->relatedPivotKey;
 
                 $findColumn = $object->details['findColumn'];
@@ -139,7 +139,7 @@ trait RecordRelationship
         }
     }
     /**
-     * Update Relationship
+     * Update Relationship.
      *
      * @param \Illuminate\Support\Collection $fields
      * @param object $columns
@@ -156,15 +156,15 @@ trait RecordRelationship
 
                 $relationship = $field->relationship;
 
-                $localModel   = $relationship->localModel;
-                $localTable   = $relationship->localTable;
+                $localModel = $relationship->localModel;
+                $localTable = $relationship->localTable;
                 $foreignModel = $relationship->foreignModel;
 
                 if ($field->relationship->relationType == "belongsToMany") {
-                    $pivotTable      = $relationship->pivotTable;
-                    $parentPivotKey  = $relationship->parentPivotKey;
+                    $pivotTable = $relationship->pivotTable;
+                    $parentPivotKey = $relationship->parentPivotKey;
                     $relatedPivotKey = $relationship->relatedPivotKey;
-                    $findColumn      = $object->details['findColumn'];
+                    $findColumn = $object->details['findColumn'];
 
                     $localObject = DBM::model($localModel, $localTable)->where($findColumn, $table->{$findColumn})->first();
 
@@ -184,7 +184,7 @@ trait RecordRelationship
         }
     }
     /**
-     * Remove Relationship
+     * Remove Relationship.
      *
      * @param object $field
      * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
@@ -198,7 +198,7 @@ trait RecordRelationship
 
             $relationship = $field->settings;
 
-            $localModel   = $relationship->localModel;
+            $localModel = $relationship->localModel;
             $foreignModel = $relationship->foreignModel;
 
             $findColumn = $object->details['findColumn'];
@@ -207,8 +207,8 @@ trait RecordRelationship
 
             if ($relationship->relationType == 'belongsToMany') {
 
-                $pivotTable      = $relationship->pivotTable;
-                $parentPivotKey  = $relationship->parentPivotKey;
+                $pivotTable = $relationship->pivotTable;
+                $parentPivotKey = $relationship->parentPivotKey;
                 $relatedPivotKey = $relationship->relatedPivotKey;
 
                 DBM::Object()
@@ -224,7 +224,7 @@ trait RecordRelationship
             } else if ($relationship->relationType == 'hasMany') {
 
                 $foreignKey = $relationship->foreignKey;
-                $localKey   = $relationship->localKey;
+                $localKey = $relationship->localKey;
 
                 DBM::Object()
                     ->setCommonRelation(

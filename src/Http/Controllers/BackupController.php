@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 class BackupController extends Controller
 {
     /**
-     * Load backups
+     * Load backups.
      *
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
@@ -20,7 +20,7 @@ class BackupController extends Controller
         return view('dbm::app');
     }
     /**
-     * Get all backup files
+     * Get all backup files.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -33,21 +33,21 @@ class BackupController extends Controller
             }
 
             $userPermissions = DBM::userPermissions();
-            $files           = $this->getPaginateFiles($request);
-            $results         = [];
+            $files = $this->getPaginateFiles($request);
+            $results = [];
             foreach ($files as $file) {
                 $results[] = (object) [
-                    'info'         => pathinfo($file),
+                    'info' => pathinfo($file),
                     'lastModified' => date("F j, Y, g:i a", Storage::lastModified($file)),
-                    'size'         => Storage::size($file),
+                    'size' => Storage::size($file),
                 ];
             }
 
             return response()->json([
-                'success'         => true,
-                'files'           => $results,
+                'success' => true,
+                'files' => $results,
                 'userPermissions' => $userPermissions,
-                'pagination'      => $files,
+                'pagination' => $files,
             ]);
         }
 
@@ -55,15 +55,15 @@ class BackupController extends Controller
 
     }
     /**
-     * Get Pagination Data
+     * Get Pagination Data.
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
     public function getPaginateFiles(Request $request)
     {
-        $driver    = dbm_driver();
+        $driver = dbm_driver();
         $directory = 'backups' . DIRECTORY_SEPARATOR . $driver;
-        $files     = collect(Storage::allFiles($directory));
+        $files = collect(Storage::allFiles($directory));
 
         $query = $request->q;
         if (!empty($query)) {
@@ -72,14 +72,14 @@ class BackupController extends Controller
                 return false !== stristr($info['basename'], $query);
             });
         }
-        $page    = (int) $request->page ?: 1;
+        $page = (int) $request->page ?: 1;
         $perPage = (int) $request->perPage;
-        $slice   = $files->slice(($page - 1) * $perPage, $perPage);
+        $slice = $files->slice(($page - 1) * $perPage, $perPage);
 
         return new \Illuminate\Pagination\LengthAwarePaginator($slice, $files->count(), $perPage);
     }
     /**
-     * Create new backup
+     * Create new backup.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -109,7 +109,7 @@ class BackupController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'errors'  => [$e->getMessage()],
+                    'errors' => [$e->getMessage()],
                 ], 200);
             }
         }
@@ -117,7 +117,7 @@ class BackupController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Restore from a specific backup
+     * Restore from a specific backup.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -140,7 +140,7 @@ class BackupController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'errors'  => [$e->getMessage()],
+                    'errors' => [$e->getMessage()],
                 ], 200);
             }
         }
@@ -149,7 +149,7 @@ class BackupController extends Controller
 
     }
     /**
-     * Return specific backup file for download
+     * Return specific backup file for download.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -170,7 +170,7 @@ class BackupController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'errors'  => [$e->getMessage()],
+                    'errors' => [$e->getMessage()],
                 ], 200);
             }
         }
@@ -178,7 +178,7 @@ class BackupController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Remove a backup
+     * Remove a backup.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -199,7 +199,7 @@ class BackupController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'errors'  => [$e->getMessage()],
+                    'errors' => [$e->getMessage()],
                 ], 200);
             }
         }

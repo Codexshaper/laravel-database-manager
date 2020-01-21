@@ -10,7 +10,7 @@ class FloatType extends Type
     const NAME = 'float';
 
     /**
-     * Register float type
+     * Register float type.
      *
      * @return string
      */

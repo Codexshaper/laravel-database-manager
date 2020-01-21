@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 class RelationController extends Controller
 {
     /**
-     * Get Relation
+     * Get Relation.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -25,9 +25,9 @@ class RelationController extends Controller
             }
 
             $tableName = $request->table;
-            $object    = DBM::Object()->where('name', $tableName)->first();
-            $fields    = $object->fields;
-            $field     = $this->prepareRelationshipField($fields, json_decode($request->field));
+            $object = DBM::Object()->where('name', $tableName)->first();
+            $fields = $object->fields;
+            $field = $this->prepareRelationshipField($fields, json_decode($request->field));
 
             return response()->json(['success' => true, 'field' => $field]);
         }
@@ -35,7 +35,7 @@ class RelationController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Prepare relationship field
+     * Prepare relationship field.
      *
      * @param \Illuminate\Support\Collection $fields
      * @param object $field
@@ -50,21 +50,21 @@ class RelationController extends Controller
             if ($fld->id == $field->{$prefix . "id"}) {
 
                 $relationship = $fld->settings;
-                $localTable   = $relationship['localTable'];
+                $localTable = $relationship['localTable'];
                 $foreignTable = $relationship['foreignTable'];
-                $pivotTable   = $relationship['pivotTable'];
+                $pivotTable = $relationship['pivotTable'];
 
-                $field->localFields   = Table::getTable($localTable);
+                $field->localFields = Table::getTable($localTable);
                 $field->foreignFields = Table::getTable($foreignTable);
-                $field->pivotFields   = Table::getTable($pivotTable);
-                $field->relationship  = $relationship;
+                $field->pivotFields = Table::getTable($pivotTable);
+                $field->relationship = $relationship;
             }
         }
 
         return $field;
     }
     /**
-     * Create Relation
+     * Create Relation.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -83,18 +83,18 @@ class RelationController extends Controller
             }
 
             $fieldName = $this->getFieldName($relationship);
-            $settings  = $this->prepareSettings($relationship);
+            $settings = $this->prepareSettings($relationship);
 
             $object = DBM::Object()->where('name', $relationship['localTable'])->first();
-            $order  = DBM::Field()->where('dbm_object_id', $object->id)->max('order');
+            $order = DBM::Field()->where('dbm_object_id', $object->id)->max('order');
 
-            $field                = DBM::Field();
+            $field = DBM::Field();
             $field->dbm_object_id = $object->id;
-            $field->name          = $fieldName;
-            $field->type          = 'relationship';
-            $field->display_name  = ucfirst($relationship['foreignTable']);
-            $field->order         = $order + 1;
-            $field->settings      = $settings;
+            $field->name = $fieldName;
+            $field->type = 'relationship';
+            $field->display_name = ucfirst($relationship['foreignTable']);
+            $field->order = $order + 1;
+            $field->settings = $settings;
 
             if ($field->save()) {
                 return response()->json(['success' => true]);
@@ -104,13 +104,13 @@ class RelationController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Check Errors
+     * Check Errors.
      *
      * @return \Illuminate\Http\JsonResponse|true
      */
     public function checkErrors($relationship)
     {
-        $localModel   = $relationship['localModel'];
+        $localModel = $relationship['localModel'];
         $foreignModel = $relationship['foreignModel'];
 
         if (!class_exists($localModel)) {
@@ -126,7 +126,7 @@ class RelationController extends Controller
         return true;
     }
     /**
-     * Get Field Name
+     * Get Field Name.
      *
      * @param string $relationship
      *
@@ -134,14 +134,14 @@ class RelationController extends Controller
      */
     public function getFieldName($relationship)
     {
-        $localTable   = Str::singular($relationship['localTable']);
+        $localTable = Str::singular($relationship['localTable']);
         $foreignTable = Str::singular($relationship['foreignTable']);
         $relationType = $relationship['type'];
 
         return strtolower("{$localTable}_{$relationType}_{$foreignTable}_relationship");
     }
     /**
-     * Prepare Settings
+     * Prepare Settings.
      *
      * @param array $relationship
      *
@@ -150,21 +150,21 @@ class RelationController extends Controller
     public function prepareSettings($relationship)
     {
         return [
-            'relationType'    => $relationship['type'],
-            'localModel'      => $relationship['localModel'],
-            'localTable'      => $relationship['localTable'],
-            'localKey'        => $relationship['localKey'],
-            'foreignModel'    => $relationship['foreignModel'],
-            'foreignTable'    => $relationship['foreignTable'],
-            'foreignKey'      => $relationship['foreignKey'],
-            'displayLabel'    => $relationship['displayLabel'],
-            'pivotTable'      => $relationship['pivotTable'],
-            'parentPivotKey'  => $relationship['parentPivotKey'],
+            'relationType' => $relationship['type'],
+            'localModel' => $relationship['localModel'],
+            'localTable' => $relationship['localTable'],
+            'localKey' => $relationship['localKey'],
+            'foreignModel' => $relationship['foreignModel'],
+            'foreignTable' => $relationship['foreignTable'],
+            'foreignKey' => $relationship['foreignKey'],
+            'displayLabel' => $relationship['displayLabel'],
+            'pivotTable' => $relationship['pivotTable'],
+            'parentPivotKey' => $relationship['parentPivotKey'],
             'relatedPivotKey' => $relationship['relatedPivotKey'],
         ];
     }
     /**
-     * Update Relationship
+     * Update Relationship.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -177,7 +177,7 @@ class RelationController extends Controller
             }
 
             $relationship = $request->relationship;
-            $field        = $request->field;
+            $field = $request->field;
 
             if (($response = $this->checkErrors($relationship)) !== true) {
                 return $response;
@@ -185,7 +185,7 @@ class RelationController extends Controller
 
             $settings = $this->prepareSettings($relationship);
 
-            $field           = DBM::Field()::find($field['id']);
+            $field = DBM::Field()::find($field['id']);
             $field->settings = $settings;
             if ($field->update()) {
                 return response()->json(['success' => true]);
@@ -195,7 +195,7 @@ class RelationController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Delete Relation
+     * Delete Relation.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -208,7 +208,7 @@ class RelationController extends Controller
             }
 
             $tableName = $request->table;
-            $data      = json_decode($request->field);
+            $data = json_decode($request->field);
 
             $field = DBM::Field()::find($data->id);
 
@@ -220,7 +220,7 @@ class RelationController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Get Relation
+     * Get Relation.
      *
      * @param array $errors
      *
@@ -230,7 +230,7 @@ class RelationController extends Controller
     {
         return response()->json([
             'success' => false,
-            'errors'  => $errors,
+            'errors' => $errors,
         ], 400);
     }
 }

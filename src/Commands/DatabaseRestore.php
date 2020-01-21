@@ -2,7 +2,6 @@
 namespace CodexShaper\DBM\Commands;
 
 use CodexShaper\Dumper\Contracts\Dumper;
-use DBM;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +25,7 @@ class DatabaseRestore extends Command
     protected $description = 'Restore Database';
 
     /**
-     * Get Option
+     * Get Option.
      *
      * @return array
      */
@@ -44,8 +43,8 @@ class DatabaseRestore extends Command
      */
     protected function findComposer()
     {
-        if (file_exists(getcwd() . '/composer.phar')) {
-            return '"' . PHP_BINARY . '" ' . getcwd() . '/composer.phar';
+        if (file_exists(getcwd().'/composer.phar')) {
+            return '"'.PHP_BINARY.'" '.getcwd().'/composer.phar';
         }
         return 'composer';
     }
@@ -62,37 +61,36 @@ class DatabaseRestore extends Command
         $this->info('Restoring Database');
 
         $hostname = config('database.connections.mysql.host', '127.0.0.1');
-        $port     = config('database.connections.mysql.port', '3306');
+        $port = config('database.connections.mysql.port', '3306');
         $database = config('database.connections.mysql.database', 'dbm');
         $username = config('database.connections.mysql.username', 'root');
         $password = config('database.connections.mysql.password', '');
 
-        $driver    = dbm_driver();
-        $directory = 'backups' . DIRECTORY_SEPARATOR . $driver;
+        $driver = dbm_driver();
+        $directory = 'backups'.DIRECTORY_SEPARATOR.$driver;
 
         if ($this->option('path') != null) {
             $path = $this->option('path');
-        } else if ($this->option('file') != null) {
-            $path = $directory . DIRECTORY_SEPARATOR . $this->option('file');
+        } elseif ($this->option('file') != null) {
+            $path = $directory.DIRECTORY_SEPARATOR.$this->option('file');
         } else {
             $files = array_reverse(Storage::files($directory));
-            $path  = $files[0];
+            $path = $files[0];
         }
 
-        $filePath = storage_path('app') . DIRECTORY_SEPARATOR . $path;
+        $filePath = storage_path('app').DIRECTORY_SEPARATOR.$path;
 
-        $isCompress         = config('dbm.backup.compress', false);
-        $compressBinaryPath = config('dbm.backup.compress_binary_path', "");
-        $compressCommand    = config('dbm.backup.uncompress_command', "gunzip");
-        $compressExtension  = config('dbm.backup.compress_extension', ".gz");
-        $dumpBinaryPath     = config('dbm.backup.' . $driver . '.binary_path', '');
+        $isCompress = config('dbm.backup.compress', false);
+        $compressBinaryPath = config('dbm.backup.compress_binary_path', '');
+        $compressCommand = config('dbm.backup.uncompress_command', 'gunzip');
+        $compressExtension = config('dbm.backup.compress_extension', '.gz');
+        $dumpBinaryPath = config('dbm.backup.'.$driver.'.binary_path', '');
 
-        try
-        {
+        try {
             switch ($driver) {
                 case 'mongodb':
                     $dsn = config('dbm.backup.mongodb.dsn', '');
-                    if (!empty($dsn)) {
+                    if (! empty($dsn)) {
                         $dumper->setUri($dsn);
                     }
                     break;

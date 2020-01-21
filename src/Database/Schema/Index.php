@@ -7,11 +7,11 @@ use Doctrine\DBAL\Schema\Index as DoctrineIndex;
 class Index
 {
     const PRIMARY = 'PRIMARY';
-    const UNIQUE  = 'UNIQUE';
-    const INDEX   = 'INDEX';
+    const UNIQUE = 'UNIQUE';
+    const INDEX = 'INDEX';
 
     /**
-     * Create new index
+     * Create new index.
      *
      * @param array $index
      *
@@ -29,10 +29,10 @@ class Index
             $type = $index['type'];
 
             $isPrimary = ($type == static::PRIMARY);
-            $isUnique  = $isPrimary || ($type == static::UNIQUE);
+            $isUnique = $isPrimary || ($type == static::UNIQUE);
         } else {
             $isPrimary = $index['isPrimary'];
-            $isUnique  = $index['isUnique'];
+            $isUnique = $index['isUnique'];
 
             // Set the type
             if ($isPrimary) {
@@ -47,18 +47,18 @@ class Index
         // Set the name
         $indexName = trim($index['name'] ?? '');
         if (empty($indexName)) {
-            $table     = $index['table'] ?? null;
+            $table = $index['table'] ?? null;
             $indexName = static::createName($indexColumns, $type, $table);
         }
 
-        $flags   = $index['flags'] ?? [];
+        $flags = $index['flags'] ?? [];
         $options = $index['options'] ?? [];
 
         return new DoctrineIndex($indexName, $indexColumns, $isUnique, $isPrimary, $flags, $options);
 
     }
     /**
-     * Get index name
+     * Get index name.
      *
      * @param array $columns
      * @param string $type
@@ -69,32 +69,32 @@ class Index
     public static function createName($columns, $type, $table = null)
     {
         $table = isset($table) ? trim($table) . '_' : '';
-        $type  = trim($type);
-        $name  = strtolower($table . implode('_', $columns) . '_' . $type);
+        $type = trim($type);
+        $name = strtolower($table . implode('_', $columns) . '_' . $type);
 
         return str_replace(['-', '.'], '_', $name);
     }
     /**
-     * Get all indexes as an array
+     * Get all indexes as an array.
      *
      * @return array
      */
     public static function toArray(DoctrineIndex $index)
     {
         return [
-            "name"        => $index->getName(),
-            "oldName"     => $index->getName(),
-            "columns"     => $index->getColumns(),
-            "type"        => static::getType($index),
-            "isPrimary"   => $index->isPrimary(),
-            "isUnique"    => $index->isUnique(),
+            "name" => $index->getName(),
+            "oldName" => $index->getName(),
+            "columns" => $index->getColumns(),
+            "type" => static::getType($index),
+            "isPrimary" => $index->isPrimary(),
+            "isUnique" => $index->isUnique(),
             "isComposite" => (count($index->getColumns()) > 1) ? true : false,
-            "flags"       => $index->getFlags(),
-            "options"     => $index->getOptions(),
+            "flags" => $index->getFlags(),
+            "options" => $index->getOptions(),
         ];
     }
     /**
-     * Get index type
+     * Get index type.
      *
      * @return string
      */

@@ -19,7 +19,7 @@ class DBM_Object extends Model implements RelationshipContract
     ];
 
     /**
-     * Get object fields
+     * Get object fields.
      *
      * @return \Illuminate\Support\Collection
      */
@@ -28,7 +28,7 @@ class DBM_Object extends Model implements RelationshipContract
         return $this->hasMany(DBM_Field::class, 'dbm_object_id');
     }
     /**
-     * Get all fields
+     * Get all fields.
      *
      * @param string $order_by
      * @param string $direction
@@ -40,7 +40,7 @@ class DBM_Object extends Model implements RelationshipContract
         return $this->fields()->orderBy($order_by, $direction)->get();
     }
     /**
-     * Get Create fields
+     * Get Create fields.
      *
      * @param string $order_by
      * @param string $direction
@@ -52,7 +52,7 @@ class DBM_Object extends Model implements RelationshipContract
         return $this->fields()->where('create', 1)->orderBy($order_by, $direction)->get();
     }
     /**
-     * Get Browse fields
+     * Get Browse fields.
      *
      * @param string $order_by
      * @param string $direction
@@ -64,7 +64,7 @@ class DBM_Object extends Model implements RelationshipContract
         return $this->fields()->where('read', 1)->orderBy($order_by, $direction)->get();
     }
     /**
-     * Get Edit fields
+     * Get Edit fields.
      *
      * @param string $order_by
      * @param string $direction
@@ -76,7 +76,7 @@ class DBM_Object extends Model implements RelationshipContract
         return $this->fields()->where('edit', 1)->orderBy($order_by, $direction)->get();
     }
     /**
-     * Get Delete fields
+     * Get Delete fields.
      *
      * @param string $order_by
      * @param string $direction

@@ -5,7 +5,7 @@
 	        <a href="#"><img src="#" alt="" class="img-responsive"></a>
 	    </div>
 	    <div class="sidebar-scroll">
-	        <nav>
+	        <!-- <nav>
 	            <ul class="nav">
 	                <li>
 	                    <a href="#database" data-toggle="collapse" class="collapsed"><i class="fas fa-th-large"></i> <span>Database</span> <i class="icon-submenu lnr lnr-chevron-left"></i></a>
@@ -19,17 +19,28 @@
 	                    </div>
 	                </li>
 	            </ul>
-	        </nav>
+	        </nav> -->
+	        <div id="database-menu">
+                <nestmenu
+                	:isLoggedIn="isLoggedIn" 
+                    :lists="menus">
+                </nestmenu>
+            </div>
 	    </div>
 	</div>
 	<!-- END LEFT SIDEBAR -->
 </template>
 
 <script>
+	import nestMenu from './NestMenu'
 	export default {
 		props: {
-			isLoggedIn: Boolean
+			isLoggedIn: Boolean,
+			menus: Array
 		},
+		components: {
+            'nestmenu':nestMenu,
+        },
 		computed: {
 			isActiveMenu: function(){
 				switch(this.$route.name) {
@@ -43,12 +54,15 @@
 				
 				return false;
 			}
+		},
+		created(){
+			console.log(this.$route);
 		}
 	}
 </script>
 
 <style>
-	.database-menu li a.router-link-exact-active{
-		color: #fff;
+	#database-menu .router-link-exact-active{
+		color: #fff !important;
 	}
 </style>

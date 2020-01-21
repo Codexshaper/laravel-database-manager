@@ -15,7 +15,7 @@ class DBM_Collection extends Model
     ];
 
     /**
-     * Get collection fields
+     * Get collection fields.
      *
      * @return \Illuminate\Support\Collection
      */

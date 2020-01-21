@@ -11,7 +11,7 @@ class EnumType extends Type
     const NAME = 'enum';
 
     /**
-     * Register enum type
+     * Register enum type.
      *
      * @return string
      */

@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 class TableController extends Controller
 {
     /**
-     * Get all Tables
+     * Get all Tables.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -23,9 +23,9 @@ class TableController extends Controller
 
             try
             {
-                $perPage         = (int) $request->perPage;
-                $query           = $request->q;
-                $tables          = Table::paginate($perPage, null, [], $query);
+                $perPage = (int) $request->perPage;
+                $query = $request->q;
+                $tables = Table::paginate($perPage, null, [], $query);
                 $userPermissions = DBM::userPermissions();
 
                 $newTables = [];
@@ -36,25 +36,25 @@ class TableController extends Controller
                 }
 
                 return response()->json([
-                    'success'         => true,
-                    'tables'          => $newTables,
-                    'pagination'      => $tables,
+                    'success' => true,
+                    'tables' => $newTables,
+                    'pagination' => $tables,
                     'userPermissions' => $userPermissions,
-                    'coreTables'      => config('dbm.core.tables', []),
-                    'collation'       => config('dbm.collation', 'utf8mb4_unicode_ci'),
+                    'coreTables' => config('dbm.core.tables', []),
+                    'collation' => config('dbm.collation', 'utf8mb4_unicode_ci'),
                 ]);
 
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
-                    'errors'  => [$e->getMessage()],
+                    'errors' => [$e->getMessage()],
                 ], 400);
             }
         }
         return response()->json(['success' => false]);
     }
     /**
-     * Get Table Details
+     * Get Table Details.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -67,11 +67,11 @@ class TableController extends Controller
             }
 
             $userPermissions = DBM::userPermissions();
-            $table           = Table::getTable($request->name);
-            $object          = DBM::Object()->where('name', $request->name)->first();
-            $isCrudExists    = false;
-            $columns         = $table['columns'];
-            $newColumns      = [];
+            $table = Table::getTable($request->name);
+            $object = DBM::Object()->where('name', $request->name)->first();
+            $isCrudExists = false;
+            $columns = $table['columns'];
+            $newColumns = [];
 
             if ($object) {
                 $fields = $object->fields()->orderBy('order', 'ASC')->get();
@@ -81,7 +81,7 @@ class TableController extends Controller
                             if ($field->name == $column->name) {
                                 // $column->id    = $field->id;
                                 $column->order = $field->order;
-                                $newColumns[]  = $column;
+                                $newColumns[] = $column;
                                 unset($columns[$key]);
                                 $columns = array_values($columns);
                             }
@@ -95,18 +95,18 @@ class TableController extends Controller
             }
 
             return response()->json([
-                'success'         => true,
-                'table'           => $table,
-                'isCrudExists'    => $isCrudExists,
+                'success' => true,
+                'table' => $table,
+                'isCrudExists' => $isCrudExists,
                 'userPermissions' => $userPermissions,
-                'templates'       => DBM::templates(),
+                'templates' => DBM::templates(),
             ]);
         }
 
         return response()->json(['success' => false]);
     }
     /**
-     * Get Table Columns
+     * Get Table Columns.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -118,7 +118,7 @@ class TableController extends Controller
                 return $response;
             }
 
-            $table  = Table::getTable($request->table);
+            $table = Table::getTable($request->table);
             $fields = $table['columns'];
 
             return response()->json(['success' => true, 'fields' => $fields]);

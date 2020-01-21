@@ -60,4 +60,6 @@ Route::group([
 ], function () {
     // User
     Route::post('/login', 'UserController@login');
+
+    Route::get('menus', 'MenuController@get');
 });

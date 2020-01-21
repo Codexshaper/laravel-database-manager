@@ -10,7 +10,7 @@ class MediumIntType extends Type
     const NAME = 'mediumint';
 
     /**
-     * Register mediumint type
+     * Register mediumint type.
      *
      * @return string
      */

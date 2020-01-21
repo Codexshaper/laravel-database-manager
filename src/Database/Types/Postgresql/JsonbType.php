@@ -10,7 +10,7 @@ class JsonbType extends Type
     const NAME = 'jsonb';
 
     /**
-     * Register jsonb type
+     * Register jsonb type.
      *
      * @return string
      */

@@ -10,7 +10,7 @@ class UuidType extends Type
     const NAME = 'uuid';
 
     /**
-     * Register uuid type
+     * Register uuid type.
      *
      * @return string
      */

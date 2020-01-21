@@ -15,7 +15,7 @@ class UpdateManager
     protected $originalTable;
 
     /**
-     * Update table
+     * Update table.
      *
      * @param array $table
      *
@@ -33,14 +33,14 @@ class UpdateManager
             throw SchemaException::tableDoesNotExist($table['oldName']);
         }
 
-        $this->newTable      = Table::prepareTable($table);
-        $this->data          = $table;
+        $this->newTable = Table::prepareTable($table);
+        $this->data = $table;
         $this->originalTable = static::listTableDetails($table['oldName']);
 
         $this->updateTable();
     }
     /**
-     * Get all table details
+     * Get all table details.
      *
      * @param string $tableName
      *
@@ -60,7 +60,7 @@ class UpdateManager
         return new DoctrineTable($tableName, $columns, $indexes, $foreignKeys, false, []);
     }
     /**
-     * Update table
+     * Update table.
      *
      * @return void
      */
@@ -84,7 +84,7 @@ class UpdateManager
         // Add new table name to tableDiff
         if ($newTableName) {
             if (!$tableDiff) {
-                $tableDiff            = new TableDiff($this->data['oldName']);
+                $tableDiff = new TableDiff($this->data['oldName']);
                 $tableDiff->fromTable = $this->originalTable;
             }
 
@@ -97,13 +97,13 @@ class UpdateManager
         }
     }
     /**
-     * Rename columns
+     * Rename columns.
      *
      * @return void
      */
     protected function renameColumns()
     {
-        $renamedColumnsDiff            = new TableDiff($this->data['oldName']);
+        $renamedColumnsDiff = new TableDiff($this->data['oldName']);
         $renamedColumnsDiff->fromTable = $this->originalTable;
 
         $countRenamedColumns = 0;

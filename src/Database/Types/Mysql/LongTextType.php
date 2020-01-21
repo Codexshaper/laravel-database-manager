@@ -10,7 +10,7 @@ class LongTextType extends Type
     const NAME = 'longtext';
 
     /**
-     * Register longtext type
+     * Register longtext type.
      *
      * @return string
      */

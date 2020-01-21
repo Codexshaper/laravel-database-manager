@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 abstract class Sqlite extends Platform
 {
     /**
-     * Get Types
+     * Get Types.
      *
      * @return \Illuminate\Support\Collection
      */

@@ -8,7 +8,7 @@ use Doctrine\DBAL\Types\Type as DoctrineType;
 class Column
 {
     /**
-     * Create new column
+     * Create new column.
      *
      * @param array $column
      *
@@ -28,7 +28,7 @@ class Column
         return $DoctrineColumn;
     }
     /**
-     * Get all columns as an array
+     * Get all columns as an array.
      *
      * @return array
      */
@@ -36,13 +36,13 @@ class Column
     {
         $type = $column->getType();
 
-        $newColumn            = $column->toArray();
+        $newColumn = $column->toArray();
         $newColumn['oldName'] = $column->getName();
-        $newColumn['type']    = [
+        $newColumn['type'] = [
             'name' => $type->getName(),
         ];
-        $newColumn['null']      = $column->getNotnull() ? 'NO' : 'YES';
-        $newColumn['extra']     = $column->getAutoincrement() ? 'auto_increment' : '';
+        $newColumn['null'] = $column->getNotnull() ? 'NO' : 'YES';
+        $newColumn['extra'] = $column->getAutoincrement() ? 'auto_increment' : '';
         $newColumn['composite'] = false;
 
         return $newColumn;

@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 class CrudController extends Controller
 {
     /**
-     * Load all crud tables
+     * Load all crud tables.
      *
      * @return \Illuminate\View\View|\Illuminate\Contracts\View\Factory
      */
@@ -20,7 +20,7 @@ class CrudController extends Controller
         return view('dbm::app');
     }
     /**
-     * Create|Update CRUD
+     * Create|Update CRUD.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -28,8 +28,8 @@ class CrudController extends Controller
     {
         if ($request->ajax()) {
 
-            $table      = $request->object;
-            $columns    = $request->fields;
+            $table = $request->object;
+            $columns = $request->fields;
             $permission = $request->isCrudExists ? 'update' : 'create';
 
             if (($response = DBM::authorize('crud.' . $permission)) !== true) {
@@ -54,8 +54,8 @@ class CrudController extends Controller
 
                 return response()->json([
                     'success' => true,
-                    'object'  => $request->object,
-                    'fields'  => $request->fields,
+                    'object' => $request->object,
+                    'fields' => $request->fields,
                 ]);
 
             } catch (\Exception $e) {
@@ -66,7 +66,7 @@ class CrudController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Create a new model if not exists
+     * Create a new model if not exists.
      *
      * @param array $table
      *
@@ -90,7 +90,7 @@ class CrudController extends Controller
         return true;
     }
     /**
-     * Create|Update Object
+     * Create|Update Object.
      *
      * @param array $table
      *
@@ -101,21 +101,21 @@ class CrudController extends Controller
         $object = DBM::Object()->where('name', $table['name'])->first();
         $action = 'update';
         if (!$object) {
-            $object       = DBM::Object();
+            $object = DBM::Object();
             $object->name = $table['name'];
-            $action       = 'save';
+            $action = 'save';
         }
-        $object->slug         = Str::slug($table['slug']);
+        $object->slug = Str::slug($table['slug']);
         $object->display_name = ucfirst($table['display_name']);
-        $object->model        = $table['model'];
-        $object->controller   = $table['controller'];
-        $object->details      = [
-            'findColumn'         => $table['findColumn'],
-            'searchColumn'       => $table['searchColumn'],
-            'perPage'            => $table['perPage'],
-            'orderColumn'        => $table['orderColumn'],
+        $object->model = $table['model'];
+        $object->controller = $table['controller'];
+        $object->details = [
+            'findColumn' => $table['findColumn'],
+            'searchColumn' => $table['searchColumn'],
+            'perPage' => $table['perPage'],
+            'orderColumn' => $table['orderColumn'],
             'orderDisplayColumn' => $table['orderDisplayColumn'],
-            'orderDirection'     => $table['orderDirection'],
+            'orderDirection' => $table['orderDirection'],
         ];
 
         if ($object->{$action}()) {
@@ -125,7 +125,7 @@ class CrudController extends Controller
         return false;
     }
     /**
-     * Create|Update Object Field
+     * Create|Update Object Field.
      *
      * @param array $column
      * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
@@ -136,32 +136,32 @@ class CrudController extends Controller
     {
         $field = DBM::Field()->where([
             'dbm_object_id' => $object->id,
-            'name'          => $column['name'],
+            'name' => $column['name'],
         ])->first();
 
         $action = 'update';
 
         if (!$field) {
-            $field                = DBM::Field();
+            $field = DBM::Field();
             $field->dbm_object_id = $object->id;
-            $field->name          = $column['name'];
-            $action               = 'save';
+            $field->name = $column['name'];
+            $action = 'save';
         }
 
-        $field->display_name  = ucfirst($column['display_name']);
-        $field->type          = $column['type'];
-        $field->create        = isset($column['create']) ? $column['create'] : false;
-        $field->read          = isset($column['read']) ? $column['read'] : false;
-        $field->edit          = isset($column['edit']) ? $column['edit'] : false;
-        $field->delete        = isset($column['delete']) ? $column['delete'] : false;
-        $field->order         = $column['order'];
+        $field->display_name = ucfirst($column['display_name']);
+        $field->type = $column['type'];
+        $field->create = isset($column['create']) ? $column['create'] : false;
+        $field->read = isset($column['read']) ? $column['read'] : false;
+        $field->edit = isset($column['edit']) ? $column['edit'] : false;
+        $field->delete = isset($column['delete']) ? $column['delete'] : false;
+        $field->order = $column['order'];
         $field->function_name = isset($column['function_name']) ? $column['function_name'] : "";
-        $field->settings      = json_decode($column['settings']);
+        $field->settings = json_decode($column['settings']);
 
         $field->{$action}();
     }
     /**
-     * Delete CRUD
+     * Delete CRUD.
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -184,7 +184,7 @@ class CrudController extends Controller
         return response()->json(['success' => false]);
     }
     /**
-     * Generate an error
+     * Generate an error.
      *
      * @param array $errors
      *
@@ -194,7 +194,7 @@ class CrudController extends Controller
     {
         return response()->json([
             'success' => false,
-            'errors'  => $errors,
+            'errors' => $errors,
         ], 400);
     }
 }

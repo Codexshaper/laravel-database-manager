@@ -10,7 +10,7 @@ class XmlType extends Type
     const NAME = 'xml';
 
     /**
-     * Register xml type
+     * Register xml type.
      *
      * @return string
      */

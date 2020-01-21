@@ -1,6 +1,6 @@
 <template>
     <div>
-        <left-sidebar :isLoggedIn="isLoggedIn"></left-sidebar>
+        <left-sidebar :menus="menus" :isLoggedIn="isLoggedIn"></left-sidebar>
         <div class="main">
             <!-- MAIN CONTENT -->
             <!-- NAVBAR -->
@@ -65,6 +65,7 @@
         },
         data() {
             return {
+                menus: null,
                 name: null,
                 user_type: 0,
                 isLoggedIn: localStorage.getItem('dbm.authToken') != null
@@ -99,10 +100,21 @@
             })
         },
         mounted() {
+            this.getMenus();
             this.setDefaults();
             this.$Progress.finish()
         },
         methods : {
+            getMenus: function() {
+                axios.get(`/api/database/menus`)
+                .then(res => {
+                    console.log(res.data);
+                    if( res.data.success == true ){
+                        this.menus = res.data.menus;
+                    } 
+                })
+                .catch(err => this.displayError(err.response));
+            },
             setDefaults() {
                 if (this.isLoggedIn) {
                     let user = JSON.parse(localStorage.getItem('dbm.user'))

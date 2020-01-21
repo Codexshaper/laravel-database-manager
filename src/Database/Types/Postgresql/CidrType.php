@@ -10,7 +10,7 @@ class CidrType extends Type
     const NAME = 'cidr';
 
     /**
-     * Register cidr type
+     * Register cidr type.
      *
      * @return string
      */

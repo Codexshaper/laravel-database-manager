@@ -10,7 +10,7 @@ class TinyBlobType extends Type
     const NAME = 'tinyblob';
 
     /**
-     * Register tinyblob type
+     * Register tinyblob type.
      *
      * @return string
      */

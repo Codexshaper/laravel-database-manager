@@ -7,11 +7,11 @@ use Doctrine\DBAL\Platforms\AbstractPlatform;
 
 class SmallIntType extends Type
 {
-    const NAME   = 'smallint';
+    const NAME = 'smallint';
     const DBTYPE = 'int2';
 
     /**
-     * Register smallint type
+     * Register smallint type.
      *
      * @return string
      */

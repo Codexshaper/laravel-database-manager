@@ -11,7 +11,7 @@ class SetType extends Type
     const NAME = 'set';
 
     /**
-     * Register set type
+     * Register set type.
      *
      * @return string
      */

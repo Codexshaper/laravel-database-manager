@@ -44,10 +44,10 @@ class ManagerServiceProvider extends ServiceProvider
         // Bind Dumper to backup and and restore
         $this->app->bind(Dumper::class, function ($app) use ($database) {
             $connection = $database['default'];
-            $options    = [
-                "host"     => $database["connections"][$connection]["host"] ?? '',
-                "port"     => $database["connections"][$connection]["port"] ?? 3306,
-                "dbName"   => $database["connections"][$connection]["database"] ?? '',
+            $options = [
+                "host" => $database["connections"][$connection]["host"] ?? '',
+                "port" => $database["connections"][$connection]["port"] ?? 3306,
+                "dbName" => $database["connections"][$connection]["database"] ?? '',
                 "username" => $database["connections"][$connection]["username"] ?? 'root',
                 "password" => $database["connections"][$connection]["password"] ?? '',
             ];
@@ -95,7 +95,7 @@ class ManagerServiceProvider extends ServiceProvider
     }
 
     /**
-     * Include helper files
+     * Include helper files.
      *
      * @return void
      */
@@ -114,13 +114,13 @@ class ManagerServiceProvider extends ServiceProvider
     protected function registerPublish()
     {
         $publishable = [
-            'dbm.config'    => [
+            'dbm.config' => [
                 __DIR__ . '/../config/dbm.php' => config_path('dbm.php'),
             ],
-            'dbm.seeds'     => [
+            'dbm.seeds' => [
                 __DIR__ . "/../database/seeds/" => database_path('seeds'),
             ],
-            'dbm.views'     => [
+            'dbm.views' => [
                 __DIR__ . '/../resources/views' => resource_path('views/vendor/dbm/views'),
             ],
             'dbm.resources' => [

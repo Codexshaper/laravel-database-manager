@@ -10,7 +10,7 @@ class MediumTextType extends Type
     const NAME = 'mediumtext';
 
     /**
-     * Register mediumtext type
+     * Register mediumtext type.
      *
      * @return string
      */

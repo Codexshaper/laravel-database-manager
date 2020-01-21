@@ -6,6 +6,6 @@ use CodexShaper\DBM\Database\Types\Common\VarCharType;
 
 class CharacterVaryingType extends VarCharType
 {
-    const NAME   = 'character varying';
+    const NAME = 'character varying';
     const DBTYPE = 'varchar';
 }

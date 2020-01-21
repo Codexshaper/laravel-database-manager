@@ -10,7 +10,7 @@ class MacAddrType extends Type
     const NAME = 'macaddr';
 
     /**
-     * Register macaddr type
+     * Register macaddr type.
      *
      * @return string
      */

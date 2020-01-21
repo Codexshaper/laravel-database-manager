@@ -31,7 +31,7 @@ class Table
         return SchemaManager::getInstance()->listTableNames();
     }
     /**
-     * Get table details
+     * Get table details.
      *
      * @param string $tableName
      *
@@ -45,22 +45,22 @@ class Table
 
         Type::registerCustomTypes();
 
-        $table          = SchemaManager::getInstance()->listTableDetails($tableName);
+        $table = SchemaManager::getInstance()->listTableDetails($tableName);
         $primaryKeyName = $table->getPrimaryKey();
-        $options        = $table->getOptions();
+        $options = $table->getOptions();
 
         return [
-            'name'           => $table->getName(),
-            'oldName'        => $table->getName(),
-            'columns'        => static::getColumns($table),
-            'indexes'        => static::getIndexes($table),
-            'foreignKeys'    => static::getForeignKeys($table),
+            'name' => $table->getName(),
+            'oldName' => $table->getName(),
+            'columns' => static::getColumns($table),
+            'indexes' => static::getIndexes($table),
+            'foreignKeys' => static::getForeignKeys($table),
             'primaryKeyName' => $primaryKeyName,
-            'options'        => $options,
+            'options' => $options,
         ];
     }
     /**
-     * Get column names
+     * Get column names.
      *
      * @param string $tableName
      *
@@ -79,7 +79,7 @@ class Table
         return $columnsName;
     }
     /**
-     * Create new table
+     * Create new table.
      *
      * @param array $table
      *
@@ -102,7 +102,7 @@ class Table
         $schema->createTable($newTable);
     }
     /**
-     * Update table
+     * Update table.
      *
      * @param array $table
      *
@@ -121,7 +121,7 @@ class Table
         (new UpdateManager())->update($table);
     }
     /**
-     * Drop table
+     * Drop table.
      *
      * @param string $tableName
      *
@@ -136,7 +136,7 @@ class Table
         return SchemaManager::getInstance()->dropTable($tableName);
     }
     /**
-     * Prepare table
+     * Prepare table.
      *
      * @param array $table
      *
@@ -158,22 +158,22 @@ class Table
             $table['options']['charset'] = $table['options']['charset'] ?? config($conn . '.charset', 'utf8mb4');
         }
 
-        $tableName   = $table['name'];
-        $columns     = $table['columns'];
-        $indexes     = $table['indexes'];
+        $tableName = $table['name'];
+        $columns = $table['columns'];
+        $indexes = $table['indexes'];
         $foreignKeys = $table['foreignKeys'];
 
         // Make Doctrain  columns
         $DoctrineColumns = [];
         foreach ($columns as $column) {
-            $DoctrineColumn                              = Column::create($column);
+            $DoctrineColumn = Column::create($column);
             $DoctrineColumns[$DoctrineColumn->getName()] = $DoctrineColumn;
         }
 
         // Make Doctrain indexes
         $DoctrineIndexes = [];
         foreach ($indexes as $index) {
-            $DoctrineIndex                              = Index::create($index);
+            $DoctrineIndex = Index::create($index);
             $DoctrineIndexes[$DoctrineIndex->getName()] = $DoctrineIndex;
         }
 
@@ -191,7 +191,7 @@ class Table
         return new DoctrineTable($tableName, $DoctrineColumns, $DoctrineIndexes, $DoctrineForeignKeys, false, $options);
     }
     /**
-     * Get all columns
+     * Get all columns.
      *
      * @return array
      */
@@ -211,7 +211,7 @@ class Table
         return $columns;
     }
     /**
-     * Get all indexes
+     * Get all indexes.
      *
      * @return array
      */
@@ -229,7 +229,7 @@ class Table
         return $indexes;
     }
     /**
-     * Get all foreign keys
+     * Get all foreign keys.
      *
      * @return array
      */
@@ -244,7 +244,7 @@ class Table
         return $foreignKeys;
     }
     /**
-     * Check table exists or not
+     * Check table exists or not.
      *
      * @param string $tableName
      *
@@ -263,7 +263,7 @@ class Table
         return true;
     }
     /**
-     * Get tables with pagination
+     * Get tables with pagination.
      *
      * @param int $perPage
      * @param int|null $page
@@ -274,10 +274,10 @@ class Table
      */
     public static function paginate($perPage = 15, $page = null, $options = [], $query = "")
     {
-        $page            = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $options['path'] = Paginator::resolveCurrentPath();
-        $items           = static::all();
-        $collection      = $items instanceof Collection ? $items : Collection::make($items);
+        $items = static::all();
+        $collection = $items instanceof Collection ? $items : Collection::make($items);
         if (!empty($query)) {
             $collection = $collection->filter(function ($value, $key) use ($query) {
                 return false !== stristr($value, $query);

@@ -10,7 +10,7 @@ class IntervalType extends Type
     const NAME = 'interval';
 
     /**
-     * Register interval type
+     * Register interval type.
      *
      * @return string
      */

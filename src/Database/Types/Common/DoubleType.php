@@ -9,7 +9,7 @@ class DoubleType extends DoctrineFloatType
     const NAME = 'double';
 
     /**
-     * Register double type
+     * Register double type.
      *
      * @return string
      */

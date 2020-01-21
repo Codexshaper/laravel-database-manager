@@ -10,7 +10,7 @@ class LineStringType extends Type
     const NAME = 'linestring';
 
     /**
-     * Register linestring type
+     * Register linestring type.
      *
      * @return string
      */
