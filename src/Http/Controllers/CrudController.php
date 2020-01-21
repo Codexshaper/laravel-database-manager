@@ -19,6 +19,7 @@ class CrudController extends Controller
     {
         return view('dbm::app');
     }
+
     /**
      * Create|Update CRUD.
      *
@@ -65,6 +66,7 @@ class CrudController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Create a new model if not exists.
      *
@@ -89,6 +91,7 @@ class CrudController extends Controller
 
         return true;
     }
+
     /**
      * Create|Update Object.
      *
@@ -124,6 +127,7 @@ class CrudController extends Controller
 
         return false;
     }
+
     /**
      * Create|Update Object Field.
      *
@@ -160,6 +164,7 @@ class CrudController extends Controller
 
         $field->{$action}();
     }
+
     /**
      * Delete CRUD.
      *
@@ -183,6 +188,7 @@ class CrudController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Generate an error.
      *

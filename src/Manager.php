@@ -31,6 +31,7 @@ class Manager
     {
         require __DIR__ . '/../routes/web.php';
     }
+
     /**
      * Include API routes.
      *
@@ -81,6 +82,7 @@ class Manager
 
         return response('', 404);
     }
+
     /**
      * Get Model Namespace.
      *
@@ -90,6 +92,7 @@ class Manager
     {
         return trim(config('dbm.modal_namespace', App::getNamespace()), '\\');
     }
+
     /**
      * Get model name with namespace.
      *
@@ -101,6 +104,7 @@ class Manager
     {
         return static::getModelNamespace() . '\\' . ucfirst(Str::singular($className));
     }
+
     /**
      * Make new model.
      *
@@ -155,8 +159,8 @@ class Manager
             throw new \Exception("There has an error when create model. The error is :" . $e->getMessage(), 1);
 
         }
-
     }
+
     /**
      * Make new controller.
      *
@@ -176,6 +180,7 @@ class Manager
         }
 
     }
+
     /**
      * Create new model instance.
      *
@@ -192,6 +197,7 @@ class Manager
 
         return (new $model)->setTable($table);
     }
+
     /**
      * Create new model instance.
      *
@@ -205,6 +211,7 @@ class Manager
 
         return new DBM_Object;
     }
+
     /**
      * Create new model instance.
      *
@@ -218,6 +225,7 @@ class Manager
 
         return new DBM_Field;
     }
+
     /**
      * Create new model instance.
      *
@@ -231,6 +239,7 @@ class Manager
 
         return new DBM_Permission;
     }
+
     /**
      * Create new model instance.
      *
@@ -244,6 +253,7 @@ class Manager
 
         return new DBM_Template;
     }
+
     /**
      * Get all templates.
      *
@@ -272,6 +282,7 @@ class Manager
 
         return $newTemplates;
     }
+
     /**
      * Get file path prefix.
      *
@@ -283,6 +294,7 @@ class Manager
     {
         return trim(Storage::disk($driver)->getDriver()->getAdapter()->getPathPrefix(), DIRECTORY_SEPARATOR);
     }
+
     /**
      * Get all templates.
      *
@@ -302,6 +314,7 @@ class Manager
             )
             ->belongs_to_many;
     }
+
     /**
      * Check user loggedin or not.
      *
@@ -315,6 +328,7 @@ class Manager
 
         return true;
     }
+
     /**
      * Check user permission.
      *
@@ -345,6 +359,7 @@ class Manager
         return 'not_authorized';
 
     }
+
     /**
      * Check user aurization.
      *
@@ -378,5 +393,4 @@ class Manager
                 break;
         }
     }
-
 }

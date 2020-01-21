@@ -43,8 +43,8 @@ class DatabaseRestore extends Command
      */
     protected function findComposer()
     {
-        if (file_exists(getcwd().'/composer.phar')) {
-            return '"'.PHP_BINARY.'" '.getcwd().'/composer.phar';
+        if (file_exists(getcwd() . '/composer.phar')) {
+            return '"' . PHP_BINARY . '" ' . getcwd() . '/composer.phar';
         }
         return 'composer';
     }
@@ -67,30 +67,29 @@ class DatabaseRestore extends Command
         $password = config('database.connections.mysql.password', '');
 
         $driver = dbm_driver();
-        $directory = 'backups'.DIRECTORY_SEPARATOR.$driver;
+        $directory = 'backups' . DIRECTORY_SEPARATOR . $driver;
 
         if ($this->option('path') != null) {
             $path = $this->option('path');
         } elseif ($this->option('file') != null) {
-            $path = $directory.DIRECTORY_SEPARATOR.$this->option('file');
+            $path = $directory . DIRECTORY_SEPARATOR . $this->option('file');
         } else {
             $files = array_reverse(Storage::files($directory));
             $path = $files[0];
         }
 
-        $filePath = storage_path('app').DIRECTORY_SEPARATOR.$path;
-
+        $filePath = storage_path('app') . DIRECTORY_SEPARATOR . $path;
         $isCompress = config('dbm.backup.compress', false);
         $compressBinaryPath = config('dbm.backup.compress_binary_path', '');
         $compressCommand = config('dbm.backup.uncompress_command', 'gunzip');
         $compressExtension = config('dbm.backup.compress_extension', '.gz');
-        $dumpBinaryPath = config('dbm.backup.'.$driver.'.binary_path', '');
+        $dumpBinaryPath = config('dbm.backup.' . $driver . '.binary_path', '');
 
         try {
             switch ($driver) {
                 case 'mongodb':
                     $dsn = config('dbm.backup.mongodb.dsn', '');
-                    if (! empty($dsn)) {
+                    if (!empty($dsn)) {
                         $dumper->setUri($dsn);
                     }
                     break;

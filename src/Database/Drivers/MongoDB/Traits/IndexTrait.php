@@ -13,20 +13,21 @@ trait IndexTrait
      */
     protected static function getCommonType(IndexInfo $index)
     {
-        $type = "";
+        $type = '';
 
         if ($index->isText()) {
-            $type = "TEXT";
+            $type = 'TEXT';
         } else if ($index->is2dSphere()) {
-            $type = "2DSPARSE";
+            $type = '2DSPARSE';
         } else if ($index->isTtl()) {
-            $type = "TTL";
+            $type = 'TTL';
         } else if ($index->isGeoHaystack()) {
-            $type = "GEOHAYSTACK";
+            $type = 'GEOHAYSTACK';
         }
 
         return $type;
     }
+
     /**
      * get special types.
      *
@@ -35,29 +36,30 @@ trait IndexTrait
     protected static function getSpecialType(IndexInfo $index)
     {
         if (static::checkUnique($index)) {
-            return "UNIQUE";
+            return 'UNIQUE';
         }
 
         if (static::checkUniqueDesc($index)) {
-            return "UNIQUE_DESC";
+            return 'UNIQUE_DESC';
         }
 
         if (static::checkSparse($index)) {
-            return "SPARSE";
+            return 'SPARSE';
         }
         if (static::checkSparseUnique($index)) {
-            return "SPARSE_UNIQUE";
+            return 'SPARSE_UNIQUE';
         }
         if (static::checkSparseUniqueDesc($index)) {
-            return "SPARSE_UNIQUE_DESC";
+            return 'SPARSE_UNIQUE_DESC';
         }
 
         if (static::checkSparseDesc($index)) {
-            return "SPARSE_DESC";
+            return 'SPARSE_DESC';
         }
 
-        return "";
+        return '';
     }
+
     /**
      * get defaults types.
      *
@@ -66,19 +68,19 @@ trait IndexTrait
     protected static function getDefaultType(IndexInfo $index)
     {
         $name = $index->getName();
-        $partials = explode("_", $name);
+        $partials = explode('_', $name);
         $type = end($partials);
 
         if ($type == 'asc') {
-            return "ASC";
+            return 'ASC';
         } else if ($type == 'index') {
-            return "INDEX";
+            return 'INDEX';
         } else if ($type == 'desc') {
-            return "DESC";
+            return 'DESC';
         }
-
-        return "";
+        return '';
     }
+
     /**
      * check Unique.
      *
@@ -88,6 +90,7 @@ trait IndexTrait
     {
         return $index->isUnique() && !$index->isSparse() && !static::checkDescending($index) ? true : false;
     }
+
     /**
      * check Unique Descending.
      *
@@ -97,6 +100,7 @@ trait IndexTrait
     {
         return $index->isUnique() && !$index->isSparse() && static::checkDescending($index) ? true : false;
     }
+
     /**
      * check Sparse.
      *
@@ -106,6 +110,7 @@ trait IndexTrait
     {
         return $index->isSparse() && !static::checkDescending($index) ? true : false;
     }
+
     /**
      * check Sparse Unique.
      *
@@ -115,6 +120,7 @@ trait IndexTrait
     {
         return $index->isSparse() && $index->isUnique() && !static::checkDescending($index) ? true : false;
     }
+
     /**
      * check Sparse Unique Descending.
      *
@@ -124,6 +130,7 @@ trait IndexTrait
     {
         return $index->isSparse() && $index->isUnique() && static::checkDescending($index) ? true : false;
     }
+
     /**
      * check Sparse Descending.
      *
@@ -133,6 +140,7 @@ trait IndexTrait
     {
         return $index->isSparse() && static::checkDescending($index) ? true : false;
     }
+
     /**
      * check Descending.
      *
@@ -147,7 +155,6 @@ trait IndexTrait
                 return true;
             }
         }
-
         return false;
     }
 }

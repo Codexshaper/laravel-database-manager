@@ -19,6 +19,7 @@ class BackupController extends Controller
     {
         return view('dbm::app');
     }
+
     /**
      * Get all backup files.
      *
@@ -54,6 +55,7 @@ class BackupController extends Controller
         return response()->json(['success' => false]);
 
     }
+
     /**
      * Get Pagination Data.
      *
@@ -78,6 +80,7 @@ class BackupController extends Controller
 
         return new \Illuminate\Pagination\LengthAwarePaginator($slice, $files->count(), $perPage);
     }
+
     /**
      * Create new backup.
      *
@@ -116,6 +119,7 @@ class BackupController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Restore from a specific backup.
      *
@@ -146,8 +150,8 @@ class BackupController extends Controller
         }
 
         return response()->json(['success' => false]);
-
     }
+
     /**
      * Return specific backup file for download.
      *
@@ -177,6 +181,7 @@ class BackupController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Remove a backup.
      *

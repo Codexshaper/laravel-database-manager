@@ -39,6 +39,7 @@ class UpdateManager
 
         $this->updateTable();
     }
+
     /**
      * Get all table details.
      *
@@ -59,6 +60,7 @@ class UpdateManager
 
         return new DoctrineTable($tableName, $columns, $indexes, $foreignKeys, false, []);
     }
+
     /**
      * Update table.
      *
@@ -96,6 +98,7 @@ class UpdateManager
             SchemaManager::getInstance()->alterTable($tableDiff);
         }
     }
+
     /**
      * Rename columns.
      *

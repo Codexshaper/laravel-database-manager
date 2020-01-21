@@ -41,6 +41,7 @@ class ObjectController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Filter CRUD Tables.
      * Check CRUD exists or not.
@@ -73,6 +74,7 @@ class ObjectController extends Controller
 
         return $newTables;
     }
+
     /**
      * Get Object details.
      *
@@ -116,6 +118,7 @@ class ObjectController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Get Object.
      *
@@ -158,6 +161,7 @@ class ObjectController extends Controller
         ];
 
     }
+
     /**
      * Prepare Object Fields.
      *
@@ -190,6 +194,7 @@ class ObjectController extends Controller
 
         return $fields;
     }
+
     /**
      * Get Relationship details.
      *
@@ -212,6 +217,7 @@ class ObjectController extends Controller
             'details' => $relationshipDetails,
         ];
     }
+
     /**
      * Get errors.
      *

@@ -27,6 +27,7 @@ class Column
 
         return $DoctrineColumn;
     }
+
     /**
      * Get all columns as an array.
      *

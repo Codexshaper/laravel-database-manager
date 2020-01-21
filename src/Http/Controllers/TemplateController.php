@@ -35,6 +35,7 @@ class TemplateController extends Controller
             }
         }
     }
+
     /**
      * Create a new template.
      *
@@ -75,6 +76,7 @@ class TemplateController extends Controller
         }
         return response()->json(['success' => true, 'template' => $request->all()]);
     }
+
     /**
      * Remove a template.
      *

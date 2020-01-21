@@ -13,6 +13,7 @@ class Driver
     {
         return config('database.default', 'mysql');
     }
+
     /**
      * Check driver is MongoDB.
      *
@@ -22,6 +23,7 @@ class Driver
     {
         return (config('database.default') == 'mongodb') ? true : false;
     }
+
     /**
      * Check driver is Mysql.
      *
@@ -31,6 +33,7 @@ class Driver
     {
         return (config('database.default') == 'mysql') ? true : false;
     }
+
     /**
      * Check driver is Postgresql.
      *
@@ -40,6 +43,7 @@ class Driver
     {
         return (config('database.default') == 'pgsql') ? true : false;
     }
+
     /**
      * Check driver is Sqlsrv.
      *
@@ -49,6 +53,7 @@ class Driver
     {
         return (config('database.default') == 'sqlsrv') ? true : false;
     }
+
     /**
      * Check driver is Sqlite.
      *

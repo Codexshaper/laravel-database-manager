@@ -23,6 +23,7 @@ class Collection
     {
         $this->collection = $collection;
     }
+
     /**
      * Add MongoDB collection column.
      *
@@ -48,6 +49,7 @@ class Collection
 
         return $this;
     }
+
     /**
      * Add index.
      *
@@ -59,6 +61,7 @@ class Collection
 
         return $this;
     }
+
     /**
      * Add unique key.
      *
@@ -70,6 +73,7 @@ class Collection
 
         return $this;
     }
+
     /**
      * Add default value.
      *
@@ -77,11 +81,13 @@ class Collection
      *
      * @return $this
      */
-    function default($value) {
+    public function defaultValue($value)
+    {
         $this->columns[$this->name]['default'] = $value;
 
         return $this;
     }
+
     /**
      * Add nullable column.
      *
@@ -93,6 +99,7 @@ class Collection
 
         return $this;
     }
+
     /**
      * Save collection and fields.
      *

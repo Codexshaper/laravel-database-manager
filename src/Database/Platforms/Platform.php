@@ -26,6 +26,7 @@ abstract class Platform
 
         return $platform;
     }
+
     /**
      * Get platform types.
      *
@@ -39,6 +40,7 @@ abstract class Platform
 
         return $platform::getTypes($typeMapping);
     }
+
     /**
      * Register platform custom type options.
      *

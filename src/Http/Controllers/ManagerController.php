@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Response;
 
 class ManagerController extends Controller
 {
-
     /**
      * Load database manager assests.
      *

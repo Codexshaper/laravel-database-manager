@@ -36,6 +36,7 @@ trait MongoConnection
         $this->admin = config('database.connections.mongodb.options.database', 'admin');
 
     }
+
     /**
      * Get mongo client instance.
      *

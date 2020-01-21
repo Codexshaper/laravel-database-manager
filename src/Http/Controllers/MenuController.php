@@ -18,6 +18,7 @@ class MenuController extends Controller
     {
         return view('dbm::admin');
     }
+
     /**
      * Login User for API.
      *
@@ -44,6 +45,7 @@ class MenuController extends Controller
         // return response()->json(["success" => false, "error" => "Unauthorised"], 401);
 
     }
+
     /**
      * Validate Credentials.
      *
@@ -69,6 +71,7 @@ class MenuController extends Controller
 
         return true;
     }
+
     /**
      * Generate errors and return response.
      *

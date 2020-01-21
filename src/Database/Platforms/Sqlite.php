@@ -20,6 +20,8 @@ abstract class Sqlite extends Platform
 
         return $typeMapping->unique();
     }
+
     public static function registerCustomTypeOptions()
-    {}
+    {
+    }
 }

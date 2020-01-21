@@ -38,5 +38,6 @@ abstract class Postgresql extends Platform
     }
 
     public static function registerCustomTypeOptions()
-    {}
+    {
+    }
 }

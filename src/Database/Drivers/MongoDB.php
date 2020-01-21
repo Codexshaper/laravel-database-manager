@@ -21,6 +21,7 @@ class MongoDB
     {
         return static::getMongoClient()->{$this->admin}->command($command);
     }
+
     /**
      * Rename collection.
      *
@@ -33,6 +34,7 @@ class MongoDB
     {
         return $this->command(['renameCollection' => $fromNs, 'to' => $toNs]);
     }
+
     /**
      * Rename fields.
      *
@@ -53,6 +55,7 @@ class MongoDB
 
         $this->selectCollection($collectionName)->updateMany([], $update, ['upsert' => true]);
     }
+
     /**
      * Get the MongoDB database object.
      *
@@ -62,6 +65,7 @@ class MongoDB
     {
         return DB::connection()->getMongoDB();
     }
+
     /**
      * Get the MongoDB collection namespace.
      *
@@ -71,8 +75,9 @@ class MongoDB
      */
     public function getNamespace($databaseName, $collectionName)
     {
-        return $databaseName.'.'.$collectionName;
+        return $databaseName . '.' . $collectionName;
     }
+
     /**
      * Get the all collections.
      *
@@ -82,6 +87,7 @@ class MongoDB
     {
         return $this->getDB()->listCollections();
     }
+
     /**
      * Get the all collections name.
      *
@@ -97,6 +103,7 @@ class MongoDB
 
         return $collectionNames;
     }
+
     /**
      * Check MongoDB collection.
      *
@@ -108,6 +115,7 @@ class MongoDB
     {
         return (in_array($collectionName, $this->getCollectionNames())) ? true : false;
     }
+
     /**
      * Create MongoDB colelction.
      *
@@ -119,6 +127,7 @@ class MongoDB
     {
         return $this->getDB()->createCollection($collectionName);
     }
+
     /**
      * Get MongoDB colelction.
      *
@@ -129,15 +138,16 @@ class MongoDB
     public function getCollection($collectionName)
     {
         return [
-            'name'           => $collectionName,
-            'oldName'        => $collectionName,
-            'columns'        => $this->getColumns($collectionName),
-            'indexes'        => Index::getIndexes($this->selectCollection($collectionName)),
-            'foreignKeys'    => [],
+            'name' => $collectionName,
+            'oldName' => $collectionName,
+            'columns' => $this->getColumns($collectionName),
+            'indexes' => Index::getIndexes($this->selectCollection($collectionName)),
+            'foreignKeys' => [],
             'primaryKeyName' => ['_id'],
-            'options'        => [],
+            'options' => [],
         ];
     }
+
     /**
      * Update MongoDB colelction.
      *
@@ -152,7 +162,7 @@ class MongoDB
         $oldName = $collection['oldName'];
         $collectionName = $oldName;
         $connection = config('database.default');
-        $database = config('database.connections.'.$connection.'.database');
+        $database = config('database.connections.' . $connection . '.database');
         $fromNs = $this->getNamespace($database, $oldName);
         $toNs = $this->getNamespace($database, $newName);
 
@@ -167,6 +177,7 @@ class MongoDB
         return true;
 
     }
+
     /**
      * Rename MongoDB colelction columns.
      *
@@ -195,13 +206,14 @@ class MongoDB
             foreach ($renames as $oldName => $newName) {
                 $collection_field = CollectionField::where([
                     'dbm_collection_id' => $dbmCollection->_id,
-                    'old_name'          => $oldName,
+                    'old_name' => $oldName,
                 ])->first();
                 $collection_field->old_name = $newName;
                 $collection_field->update();
             }
         }
     }
+
     /**
      * Add MongoDB colelction columns.
      *
@@ -234,7 +246,7 @@ class MongoDB
                         $columnNames[] = $columnName;
                     }
 
-                    if ($id != '' && ! in_array($newField, $columnNames)) {
+                    if ($id != '' && !in_array($newField, $columnNames)) {
                         $update['$set'] = [$newField => ''];
                         $collection->updateOne(
                             ['_id' => new \MongoDB\BSON\ObjectID($id)],
@@ -247,6 +259,7 @@ class MongoDB
 
         }
     }
+
     /**
      * Remove MongoDB colelction columns.
      *
@@ -263,8 +276,9 @@ class MongoDB
         $unsets = [];
 
         foreach ($columns as $column) {
-            if (! in_array($column, $newFields)) {
+            if (!in_array($column, $newFields)) {
                 $unsets[$column] = '';
+            }
         }
 
         if (count($unsets) > 0) {
@@ -272,6 +286,7 @@ class MongoDB
             $collection->updateMany([], $update, ['upsert' => true]);
         }
     }
+
     /**
      * Set MongoDB colelction fields.
      *
@@ -282,21 +297,14 @@ class MongoDB
      */
     public function setFields($collectionName, $fields)
     {
-        /*
-         * Rename Columns
-         */
+        //Rename Columns
         $this->renameColumns($collectionName, $fields);
-
-        /*
-         * Add Columns
-         */
+        //Add Columns
         $this->addColumns($collectionName);
-        /*
-         * Remove Columns
-         */
+        //Remove Columns
         $this->removeColumns($collectionName);
-        return true;
     }
+
     /**
      * Drop MongoDB colelction.
      *
@@ -308,6 +316,7 @@ class MongoDB
     {
         $this->getDB()->dropCollection($collectionName);
     }
+
     /**
      * Select MongoDB colelction.
      *
@@ -319,6 +328,7 @@ class MongoDB
     {
         return $this->getDB()->selectCollection($collectionName);
     }
+
     /**
      * Get MongoDB colelction columns.
      *
@@ -340,6 +350,7 @@ class MongoDB
 
         return array_values(array_unique($columnNames));
     }
+
     /**
      * Get MongoDB columns.
      *
@@ -356,34 +367,35 @@ class MongoDB
             $fields = $collection->fields;
             foreach ($fields as $field) {
                 $columns[] = (object) [
-                    'name'          => $field->name,
-                    'oldName'       => $field->old_name,
-                    'type'          => [
+                    'name' => $field->name,
+                    'oldName' => $field->old_name,
+                    'type' => [
                         'name' => $field->type,
                     ],
                     'autoincrement' => false,
-                    'default'       => null,
-                    'length'        => null,
+                    'default' => null,
+                    'length' => null,
                 ];
             }
         } else {
             $fields = $this->getCollectionColumns($collectionName);
             foreach ($fields as $field) {
                 $columns[] = (object) [
-                    'name'          => $field,
-                    'oldName'       => $field,
-                    'type'          => [
+                    'name' => $field,
+                    'oldName' => $field,
+                    'type' => [
                         'name' => '',
                     ],
                     'autoincrement' => false,
-                    'default'       => null,
-                    'length'        => null,
+                    'default' => null,
+                    'length' => null,
                 ];
             }
         }
 
         return $columns;
     }
+
     /**
      * Get colelction ColumnsName.
      *

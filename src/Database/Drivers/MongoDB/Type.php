@@ -44,6 +44,7 @@ class Type
     {
         return new Binary($value, $type);
     }
+
     /**
      * Get decimal.
      *
@@ -53,6 +54,7 @@ class Type
     {
         return new Decimal($value);
     }
+
     /**
      * Get javascript.
      *
@@ -62,6 +64,7 @@ class Type
     {
         return new Javascript($code, $scope);
     }
+
     /**
      * Get max key.
      *
@@ -71,6 +74,7 @@ class Type
     {
         return new MaxKey();
     }
+
     /**
      * Get min key.
      *
@@ -80,6 +84,7 @@ class Type
     {
         return new MinKey();
     }
+
     /**
      * Get ObjectId.
      *
@@ -89,6 +94,7 @@ class Type
     {
         return new ObjectId($value);
     }
+
     /**
      * Get regular expression.
      *
@@ -98,6 +104,7 @@ class Type
     {
         return new Regex($pattern, $flags);
     }
+
     /**
      * Get timestamp.
      *
@@ -107,6 +114,7 @@ class Type
     {
         return new Timestamp($increment, $timestamp);
     }
+
     /**
      * Get datetime.
      *
@@ -122,6 +130,7 @@ class Type
         }
         return new UTCDateTime($milliseconds);
     }
+
     /**
      * Get string.
      *
@@ -133,6 +142,7 @@ class Type
     {
         return (string) $value;
     }
+
     /**
      * Get array.
      *
@@ -144,6 +154,7 @@ class Type
     {
         return (array) $value;
     }
+
     /**
      * Get object.
      *
@@ -155,6 +166,7 @@ class Type
     {
         return (object) $value;
     }
+
     /**
      * Get boolean.
      *
@@ -166,6 +178,7 @@ class Type
     {
         return (boolean) $value;
     }
+
     /**
      * Get double.
      *
@@ -177,6 +190,7 @@ class Type
     {
         return (double) $value;
     }
+
     /**
      * Get null.
      *
@@ -186,6 +200,7 @@ class Type
     {
         return null;
     }
+
     /**
      * Get integer.
      *
@@ -197,6 +212,7 @@ class Type
     {
         return (int) $value;
     }
+
     /**
      * Get long integer.
      *
@@ -208,6 +224,7 @@ class Type
     {
         return (int) $value;
     }
+
     /**
      * Get types.
      *

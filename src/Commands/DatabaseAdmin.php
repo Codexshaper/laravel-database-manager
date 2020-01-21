@@ -41,8 +41,8 @@ class DatabaseAdmin extends Command
      */
     protected function findComposer()
     {
-        if (file_exists(getcwd().'/composer.phar')) {
-            return '"'.PHP_BINARY.'" '.getcwd().'/composer.phar';
+        if (file_exists(getcwd() . '/composer.phar')) {
+            return '"' . PHP_BINARY . '" ' . getcwd() . '/composer.phar';
         }
         return 'composer';
     }
@@ -62,7 +62,7 @@ class DatabaseAdmin extends Command
         $successMessage = 'Admin Created successfully';
 
         if ($this->argument('action') == 'drop') {
-            $permissions    = [];
+            $permissions = [];
             $successMessage = "Admin Deleted successfully";
         }
 

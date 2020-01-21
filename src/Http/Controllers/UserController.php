@@ -20,6 +20,7 @@ class UserController extends Controller
     {
         return view('dbm::admin');
     }
+
     /**
      * Login User for API.
      *
@@ -60,6 +61,7 @@ class UserController extends Controller
         return response()->json(["success" => false, "error" => "Unauthorised"], 401);
 
     }
+
     /**
      * Validate Credentials.
      *
@@ -85,6 +87,7 @@ class UserController extends Controller
 
         return true;
     }
+
     /**
      * Generate errors and return response.
      *

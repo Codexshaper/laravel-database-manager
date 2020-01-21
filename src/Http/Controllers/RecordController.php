@@ -23,6 +23,7 @@ class RecordController extends Controller
     {
         return view('dbm::app');
     }
+
     /**
      * Create Record.
      *
@@ -68,6 +69,7 @@ class RecordController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Process data to store.
      *
@@ -102,6 +104,7 @@ class RecordController extends Controller
 
         return $table;
     }
+
     /**
      * Update Record.
      *
@@ -145,6 +148,7 @@ class RecordController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Process Data to update.
      *
@@ -186,6 +190,7 @@ class RecordController extends Controller
         return $table;
 
     }
+
     /**
      * Delete Record.
      *
@@ -233,6 +238,7 @@ class RecordController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Get Table Details.
      *

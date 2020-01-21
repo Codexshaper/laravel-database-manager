@@ -57,6 +57,7 @@ class Index
         return new DoctrineIndex($indexName, $indexColumns, $isUnique, $isPrimary, $flags, $options);
 
     }
+
     /**
      * Get index name.
      *
@@ -74,6 +75,7 @@ class Index
 
         return str_replace(['-', '.'], '_', $name);
     }
+
     /**
      * Get all indexes as an array.
      *
@@ -93,6 +95,7 @@ class Index
             "options" => $index->getOptions(),
         ];
     }
+
     /**
      * Get index type.
      *

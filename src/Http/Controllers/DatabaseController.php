@@ -21,6 +21,7 @@ class DatabaseController extends Controller
     {
         return view('dbm::app');
     }
+
     /**
      * Create CRUD.
      *
@@ -72,6 +73,7 @@ class DatabaseController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Update MongoDB Collection.
      *
@@ -143,6 +145,7 @@ class DatabaseController extends Controller
 
         }
     }
+
     /**
      * Create|Update CRUD Field.
      *
@@ -199,6 +202,7 @@ class DatabaseController extends Controller
             $field->save();
         }
     }
+
     /**
      * Update CRUD Fields.
      *
@@ -246,6 +250,7 @@ class DatabaseController extends Controller
             }
         }
     }
+
     /**
      * Update Table.
      *
@@ -299,6 +304,7 @@ class DatabaseController extends Controller
         return response()->json(['success' => false]);
 
     }
+
     /**
      * Create Table.
      *
@@ -347,6 +353,7 @@ class DatabaseController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Get input type.
      *
@@ -364,6 +371,7 @@ class DatabaseController extends Controller
         }
         return 'text';
     }
+
     /**
      * Input Types.
      *
@@ -447,5 +455,4 @@ class DatabaseController extends Controller
             'search' => [],
         ];
     }
-
 }

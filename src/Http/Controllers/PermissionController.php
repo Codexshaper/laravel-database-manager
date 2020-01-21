@@ -16,6 +16,7 @@ class PermissionController extends Controller
     {
         return view('dbm::app');
     }
+
     /**
      * Get all users with permissions.
      *
@@ -62,6 +63,7 @@ class PermissionController extends Controller
         return response()->json(['success' => false]);
 
     }
+
     /**
      * get Permission Users.
      *
@@ -100,6 +102,7 @@ class PermissionController extends Controller
 
         return $users;
     }
+
     /**
      * Assign Permissions to User.
      *
@@ -123,6 +126,7 @@ class PermissionController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Update User Permissions.
      *
@@ -146,6 +150,7 @@ class PermissionController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Delete User Permissions.
      *
@@ -168,6 +173,7 @@ class PermissionController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Get User Relation.
      *

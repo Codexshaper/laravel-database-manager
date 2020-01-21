@@ -53,6 +53,7 @@ class TableController extends Controller
         }
         return response()->json(['success' => false]);
     }
+
     /**
      * Get Table Details.
      *
@@ -105,6 +106,7 @@ class TableController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Get Table Columns.
      *

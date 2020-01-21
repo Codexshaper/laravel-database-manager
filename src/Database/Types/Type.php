@@ -16,6 +16,7 @@ abstract class Type extends DoctrineType
     {
         return static::NAME;
     }
+
     /**
      * Register Custom type.
      *
@@ -45,6 +46,7 @@ abstract class Type extends DoctrineType
             $platform->registerDoctrineTypeMapping($dbType, $name);
         }
     }
+
     /**
      * Get custom types.
      *
@@ -65,6 +67,7 @@ abstract class Type extends DoctrineType
 
         return $customTypes;
     }
+
     /**
      * Get Type categories.
      *
@@ -157,35 +160,5 @@ abstract class Type extends DoctrineType
             'objects' => ['object'],
         ];
     }
-
-    // public static function getTypeCategory($type)
-    // {
-    //     $categories = static::getTypeCategories();
-
-    //     foreach ($categories as $key => $category) {
-    //         foreach ($category as $value) {
-    //             if ($value == $type) {
-    //                 switch ($key) {
-    //                     case 'numbers':
-    //                         return 'Numbers';
-    //                     case 'strings':
-    //                         return 'Strings';
-    //                     case 'datetime':
-    //                         return 'Date and Time';
-    //                     case 'lists':
-    //                         return 'Lists';
-    //                     case 'binary':
-    //                         return 'Binary';
-    //                     case 'network':
-    //                         return 'Networks';
-    //                     case 'geometry':
-    //                         return 'Geometry';
-    //                     case 'objects':
-    //                         return 'Objects';
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 
 }

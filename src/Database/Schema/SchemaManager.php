@@ -17,6 +17,7 @@ class SchemaManager
     {
         self::$schemaManager = DB::connection()->getDoctrineSchemaManager();
     }
+
     /**
      * get SchemaManager instance.
      *

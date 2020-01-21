@@ -45,6 +45,7 @@ class ForeignKey
         }
         return $doctrineForeignKey;
     }
+
     /**
      * Get foreign key name.
      *
@@ -62,6 +63,7 @@ class ForeignKey
 
         return str_replace(['-', '.'], '_', $name);
     }
+
     /**
      * Get doctrine table.
      *
@@ -79,6 +81,7 @@ class ForeignKey
 
         return static::manager()->listTableDetails($table);
     }
+
     /**
      * Get all foreignkeys as an array.
      *

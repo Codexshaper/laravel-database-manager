@@ -36,6 +36,7 @@ class Index
 
         return $indexes;
     }
+
     /**
      * Get index type.
      *
@@ -55,6 +56,7 @@ class Index
 
         return $type;
     }
+
     /**
      * Set Indexes.
      *
@@ -65,7 +67,6 @@ class Index
      */
     public static function setIndexes(Collection $collection, $indexes)
     {
-
         $collection->dropIndexes();
 
         foreach ($indexes as $index) {
@@ -92,6 +93,7 @@ class Index
 
         return true;
     }
+
     /**
      * Get Index Details.
      *
@@ -148,7 +150,6 @@ class Index
                 $indexType = -1;
                 break;
         }
-
         return ['type' => $indexType, 'options' => $options];
     }
 }

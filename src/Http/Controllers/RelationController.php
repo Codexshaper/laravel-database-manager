@@ -34,6 +34,7 @@ class RelationController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Prepare relationship field.
      *
@@ -63,6 +64,7 @@ class RelationController extends Controller
 
         return $field;
     }
+
     /**
      * Create Relation.
      *
@@ -103,6 +105,7 @@ class RelationController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Check Errors.
      *
@@ -125,6 +128,7 @@ class RelationController extends Controller
 
         return true;
     }
+
     /**
      * Get Field Name.
      *
@@ -140,6 +144,7 @@ class RelationController extends Controller
 
         return strtolower("{$localTable}_{$relationType}_{$foreignTable}_relationship");
     }
+
     /**
      * Prepare Settings.
      *
@@ -163,6 +168,7 @@ class RelationController extends Controller
             'relatedPivotKey' => $relationship['relatedPivotKey'],
         ];
     }
+
     /**
      * Update Relationship.
      *
@@ -194,6 +200,7 @@ class RelationController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Delete Relation.
      *
@@ -219,6 +226,7 @@ class RelationController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Get Relation.
      *

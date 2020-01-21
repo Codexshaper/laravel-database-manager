@@ -30,6 +30,7 @@ class Table
         }
         return SchemaManager::getInstance()->listTableNames();
     }
+
     /**
      * Get table details.
      *
@@ -59,6 +60,7 @@ class Table
             'options' => $options,
         ];
     }
+
     /**
      * Get column names.
      *
@@ -78,6 +80,7 @@ class Table
 
         return $columnsName;
     }
+
     /**
      * Create new table.
      *
@@ -101,6 +104,7 @@ class Table
         $schema = SchemaManager::getInstance();
         $schema->createTable($newTable);
     }
+
     /**
      * Update table.
      *
@@ -120,6 +124,7 @@ class Table
 
         (new UpdateManager())->update($table);
     }
+
     /**
      * Drop table.
      *
@@ -135,6 +140,7 @@ class Table
 
         return SchemaManager::getInstance()->dropTable($tableName);
     }
+
     /**
      * Prepare table.
      *
@@ -190,6 +196,7 @@ class Table
 
         return new DoctrineTable($tableName, $DoctrineColumns, $DoctrineIndexes, $DoctrineForeignKeys, false, $options);
     }
+
     /**
      * Get all columns.
      *
@@ -210,6 +217,7 @@ class Table
 
         return $columns;
     }
+
     /**
      * Get all indexes.
      *
@@ -228,6 +236,7 @@ class Table
 
         return $indexes;
     }
+
     /**
      * Get all foreign keys.
      *
@@ -243,6 +252,7 @@ class Table
 
         return $foreignKeys;
     }
+
     /**
      * Check table exists or not.
      *
@@ -262,6 +272,7 @@ class Table
 
         return true;
     }
+
     /**
      * Get tables with pagination.
      *

@@ -76,6 +76,7 @@ trait Relationships
 
         return $this;
     }
+
     /**
      * Set Many to Many Relation.
      *
@@ -111,6 +112,7 @@ trait Relationships
 
         return $this;
     }
+
     /**
      * Set Has Through Relation.
      *
@@ -143,6 +145,7 @@ trait Relationships
 
         return $this;
     }
+
     /**
      * Set Morph Relation.
      *
@@ -172,6 +175,7 @@ trait Relationships
 
         return $this;
     }
+
     /**
      * Set MorphTo Relation.
      *
@@ -198,6 +202,7 @@ trait Relationships
 
         return $this;
     }
+
     /**
      * Set MorphToMany Relation.
      *
@@ -236,6 +241,7 @@ trait Relationships
 
         return $this;
     }
+
     /*
      * Relationship.
      */
@@ -243,10 +249,12 @@ trait Relationships
     {
         return $this->parent->hasOne($this->related, $this->foreignKey, $this->localKey);
     }
+
     public function has_many(): HasMany
     {
         return $this->parent->hasMany($this->related, $this->foreignKey, $this->localKey);
     }
+
     public function belongs_to_many(): BelongsToMany
     {
         return $this->parent->belongsToMany(
@@ -259,10 +267,12 @@ trait Relationships
             $this->relation
         );
     }
+
     public function belongs_to(): BelongsTo
     {
         return $this->parent->belongsTo($this->related, $this->foreignKey, $this->localKey, $this->relation);
     }
+
     public function has_one_through(): HasOneThrough
     {
         return $this->parent->hasOneThrough(
@@ -274,6 +284,7 @@ trait Relationships
             $this->secondLocalKey
         );
     }
+
     public function has_many_through(): HasManyThrough
     {
         return $this->parent->hasManyThrough(
@@ -285,6 +296,7 @@ trait Relationships
             $this->secondLocalKey
         );
     }
+
     public function morph_one(): MorphOne
     {
         return $this->parent->morphOne(
@@ -295,6 +307,7 @@ trait Relationships
             $this->morphLocalKey
         );
     }
+
     public function morph_to(): MorphTo
     {
         return $this->parent->morphTo(
@@ -304,6 +317,7 @@ trait Relationships
             $this->morphLocalKey
         );
     }
+
     public function morph_many(): MorphMany
     {
         return $this->parent->morphMany(
@@ -314,6 +328,7 @@ trait Relationships
             $this->morphLocalKey
         );
     }
+
     public function morph_to_many(): MorphToMany
     {
         return $this->parent->morphToMany(
@@ -327,6 +342,7 @@ trait Relationships
             $this->inverse
         );
     }
+
     public function morphed_by_many(): MorphToMany
     {
         return $this->parent->morphedByMany(

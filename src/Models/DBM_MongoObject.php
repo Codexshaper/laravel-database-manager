@@ -26,6 +26,7 @@ class DBM_MongoObject extends Model
     {
         return $this->hasMany(DBM_MongoField::class, 'dbm_object_id');
     }
+
     /**
      * Get all fields.
      *
@@ -38,6 +39,7 @@ class DBM_MongoObject extends Model
     {
         return $this->fields()->orderBy($order_by, $direction)->get();
     }
+
     /**
      * Get Create fields.
      *
@@ -50,6 +52,7 @@ class DBM_MongoObject extends Model
     {
         return $this->fields()->where('create', true)->orderBy($order_by, $direction)->get();
     }
+
     /**
      * Get Browse fields.
      *
@@ -62,6 +65,7 @@ class DBM_MongoObject extends Model
     {
         return $this->fields()->where('read', true)->orderBy($order_by, $direction)->get();
     }
+
     /**
      * Get Edit fields.
      *
@@ -74,6 +78,7 @@ class DBM_MongoObject extends Model
     {
         return $this->fields()->where('edit', true)->orderBy($order_by, $direction)->get();
     }
+
     /**
      * Get delete fields.
      *

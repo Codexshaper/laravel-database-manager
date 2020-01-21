@@ -60,6 +60,7 @@ trait RecordTrait
 
         return $value;
     }
+
     /**
      * Prepare fields to store.
      *
@@ -89,6 +90,7 @@ trait RecordTrait
 
         return $value;
     }
+
     /**
      * Prepare record fields.
      *
@@ -121,6 +123,7 @@ trait RecordTrait
 
         return $fields;
     }
+
     /**
      * Remove field when belongs_to relation.
      *
@@ -143,6 +146,7 @@ trait RecordTrait
 
         return $results;
     }
+
     /**
      * Prepare Record Details.
      *
@@ -180,6 +184,7 @@ trait RecordTrait
             "record" => $newRecord,
         ];
     }
+
     /**
      * Get options for Dropdown, Selectbox, Radio button and other fields via controller.
      *
@@ -198,6 +203,7 @@ trait RecordTrait
             return app($controllerName)->{$methodName}();
         }
     }
+
     /**
      * Check validation and return errors if fails.
      *
@@ -229,6 +235,7 @@ trait RecordTrait
 
         return $errors;
     }
+
     /**
      * Prepare validation rules.
      *
@@ -258,6 +265,7 @@ trait RecordTrait
 
         return $rules;
     }
+
     /**
      * Get field name.
      *
@@ -272,6 +280,7 @@ trait RecordTrait
 
         return $collection->fields()->where('name', $fieldName)->first()->type;
     }
+
     /**
      * Generate errors and return response.
      *
@@ -286,6 +295,7 @@ trait RecordTrait
             'errors' => $errors,
         ], 400);
     }
+
     /**
      * Check Function name is available for MySQL.
      *
@@ -304,6 +314,7 @@ trait RecordTrait
 
         return false;
     }
+
     /**
      * Execute MySQL Function.
      *

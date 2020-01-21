@@ -23,6 +23,7 @@ abstract class Mysql extends Platform
 
         return $typeMapping;
     }
+
     /**
      * Register Custom Type Options.
      *
