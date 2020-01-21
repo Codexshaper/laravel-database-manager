@@ -15,11 +15,8 @@ class TemplateController extends Controller
     public function updateTemplates(Request $request)
     {
         if (is_array($request->templates) && count($request->templates) > 0) {
-
             foreach ($request->templates as $field) {
-
                 if ($template = DBM::Template()->where('old_name', $field['oldName'])->first()) {
-
                     $template->name = $field['name'];
                     $template->old_name = $field['name'];
                     $template->type = $field['type']['name'];
@@ -44,12 +41,11 @@ class TemplateController extends Controller
     public function save(Request $request)
     {
         $field = $request->template;
-        try
-        {
+        try {
             if (DBM::Template()->where('name', $field['name'])->first()) {
                 return response()->json([
                     'success' => false,
-                    'errors' => [" The template name must be unique. " . $field['name'] . " already exist."],
+                    'errors' => [' The template name must be unique. '.$field['name'].' already exist.'],
                 ], 400);
             }
 
@@ -67,13 +63,13 @@ class TemplateController extends Controller
             if ($template->save()) {
                 return response()->json(['success' => true, 'templates' => DBM::templates()]);
             }
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
                 'errors' => [$e->getMessage()],
             ], 400);
         }
+
         return response()->json(['success' => true, 'template' => $request->all()]);
     }
 
@@ -89,9 +85,10 @@ class TemplateController extends Controller
                 return response()->json(['success' => true, 'templates' => DBM::templates()]);
             }
         }
+
         return response()->json([
             'success' => false,
-            'errors' => ['The template '+$request->name . " not found"],
+            'errors' => ['The template ' + $request->name.' not found'],
         ], 400);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace CodexShaper\DBM\Http\Controllers;
 
-use CodexShaper\DBM\Facades\Manager as DBM;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
@@ -38,7 +37,7 @@ class UserController extends Controller
                     'password' => $request->data['password'],
                 ];
 
-                if (!Auth::attempt($credentials)) {
+                if (! Auth::attempt($credentials)) {
                     return $this->generateError(["Email and password combination doesn't match"]);
                 }
 
@@ -47,19 +46,19 @@ class UserController extends Controller
                 if (count($user->tokens) > 0) {
                     $user->tokens()->delete();
                 }
+
                 return response()->json([
                     'success' => true,
                     'user' => $user,
                     'token' => $user->createToken('DBM')->accessToken,
                     'expiry' => $expiry,
                 ]);
-
             } catch (\Exception $e) {
                 $this->generateError([$e->getMessage()]);
             }
         }
-        return response()->json(["success" => false, "error" => "Unauthorised"], 401);
 
+        return response()->json(['success' => false, 'error' => 'Unauthorised'], 401);
     }
 
     /**
@@ -82,6 +81,7 @@ class UserController extends Controller
             foreach ($validator->errors()->all() as $error) {
                 $errors[] = $error;
             }
+
             return $this->generateError($errors);
         }
 

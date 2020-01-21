@@ -18,7 +18,6 @@ class EnumType extends Type
     public function getSQLDeclaration(array $fieldDeclaration, AbstractPlatform $platform)
     {
         throw new \Exception('Enum type is not supported');
-
         $pdo = DB::connection()->getPdo();
 
         // trim the values
@@ -26,6 +25,6 @@ class EnumType extends Type
             return $pdo->quote(trim($value));
         }, $allowed);
 
-        return 'enum(' . implode(', ', $allowed) . ')';
+        return 'enum('.implode(', ', $allowed).')';
     }
 }

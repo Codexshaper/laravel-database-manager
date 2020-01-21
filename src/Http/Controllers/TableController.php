@@ -16,13 +16,11 @@ class TableController extends Controller
     public function all(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('database.browse')) !== true) {
                 return $response;
             }
 
-            try
-            {
+            try {
                 $perPage = (int) $request->perPage;
                 $query = $request->q;
                 $tables = Table::paginate($perPage, null, [], $query);
@@ -31,7 +29,6 @@ class TableController extends Controller
                 $newTables = [];
 
                 foreach ($tables as $table) {
-
                     $newTables[] = $table;
                 }
 
@@ -43,7 +40,6 @@ class TableController extends Controller
                     'coreTables' => config('dbm.core.tables', []),
                     'collation' => config('dbm.collation', 'utf8mb4_unicode_ci'),
                 ]);
-
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
@@ -51,6 +47,7 @@ class TableController extends Controller
                 ], 400);
             }
         }
+
         return response()->json(['success' => false]);
     }
 
@@ -62,7 +59,6 @@ class TableController extends Controller
     public function getTable(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('database.update')) !== true) {
                 return $response;
             }
@@ -115,7 +111,6 @@ class TableController extends Controller
     public function getTableColumns(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('crud.update')) !== true) {
                 return $response;
             }

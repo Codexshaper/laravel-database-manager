@@ -100,7 +100,7 @@ class Type
      *
      * @return  \MongoDB\BSON\Regex
      */
-    public static function regex(string $pattern, string $flags = "")
+    public static function regex(string $pattern, string $flags = '')
     {
         return new Regex($pattern, $flags);
     }
@@ -124,10 +124,10 @@ class Type
      */
     public static function dateTime($milliseconds = null)
     {
-        if (!is_int($milliseconds) || !is_float($milliseconds) || !is_string($milliseconds) || !$milliseconds instanceof \DateTimeInterface) {
-            throw new \Exception($milliseconds . " integer or float or string or instance of DateTimeInterface");
-
+        if (! is_int($milliseconds) || ! is_float($milliseconds) || ! is_string($milliseconds) || ! $milliseconds instanceof \DateTimeInterface) {
+            throw new \Exception($milliseconds.' integer or float or string or instance of DateTimeInterface');
         }
+
         return new UTCDateTime($milliseconds);
     }
 
@@ -176,19 +176,19 @@ class Type
      */
     public static function boolean($value)
     {
-        return (boolean) $value;
+        return (bool) $value;
     }
 
     /**
      * Get double.
      *
-     * @param double $value
+     * @param float $value
      *
-     * @return  double
+     * @return  float
      */
     public static function double($value)
     {
-        return (double) $value;
+        return (float) $value;
     }
 
     /**
@@ -198,7 +198,6 @@ class Type
      */
     public static function null()
     {
-        return null;
     }
 
     /**

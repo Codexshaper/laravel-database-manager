@@ -43,6 +43,7 @@ class ForeignKey
         if (isset($localTable)) {
             $doctrineForeignKey->setLocalTable($localTable);
         }
+
         return $doctrineForeignKey;
     }
 
@@ -57,9 +58,9 @@ class ForeignKey
      */
     public static function createName($columns, $type, $table = null)
     {
-        $table = isset($table) ? trim($table) . '_' : '';
+        $table = isset($table) ? trim($table).'_' : '';
         $type = trim($type);
-        $name = strtolower($table . implode('_', $columns) . '_' . $type);
+        $name = strtolower($table.implode('_', $columns).'_'.$type);
 
         return str_replace(['-', '.'], '_', $name);
     }
@@ -75,7 +76,7 @@ class ForeignKey
     {
         $table = trim($table);
 
-        if (!static::tableExists($table)) {
+        if (! static::tableExists($table)) {
             throw SchemaException::tableDoesNotExist($table);
         }
 

@@ -17,11 +17,11 @@ trait IndexTrait
 
         if ($index->isText()) {
             $type = 'TEXT';
-        } else if ($index->is2dSphere()) {
+        } elseif ($index->is2dSphere()) {
             $type = '2DSPARSE';
-        } else if ($index->isTtl()) {
+        } elseif ($index->isTtl()) {
             $type = 'TTL';
-        } else if ($index->isGeoHaystack()) {
+        } elseif ($index->isGeoHaystack()) {
             $type = 'GEOHAYSTACK';
         }
 
@@ -73,11 +73,12 @@ trait IndexTrait
 
         if ($type == 'asc') {
             return 'ASC';
-        } else if ($type == 'index') {
+        } elseif ($type == 'index') {
             return 'INDEX';
-        } else if ($type == 'desc') {
+        } elseif ($type == 'desc') {
             return 'DESC';
         }
+
         return '';
     }
 
@@ -88,7 +89,7 @@ trait IndexTrait
      */
     protected static function checkUnique(IndexInfo $index)
     {
-        return $index->isUnique() && !$index->isSparse() && !static::checkDescending($index) ? true : false;
+        return $index->isUnique() && ! $index->isSparse() && ! static::checkDescending($index) ? true : false;
     }
 
     /**
@@ -98,7 +99,7 @@ trait IndexTrait
      */
     protected static function checkUniqueDesc(IndexInfo $index)
     {
-        return $index->isUnique() && !$index->isSparse() && static::checkDescending($index) ? true : false;
+        return $index->isUnique() && ! $index->isSparse() && static::checkDescending($index) ? true : false;
     }
 
     /**
@@ -108,7 +109,7 @@ trait IndexTrait
      */
     protected static function checkSparse(IndexInfo $index)
     {
-        return $index->isSparse() && !static::checkDescending($index) ? true : false;
+        return $index->isSparse() && ! static::checkDescending($index) ? true : false;
     }
 
     /**
@@ -118,7 +119,7 @@ trait IndexTrait
      */
     protected static function checkSparseUnique(IndexInfo $index)
     {
-        return $index->isSparse() && $index->isUnique() && !static::checkDescending($index) ? true : false;
+        return $index->isSparse() && $index->isUnique() && ! static::checkDescending($index) ? true : false;
     }
 
     /**
@@ -155,6 +156,7 @@ trait IndexTrait
                 return true;
             }
         }
+
         return false;
     }
 }

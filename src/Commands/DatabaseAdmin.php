@@ -1,4 +1,5 @@
 <?php
+
 namespace CodexShaper\DBM\Commands;
 
 use CodexShaper\DBM\Facades\Manager;
@@ -41,9 +42,10 @@ class DatabaseAdmin extends Command
      */
     protected function findComposer()
     {
-        if (file_exists(getcwd() . '/composer.phar')) {
-            return '"' . PHP_BINARY . '" ' . getcwd() . '/composer.phar';
+        if (file_exists(getcwd().'/composer.phar')) {
+            return '"'.PHP_BINARY.'" '.getcwd().'/composer.phar';
         }
+
         return 'composer';
     }
 
@@ -63,7 +65,7 @@ class DatabaseAdmin extends Command
 
         if ($this->argument('action') == 'drop') {
             $permissions = [];
-            $successMessage = "Admin Deleted successfully";
+            $successMessage = 'Admin Deleted successfully';
         }
 
         $permissions = [];

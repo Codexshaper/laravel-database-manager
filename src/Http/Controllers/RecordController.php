@@ -32,7 +32,6 @@ class RecordController extends Controller
     public function store(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('record.create')) !== true) {
                 return $response;
             }
@@ -49,19 +48,18 @@ class RecordController extends Controller
 
             $object = DBM::Object()->where('name', $tableName)->first();
 
-            if (is_string($object->model) && !class_exists($object->model)) {
-                return $this->generateError(["Model not found. Please create model first"]);
+            if (is_string($object->model) && ! class_exists($object->model)) {
+                return $this->generateError(['Model not found. Please create model first']);
             }
 
             try {
-
                 $table = $this->processStoreData($request, $object);
 
                 if ($table->save()) {
                     $this->storeRelationshipData($fields, $columns, $object, $table);
+
                     return response()->json(['success' => true]);
                 }
-
             } catch (\Exception $e) {
                 return $this->generateError([$e->getMessage()]);
             }
@@ -87,12 +85,11 @@ class RecordController extends Controller
 
         foreach ($columns as $column => $value) {
             if (in_array($column, $originalColumns)) {
-
                 if ($request->hasFile($column)) {
                     $value = $this->saveFiles($request, $column, $request->table);
                 }
 
-                if (!Driver::isMongoDB()) {
+                if (! Driver::isMongoDB()) {
                     if ($functionName = $this->hasFunction($fields, $column)) {
                         $value = $this->executeFunction($functionName, $value);
                     }
@@ -113,7 +110,6 @@ class RecordController extends Controller
     public function update(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('record.update')) !== true) {
                 return $response;
             }
@@ -130,16 +126,18 @@ class RecordController extends Controller
 
             $object = DBM::Object()->where('name', $tableName)->first();
 
-            if (is_string($object->model) && !class_exists($object->model)) {
-                return $this->generateError(["Model not found. Please create model first"]);
+            if (is_string($object->model) && ! class_exists($object->model)) {
+                return $this->generateError(['Model not found. Please create model first']);
             }
 
             try {
                 $table = $this->processUpdateData($request, $object);
                 if ($table->update()) {
                     $this->updateRelationshipData($fields, $columns, $object, $table);
+
                     return response()->json(['success' => true]);
                 }
+
                 return response()->json(['success' => true]);
             } catch (\Exception $e) {
                 return $this->generateError([$e->getMessage()]);
@@ -167,16 +165,13 @@ class RecordController extends Controller
         $table = DBM::model($object->model, $request->table)->where($key, $columns->{$key})->first();
 
         foreach ($columns as $column => $value) {
-
             if (in_array($column, $originalColumns)) {
-
                 if ($request->hasFile($column)) {
                     $value = $this->saveFiles($request, $column, $request->table);
                 }
 
-                if ($value !== null && $value !== "") {
-
-                    if (!Driver::isMongoDB()) {
+                if ($value !== null && $value !== '') {
+                    if (! Driver::isMongoDB()) {
                         if ($functionName = $this->hasFunction($fields, $column)) {
                             $value = $this->executeFunction($functionName, $value);
                         }
@@ -188,7 +183,6 @@ class RecordController extends Controller
         }
 
         return $table;
-
     }
 
     /**
@@ -199,7 +193,6 @@ class RecordController extends Controller
     public function delete(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('record.delete')) !== true) {
                 return $response;
             }
@@ -213,8 +206,8 @@ class RecordController extends Controller
             $details = $object->details;
             $key = $details['findColumn'];
 
-            if (is_string($model) && !class_exists($model)) {
-                return $this->generateError(["Model not found. Please create model first"]);
+            if (is_string($model) && ! class_exists($model)) {
+                return $this->generateError(['Model not found. Please create model first']);
             }
 
             try {
@@ -230,7 +223,6 @@ class RecordController extends Controller
                         return response()->json(['success' => true]);
                     }
                 }
-
             } catch (\Exception $e) {
                 return $this->generateError([$e->getMessage()]);
             }
@@ -247,7 +239,6 @@ class RecordController extends Controller
     public function getTableDetails(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('record.browse')) !== true) {
                 return $response;
             }
@@ -255,10 +246,10 @@ class RecordController extends Controller
             $tableName = $request->table;
             $object = DBM::Object()->where('name', $tableName)->first();
 
-            if (!$object) {
+            if (! $object) {
                 return response()->json([
                     'success' => false,
-                    'errors' => ["There is no Object details"],
+                    'errors' => ['There is no Object details'],
                 ], 400);
             }
 
@@ -274,8 +265,8 @@ class RecordController extends Controller
 
             $model = $object->model;
 
-            if (!class_exists($model)) {
-                return $this->generateError(["Model not found. Please create model first"]);
+            if (! class_exists($model)) {
+                return $this->generateError(['Model not found. Please create model first']);
             }
 
             $perPage = (int) $request->perPage;
@@ -283,9 +274,9 @@ class RecordController extends Controller
             $searchColumn = $object->details['searchColumn'];
             $records = DBM::model($model, $tableName)->paginate($perPage);
 
-            if (!empty($query) && !empty($searchColumn)) {
+            if (! empty($query) && ! empty($searchColumn)) {
                 $records = DBM::model($model, $tableName)
-                    ->where($searchColumn, 'LIKE', '%' . $query . '%')
+                    ->where($searchColumn, 'LIKE', '%'.$query.'%')
                     ->paginate($perPage);
             }
 

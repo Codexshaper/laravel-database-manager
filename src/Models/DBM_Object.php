@@ -3,7 +3,6 @@
 namespace CodexShaper\DBM\Models;
 
 use CodexShaper\DBM\Contracts\Relationships as RelationshipContract;
-use CodexShaper\DBM\Models\DBM_Field;
 use CodexShaper\DBM\Traits\Relationships;
 use Illuminate\Database\Eloquent\Model;
 
@@ -92,5 +91,4 @@ class DBM_Object extends Model implements RelationshipContract
     {
         return $this->fields()->where('delete', 1)->orderBy($order_by, $direction)->get();
     }
-
 }

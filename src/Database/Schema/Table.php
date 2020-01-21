@@ -2,10 +2,6 @@
 
 namespace CodexShaper\DBM\Database\Schema;
 
-use CodexShaper\DBM\Database\Schema\Column;
-use CodexShaper\DBM\Database\Schema\ForeignKey;
-use CodexShaper\DBM\Database\Schema\Index;
-use CodexShaper\DBM\Database\Schema\UpdateManager;
 use CodexShaper\DBM\Database\Types\Type;
 use CodexShaper\DBM\Facades\Driver;
 use CodexShaper\DBM\Facades\MongoDB;
@@ -28,6 +24,7 @@ class Table
         if (Driver::isMongoDB()) {
             return MongoDB::getCollectionNames();
         }
+
         return SchemaManager::getInstance()->listTableNames();
     }
 
@@ -90,7 +87,7 @@ class Table
      */
     public static function create($table)
     {
-        if (!is_array($table)) {
+        if (! is_array($table)) {
             $table = json_decode($table, true);
         }
 
@@ -114,7 +111,7 @@ class Table
      */
     public static function update($table)
     {
-        if (!is_array($table)) {
+        if (! is_array($table)) {
             $table = json_decode($table, true);
         }
 
@@ -150,18 +147,17 @@ class Table
      */
     public static function prepareTable($table)
     {
-
-        if (!is_array($table)) {
+        if (! is_array($table)) {
             $table = json_decode($table, true);
         }
 
         Type::registerCustomTypes();
 
-        $conn = 'database.connections.' . config('database.default');
+        $conn = 'database.connections.'.config('database.default');
 
-        $table['options']['collate'] = $table['options']['collation'] ?? config($conn . '.collation', 'utf8mb4_unicode_ci');
+        $table['options']['collate'] = $table['options']['collation'] ?? config($conn.'.collation', 'utf8mb4_unicode_ci');
         if (Driver::isMysql()) {
-            $table['options']['charset'] = $table['options']['charset'] ?? config($conn . '.charset', 'utf8mb4');
+            $table['options']['charset'] = $table['options']['charset'] ?? config($conn.'.charset', 'utf8mb4');
         }
 
         $tableName = $table['name'];
@@ -186,7 +182,6 @@ class Table
         // Make Doctrain Foreign Keys
         $DoctrineForeignKeys = [];
         foreach ($foreignKeys as $foreignKey) {
-
             $DoctrineForeignKey = ForeignKey::create($foreignKey);
 
             $DoctrineForeignKeys[$DoctrineForeignKey->getName()] = $DoctrineForeignKey;
@@ -210,7 +205,7 @@ class Table
         foreach ($table->getColumns() as $column) {
             $columns[] = (object) array_merge(
                 Column::toArray($column),
-                array('order' => $order)
+                ['order' => $order]
             );
             $order++;
         }
@@ -230,7 +225,7 @@ class Table
         foreach ($table->getIndexes() as $index) {
             $indexes[] = (object) array_merge(
                 Index::toArray($index),
-                array('table' => $table->getName())
+                ['table' => $table->getName()]
             );
         }
 
@@ -258,7 +253,7 @@ class Table
      *
      * @param string $tableName
      *
-     * @return boolean
+     * @return bool
      */
     public static function exists($tableName)
     {
@@ -266,7 +261,7 @@ class Table
             return MongoDB::hasCollection($tableName);
         }
 
-        if (!SchemaManager::getInstance()->tablesExist($tableName)) {
+        if (! SchemaManager::getInstance()->tablesExist($tableName)) {
             throw SchemaException::tableDoesNotExist($tableName);
         }
 
@@ -283,19 +278,18 @@ class Table
      *
      * @return \Illuminate\Pagination\LengthAwarePaginator
      */
-    public static function paginate($perPage = 15, $page = null, $options = [], $query = "")
+    public static function paginate($perPage = 15, $page = null, $options = [], $query = '')
     {
         $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
         $options['path'] = Paginator::resolveCurrentPath();
         $items = static::all();
         $collection = $items instanceof Collection ? $items : Collection::make($items);
-        if (!empty($query)) {
+        if (! empty($query)) {
             $collection = $collection->filter(function ($value, $key) use ($query) {
                 return false !== stristr($value, $query);
             });
         }
 
         return new LengthAwarePaginator($collection->forPage($page, $perPage), $collection->count(), $perPage, $page, $options);
-
     }
 }
