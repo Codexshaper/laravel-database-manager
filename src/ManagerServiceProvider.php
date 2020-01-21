@@ -21,7 +21,6 @@ use Illuminate\Support\ServiceProvider;
 
 class ManagerServiceProvider extends ServiceProvider
 {
-
     /**
      * Boot the service provider.
      *
@@ -29,8 +28,8 @@ class ManagerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'dbm');
+        $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'dbm');
     }
 
     /**
@@ -45,23 +44,23 @@ class ManagerServiceProvider extends ServiceProvider
         $this->app->bind(Dumper::class, function ($app) use ($database) {
             $connection = $database['default'];
             $options = [
-                "host" => $database["connections"][$connection]["host"] ?? '',
-                "port" => $database["connections"][$connection]["port"] ?? 3306,
-                "dbName" => $database["connections"][$connection]["database"] ?? '',
-                "username" => $database["connections"][$connection]["username"] ?? 'root',
-                "password" => $database["connections"][$connection]["password"] ?? '',
+                'host' => $database['connections'][$connection]['host'] ?? '',
+                'port' => $database['connections'][$connection]['port'] ?? 3306,
+                'dbName' => $database['connections'][$connection]['database'] ?? '',
+                'username' => $database['connections'][$connection]['username'] ?? 'root',
+                'password' => $database['connections'][$connection]['password'] ?? '',
             ];
             switch ($connection) {
-                case "mysql":
+                case 'mysql':
                     return new MysqlDumper($options);
                     break;
-                case "sqlite":
+                case 'sqlite':
                     return new SqliteDumper($options);
                     break;
-                case "pgsql":
+                case 'pgsql':
                     return new PgsqlDumper($options);
                     break;
-                case "mongodb":
+                case 'mongodb':
                     return new MongoDumper($options);
                     break;
             }
@@ -87,7 +86,7 @@ class ManagerServiceProvider extends ServiceProvider
         }
 
         $this->mergeConfigFrom(
-            __DIR__ . '/../config/dbm.php', 'config'
+            __DIR__.'/../config/dbm.php', 'config'
         );
         $this->loadHelpers();
         $this->registerPublish();
@@ -101,7 +100,7 @@ class ManagerServiceProvider extends ServiceProvider
      */
     protected function loadHelpers()
     {
-        foreach (glob(__DIR__ . '/Helpers/*.php') as $filename) {
+        foreach (glob(__DIR__.'/Helpers/*.php') as $filename) {
             require_once $filename;
         }
     }
@@ -115,16 +114,16 @@ class ManagerServiceProvider extends ServiceProvider
     {
         $publishable = [
             'dbm.config' => [
-                __DIR__ . '/../config/dbm.php' => config_path('dbm.php'),
+                __DIR__.'/../config/dbm.php' => config_path('dbm.php'),
             ],
             'dbm.seeds' => [
-                __DIR__ . "/../database/seeds/" => database_path('seeds'),
+                __DIR__.'/../database/seeds/' => database_path('seeds'),
             ],
             'dbm.views' => [
-                __DIR__ . '/../resources/views' => resource_path('views/vendor/dbm/views'),
+                __DIR__.'/../resources/views' => resource_path('views/vendor/dbm/views'),
             ],
             'dbm.resources' => [
-                __DIR__ . '/../resources' => resource_path('views/vendor/dbm'),
+                __DIR__.'/../resources' => resource_path('views/vendor/dbm'),
             ],
         ];
 

@@ -2,7 +2,6 @@
 
 namespace CodexShaper\DBM\Http\Controllers;
 
-use CodexShaper\DBM\Facades\Manager as DBM;
 use CodexShaper\DBM\Models\MenuItem;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
@@ -18,6 +17,7 @@ class MenuController extends Controller
     {
         return view('dbm::admin');
     }
+
     /**
      * Login User for API.
      *
@@ -32,18 +32,18 @@ class MenuController extends Controller
                 ->whereNull('parent_id')
                 ->orderBy('order', 'asc')
                 ->get();
+
             return response()->json([
                 'success' => true,
                 'menus' => $menus,
             ]);
-
         } catch (\Exception $e) {
             $this->generateError([$e->getMessage()]);
         }
         // }
         // return response()->json(["success" => false, "error" => "Unauthorised"], 401);
-
     }
+
     /**
      * Validate Credentials.
      *
@@ -64,11 +64,13 @@ class MenuController extends Controller
             foreach ($validator->errors()->all() as $error) {
                 $errors[] = $error;
             }
+
             return $this->generateError($errors);
         }
 
         return true;
     }
+
     /**
      * Generate errors and return response.
      *

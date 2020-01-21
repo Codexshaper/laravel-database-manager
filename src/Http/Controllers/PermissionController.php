@@ -16,6 +16,7 @@ class PermissionController extends Controller
     {
         return view('dbm::app');
     }
+
     /**
      * Get all users with permissions.
      *
@@ -24,13 +25,11 @@ class PermissionController extends Controller
     public function all(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('permission.browse')) !== true) {
                 return $response;
             }
 
-            try
-            {
+            try {
                 $users = $this->getUsers($request);
 
                 $privileges = DBM::Permission()->all();
@@ -49,19 +48,17 @@ class PermissionController extends Controller
                     'permissions' => $permissions,
                     'pagination' => $users,
                 ]);
-
             } catch (\Exception $e) {
                 return response()->json([
                     'success' => false,
                     'errors' => [$e->getMessage()],
                 ], 200);
             }
-
         }
 
         return response()->json(['success' => false]);
-
     }
+
     /**
      * get Permission Users.
      *
@@ -78,9 +75,9 @@ class PermissionController extends Controller
         $query = $request->q;
         $users = DBM::model($user_model, $user_table)->paginate($perPage);
 
-        if (!empty($query)) {
+        if (! empty($query)) {
             $users = DBM::model($user_model, $user_table)
-                ->where('name', 'LIKE', '%' . $query . '%')
+                ->where('name', 'LIKE', '%'.$query.'%')
                 ->paginate($perPage);
         }
 
@@ -95,11 +92,13 @@ class PermissionController extends Controller
                 )
                 ->belongs_to_many;
             $user->display_name = $user_display_name;
+
             return $user;
         });
 
         return $users;
     }
+
     /**
      * Assign Permissions to User.
      *
@@ -108,7 +107,6 @@ class PermissionController extends Controller
     public function assignUserPermissions(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('permission.create')) !== true) {
                 return $response;
             }
@@ -123,6 +121,7 @@ class PermissionController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Update User Permissions.
      *
@@ -131,7 +130,6 @@ class PermissionController extends Controller
     public function syncUserPermissions(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('permission.update')) !== true) {
                 return $response;
             }
@@ -146,6 +144,7 @@ class PermissionController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Delete User Permissions.
      *
@@ -154,7 +153,6 @@ class PermissionController extends Controller
     public function deleteUserPermissions(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('permission.delete')) !== true) {
                 return $response;
             }
@@ -168,6 +166,7 @@ class PermissionController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Get User Relation.
      *
@@ -185,6 +184,7 @@ class PermissionController extends Controller
         $localModel = DBM::model($user_model, $user_table)
             ->where($user_local_key, $user->{$user_local_key})
             ->first();
+
         return DBM::Object()
             ->setManyToManyRelation(
                 $localModel,
@@ -195,5 +195,4 @@ class PermissionController extends Controller
             )
             ->belongs_to_many();
     }
-
 }

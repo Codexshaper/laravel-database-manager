@@ -9,7 +9,7 @@ class NumericType extends DoctrineDecimalType
     const NAME = 'numeric';
 
     /**
-     * Register numeric type
+     * Register numeric type.
      *
      * @return string.
      */

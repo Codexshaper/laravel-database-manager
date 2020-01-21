@@ -21,6 +21,7 @@ class DatabaseController extends Controller
     {
         return view('dbm::app');
     }
+
     /**
      * Create CRUD.
      *
@@ -29,15 +30,13 @@ class DatabaseController extends Controller
     public function create(Request $request)
     {
         if ($request->ajax()) {
-
             $table = json_decode($request->table, true);
 
             if (($response = DBM::authorize('database.create')) !== true) {
                 return $response;
             }
 
-            try
-            {
+            try {
                 Table::create($request->table);
 
                 if (Driver::isMongoDB()) {
@@ -61,6 +60,7 @@ class DatabaseController extends Controller
                         $collection_field->save();
                     }
                 }
+
                 return response()->json(['success' => true]);
             } catch (\Exception $e) {
                 return response()->json([
@@ -72,6 +72,7 @@ class DatabaseController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Update MongoDB Collection.
      *
@@ -99,14 +100,11 @@ class DatabaseController extends Controller
         }
 
         if ($collection) {
-
             $id = $collection->_id;
-            $fieldNames = (!empty($collection->fields)) ? $collection->fields->pluck('old_name')->toArray() : [];
+            $fieldNames = (! empty($collection->fields)) ? $collection->fields->pluck('old_name')->toArray() : [];
 
             foreach ($columns as $column) {
-
                 if (in_array($column['oldName'], $fieldNames)) {
-
                     $collection_field = CollectionField::where([
                         'dbm_collection_id' => $collection->_id,
                         'old_name' => $column['oldName'],
@@ -118,7 +116,6 @@ class DatabaseController extends Controller
                     $collection_field->update();
                     $fieldNames = array_values(array_diff($fieldNames, [$column['oldName']]));
                 } else {
-
                     $collection_field = new CollectionField;
 
                     $collection_field->dbm_collection_id = $id;
@@ -136,13 +133,13 @@ class DatabaseController extends Controller
                 foreach ($fieldNames as $fieldName) {
                     $field = CollectionField::where([
                         'dbm_collection_id' => $id,
-                        'name' => $fieldName])->first();
+                        'name' => $fieldName, ])->first();
                     $field->delete();
                 }
             }
-
         }
     }
+
     /**
      * Create|Update CRUD Field.
      *
@@ -157,7 +154,6 @@ class DatabaseController extends Controller
         $columnType = $column['type'];
 
         if (in_array($column['oldName'], $fieldNames)) {
-
             $field = DBM::Field()->where([
                 'dbm_object_id' => $object->id,
                 'name' => $column['oldName'],
@@ -172,13 +168,12 @@ class DatabaseController extends Controller
 
             $fieldNames = array_values(array_diff($fieldNames, [$column['oldName']]));
         } else {
-
             if (DBM::Field()->where([
                 'dbm_object_id' => $object->id,
-                'name' => $column['name']])->first()) {
+                'name' => $column['name'], ])->first()) {
                 return response()->json([
                     'success' => false,
-                    'errors' => ["Field name must be unique. " . $column['name'] . " are duplicate"],
+                    'errors' => ['Field name must be unique. '.$column['name'].' are duplicate'],
                 ], 400);
             }
 
@@ -199,6 +194,7 @@ class DatabaseController extends Controller
             $field->save();
         }
     }
+
     /**
      * Update CRUD Fields.
      *
@@ -213,7 +209,6 @@ class DatabaseController extends Controller
         $columns = $table['columns'];
 
         if ($tableName != $newName) {
-
             DBM::Object()->where('slug', Str::slug($tableName))->update([
                 'name' => $newName,
                 'slug' => Str::slug($newName),
@@ -224,21 +219,18 @@ class DatabaseController extends Controller
         }
 
         if ($object = DBM::Object()::where('slug', Str::slug($tableName))->first()) {
-
             $fieldNames = $object->fields->pluck('name')->toArray();
             // $relationshipItems = [];
 
             foreach ($columns as $column) {
-
                 $this->addOrUpdateCrudField($object, $column, $fieldNames);
-
             }
 
             if (count($fieldNames) > 0) {
                 foreach ($fieldNames as $fieldName) {
                     $field = DBM::Field()->where([
                         'dbm_object_id' => $object->id,
-                        'name' => $fieldName])->first();
+                        'name' => $fieldName, ])->first();
                     if ($field->type != 'relationship') {
                         $field->delete();
                     }
@@ -246,6 +238,7 @@ class DatabaseController extends Controller
             }
         }
     }
+
     /**
      * Update Table.
      *
@@ -254,26 +247,23 @@ class DatabaseController extends Controller
     public function update(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('database.update')) !== true) {
                 return $response;
             }
 
             $table = $request->table;
 
-            if (!is_array($table)) {
+            if (! is_array($table)) {
                 $table = json_decode($table, true);
             }
 
             $tableName = $table['oldName'];
 
-            try
-            {
+            try {
                 // Update Template
                 (new \CodexShaper\DBM\Http\Controllers\TemplateController)->updateTemplates($request);
 
                 if (Table::exists($tableName)) {
-
                     if (Driver::isMongoDB()) {
                         $this->updateMongoDbTable($table);
                     }
@@ -286,9 +276,7 @@ class DatabaseController extends Controller
 
                     return response()->json(['success' => true]);
                 }
-
             } catch (\Exception $e) {
-
                 return response()->json([
                     'success' => false,
                     'errors' => [$e->getMessage()],
@@ -297,8 +285,8 @@ class DatabaseController extends Controller
         }
 
         return response()->json(['success' => false]);
-
     }
+
     /**
      * Create Table.
      *
@@ -307,17 +295,14 @@ class DatabaseController extends Controller
     public function delete(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('database.delete')) !== true) {
                 return $response;
             }
 
             $tableName = $request->table;
 
-            try
-            {
+            try {
                 if (Table::exists($tableName)) {
-
                     if (Driver::isMongoDB()) {
                         if ($collection = DBM_Collection::where('name', $tableName)->first()) {
                             $collection->fields()->delete();
@@ -326,7 +311,6 @@ class DatabaseController extends Controller
                     }
 
                     if ($object = DBM::Object()->where('slug', Str::slug($tableName))->first()) {
-
                         $object->fields()->delete();
                         $object->delete();
                     }
@@ -335,9 +319,7 @@ class DatabaseController extends Controller
 
                     return response()->json(['success' => true]);
                 }
-
             } catch (\Exception $e) {
-
                 return response()->json([
                     'success' => false,
                     'errors' => [$e->getMessage()],
@@ -347,6 +329,7 @@ class DatabaseController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Get input type.
      *
@@ -362,8 +345,10 @@ class DatabaseController extends Controller
                 return $type;
             }
         }
+
         return 'text';
     }
+
     /**
      * Input Types.
      *
@@ -447,5 +432,4 @@ class DatabaseController extends Controller
             'search' => [],
         ];
     }
-
 }

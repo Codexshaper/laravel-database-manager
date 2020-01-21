@@ -25,7 +25,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
     protected $columns = [];
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __construct(Connection $connection, $collection)
     {
@@ -35,7 +35,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function index($columns = null, $name = null, $algorithm = null, $options = [])
     {
@@ -63,7 +63,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function primary($columns = null, $name = null, $algorithm = null, $options = [])
     {
@@ -71,7 +71,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function dropIndex($indexOrColumns = null)
     {
@@ -93,6 +93,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
         if ($this->hasIndex($indexOrColumns)) {
             $this->dropIndex($indexOrColumns);
         }
+
         return $this;
     }
 
@@ -114,6 +115,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
                 return true;
             }
         }
+
         return false;
     }
 
@@ -130,16 +132,17 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
             $transform = [];
 
             foreach ($indexOrColumns as $column) {
-                $transform[$column] = $column . '_1';
+                $transform[$column] = $column.'_1';
             }
 
             $indexOrColumns = implode('_', $transform);
         }
+
         return $indexOrColumns;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function unique($columns = null, $name = null, $algorithm = null, $options = [])
     {
@@ -224,7 +227,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function create()
     {
@@ -237,7 +240,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function drop()
     {
@@ -245,7 +248,7 @@ class Blueprint extends \Illuminate\Database\Schema\Blueprint
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function addColumn($type, $name, array $parameters = [])
     {

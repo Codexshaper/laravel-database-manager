@@ -2,7 +2,6 @@
 
 namespace CodexShaper\DBM\Database\Schema;
 
-use CodexShaper\DBM\Database\Schema\Table;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Schema\Table as DoctrineTable;
@@ -23,13 +22,13 @@ class UpdateManager
      */
     public function update($table)
     {
-        if (!is_array($table)) {
+        if (! is_array($table)) {
             $table = json_decode($table, true);
         }
 
         $tableName = $table['oldName'];
 
-        if (!SchemaManager::getInstance()->tablesExist($tableName)) {
+        if (! SchemaManager::getInstance()->tablesExist($tableName)) {
             throw SchemaException::tableDoesNotExist($table['oldName']);
         }
 
@@ -39,6 +38,7 @@ class UpdateManager
 
         $this->updateTable();
     }
+
     /**
      * Get all table details.
      *
@@ -59,6 +59,7 @@ class UpdateManager
 
         return new DoctrineTable($tableName, $columns, $indexes, $foreignKeys, false, []);
     }
+
     /**
      * Update table.
      *
@@ -83,7 +84,7 @@ class UpdateManager
 
         // Add new table name to tableDiff
         if ($newTableName) {
-            if (!$tableDiff) {
+            if (! $tableDiff) {
                 $tableDiff = new TableDiff($this->data['oldName']);
                 $tableDiff->fromTable = $this->originalTable;
             }
@@ -96,6 +97,7 @@ class UpdateManager
             SchemaManager::getInstance()->alterTable($tableDiff);
         }
     }
+
     /**
      * Rename columns.
      *

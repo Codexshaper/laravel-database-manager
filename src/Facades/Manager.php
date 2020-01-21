@@ -1,4 +1,5 @@
 <?php
+
 namespace CodexShaper\DBM\Facades;
 
 use CodexShaper\DBM\Manager as DatabaseManager;

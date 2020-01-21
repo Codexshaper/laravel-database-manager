@@ -44,6 +44,7 @@ class Type
     {
         return new Binary($value, $type);
     }
+
     /**
      * Get decimal.
      *
@@ -53,6 +54,7 @@ class Type
     {
         return new Decimal($value);
     }
+
     /**
      * Get javascript.
      *
@@ -62,6 +64,7 @@ class Type
     {
         return new Javascript($code, $scope);
     }
+
     /**
      * Get max key.
      *
@@ -71,6 +74,7 @@ class Type
     {
         return new MaxKey();
     }
+
     /**
      * Get min key.
      *
@@ -80,6 +84,7 @@ class Type
     {
         return new MinKey();
     }
+
     /**
      * Get ObjectId.
      *
@@ -89,15 +94,17 @@ class Type
     {
         return new ObjectId($value);
     }
+
     /**
      * Get regular expression.
      *
      * @return  \MongoDB\BSON\Regex
      */
-    public static function regex(string $pattern, string $flags = "")
+    public static function regex(string $pattern, string $flags = '')
     {
         return new Regex($pattern, $flags);
     }
+
     /**
      * Get timestamp.
      *
@@ -107,6 +114,7 @@ class Type
     {
         return new Timestamp($increment, $timestamp);
     }
+
     /**
      * Get datetime.
      *
@@ -116,12 +124,13 @@ class Type
      */
     public static function dateTime($milliseconds = null)
     {
-        if (!is_int($milliseconds) || !is_float($milliseconds) || !is_string($milliseconds) || !$milliseconds instanceof \DateTimeInterface) {
-            throw new \Exception($milliseconds . " integer or float or string or instance of DateTimeInterface");
-
+        if (! is_int($milliseconds) || ! is_float($milliseconds) || ! is_string($milliseconds) || ! $milliseconds instanceof \DateTimeInterface) {
+            throw new \Exception($milliseconds.' integer or float or string or instance of DateTimeInterface');
         }
+
         return new UTCDateTime($milliseconds);
     }
+
     /**
      * Get string.
      *
@@ -133,6 +142,7 @@ class Type
     {
         return (string) $value;
     }
+
     /**
      * Get array.
      *
@@ -144,6 +154,7 @@ class Type
     {
         return (array) $value;
     }
+
     /**
      * Get object.
      *
@@ -155,6 +166,7 @@ class Type
     {
         return (object) $value;
     }
+
     /**
      * Get boolean.
      *
@@ -164,19 +176,21 @@ class Type
      */
     public static function boolean($value)
     {
-        return (boolean) $value;
+        return (bool) $value;
     }
+
     /**
      * Get double.
      *
-     * @param double $value
+     * @param float $value
      *
-     * @return  double
+     * @return  float
      */
     public static function double($value)
     {
-        return (double) $value;
+        return (float) $value;
     }
+
     /**
      * Get null.
      *
@@ -184,8 +198,8 @@ class Type
      */
     public static function null()
     {
-        return null;
     }
+
     /**
      * Get integer.
      *
@@ -197,6 +211,7 @@ class Type
     {
         return (int) $value;
     }
+
     /**
      * Get long integer.
      *
@@ -208,6 +223,7 @@ class Type
     {
         return (int) $value;
     }
+
     /**
      * Get types.
      *

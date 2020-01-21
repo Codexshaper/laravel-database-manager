@@ -71,7 +71,7 @@ class Token extends Model
     {
         $provider = config('auth.guards.api.provider');
 
-        return $this->belongsTo(config('auth.providers.' . $provider . '.model'));
+        return $this->belongsTo(config('auth.providers.'.$provider.'.model'));
     }
 
     /**
@@ -95,7 +95,7 @@ class Token extends Model
      */
     public function cant($scope)
     {
-        return !$this->can($scope);
+        return ! $this->can($scope);
     }
 
     /**

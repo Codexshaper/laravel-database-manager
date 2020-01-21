@@ -4,7 +4,6 @@ namespace CodexShaper\DBM\Traits;
 
 use CodexShaper\DBM\Database\Drivers\MongoDB\Type;
 use CodexShaper\DBM\Facades\Driver;
-use CodexShaper\DBM\Facades\Manager as DBM;
 use CodexShaper\DBM\Models\DBM_Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -43,52 +42,52 @@ trait RecordTrait
         $files = $request->file($column);
         $values = [];
         foreach ($files as $file) {
-            $fileName = Str::random(config('dbm.filesystem.random_length')) . '.' . $file->getClientOriginalExtension();
-            $path = trim(config('dbm.filesystem.dir'), '/') . DIRECTORY_SEPARATOR . $tableName;
+            $fileName = Str::random(config('dbm.filesystem.random_length')).'.'.$file->getClientOriginalExtension();
+            $path = trim(config('dbm.filesystem.dir'), '/').DIRECTORY_SEPARATOR.$tableName;
             $file->storeAs($path, $fileName);
             $values[] = $fileName;
         }
 
         if (count($values) > 1) {
             $value = $values;
-            if (!Driver::isMongoDB()) {
+            if (! Driver::isMongoDB()) {
                 $value = json_encode($values);
             }
-        } else if (count($values) == 1) {
+        } elseif (count($values) == 1) {
             $value = $values[0];
         }
 
         return $value;
     }
+
     /**
      * Prepare fields to store.
      *
-     * @param array|string|int|double|bool $request
+     * @param array|string|int|float|bool $request
      * @param string $tableName
      * @param string $column
      *
-     * @return array|string|int|double|bool
+     * @return array|string|int|float|bool
      */
     public function prepareStoreField($value, $tableName, $column)
     {
         $value = is_array($value) ? json_encode($value) : $value;
 
         if (Driver::isMongoDB()) {
-
             $fieldType = $this->getFieldType($tableName, $column);
 
-            if (!in_array($fieldType, Type::getTypes())) {
-                $this->generateError([$fieldType . " type not supported."]);
+            if (! in_array($fieldType, Type::getTypes())) {
+                $this->generateError([$fieldType.' type not supported.']);
             }
 
             if ($fieldType != 'timestamp') {
                 $value = Type::$fieldType($value);
             }
-
         }
 
         return $value;
     }
+
     /**
      * Prepare record fields.
      *
@@ -99,9 +98,7 @@ trait RecordTrait
     public function prepareRecordFields($fields)
     {
         foreach ($fields as $key => $field) {
-
             if ($field->type == 'relationship') {
-
                 $relationship = $field->settings;
                 $foreignModel = $relationship['foreignModel'];
                 $foreignKey = $relationship['foreignKey'];
@@ -121,6 +118,7 @@ trait RecordTrait
 
         return $fields;
     }
+
     /**
      * Remove field when belongs_to relation.
      *
@@ -143,6 +141,7 @@ trait RecordTrait
 
         return $results;
     }
+
     /**
      * Prepare Record Details.
      *
@@ -159,11 +158,8 @@ trait RecordTrait
         $newRecord = new \stdClass();
 
         foreach ($records as $item => $record) {
-
             foreach ($fields as $key => &$field) {
-
                 if (isset($record->{$field->name})) {
-
                     $record->{$field->name} = is_json($record->{$field->name}) ? json_decode($record->{$field->name}, true) : $record->{$field->name};
                 }
             }
@@ -176,10 +172,11 @@ trait RecordTrait
         }
 
         return [
-            "records" => $newRecords,
-            "record" => $newRecord,
+            'records' => $newRecords,
+            'record' => $newRecord,
         ];
     }
+
     /**
      * Get options for Dropdown, Selectbox, Radio button and other fields via controller.
      *
@@ -198,6 +195,7 @@ trait RecordTrait
             return app($controllerName)->{$methodName}();
         }
     }
+
     /**
      * Check validation and return errors if fails.
      *
@@ -207,14 +205,13 @@ trait RecordTrait
      *
      * @return array
      */
-    public function validation($fields, $columns, $action = "create")
+    public function validation($fields, $columns, $action = 'create')
     {
         $errors = [];
         foreach ($fields as $field) {
             $name = $field->name;
 
             if (is_object($field->settings) && property_exists($field->settings, 'validation') !== false) {
-
                 $validationSettings = $field->settings->validation;
                 $rules = $this->prepareRules($columns, $action, $validationSettings);
                 $data = [$name => $columns->{$name}];
@@ -229,6 +226,7 @@ trait RecordTrait
 
         return $errors;
     }
+
     /**
      * Prepare validation rules.
      *
@@ -244,20 +242,21 @@ trait RecordTrait
 
         if (is_string($settings)) {
             $rules = $settings;
-        } else if ($action == 'create' && isset($settings->create)) {
+        } elseif ($action == 'create' && isset($settings->create)) {
             $createSettings = $settings->create;
             $rules = $createSettings->rules;
-        } else if ($action == 'update' && isset($settings->update)) {
+        } elseif ($action == 'update' && isset($settings->update)) {
             $updateSettings = $settings->update;
             $rules = $updateSettings->rules;
             if (isset($updateSettings->localKey)) {
                 $localKey = $updateSettings->localKey;
-                $rules = $updateSettings->rules . ',' . $columns->{$localKey};
+                $rules = $updateSettings->rules.','.$columns->{$localKey};
             }
         }
 
         return $rules;
     }
+
     /**
      * Get field name.
      *
@@ -272,6 +271,7 @@ trait RecordTrait
 
         return $collection->fields()->where('name', $fieldName)->first()->type;
     }
+
     /**
      * Generate errors and return response.
      *
@@ -286,6 +286,7 @@ trait RecordTrait
             'errors' => $errors,
         ], 400);
     }
+
     /**
      * Check Function name is available for MySQL.
      *
@@ -297,25 +298,27 @@ trait RecordTrait
     public function hasFunction($fields, $column)
     {
         foreach ($fields as $field) {
-            if ($field->name == $column && ($field->function_name != null || $field->function_name != "")) {
+            if ($field->name == $column && ($field->function_name != null || $field->function_name != '')) {
                 return $field->function_name;
             }
         }
 
         return false;
     }
+
     /**
      * Execute MySQL Function.
      *
      * @param string $functionName
-     * @param string|int|double|bool|null $column
+     * @param string|int|float|bool|null $column
      *
-     * @return string|int|double|bool
+     * @return string|int|float|bool
      */
     public function executeFunction($functionName, $value = null)
     {
         $signature = ($value != null) ? "{$functionName}('{$value}')" : "{$functionName}()";
         $result = DB::raw("{$signature}");
+
         return $result;
     }
 }

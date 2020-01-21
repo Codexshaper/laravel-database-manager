@@ -1,4 +1,5 @@
 <?php
+
 namespace CodexShaper\DBM\Commands;
 
 use CodexShaper\DBM\Facades\Driver;
@@ -46,12 +47,12 @@ class DatabaseBackup extends Command
         if (file_exists(getcwd().'/composer.phar')) {
             return '"'.PHP_BINARY.'" '.getcwd().'/composer.phar';
         }
+
         return 'composer';
     }
 
     public function getFileName($table, $database)
     {
-
         $prefix = (strlen($table) > 0)
         ? 'table_'.strtolower(str_replace('-', '_', $table)).'_'
         : 'database_'.strtolower(str_replace('-', '_', $database)).'_';
@@ -125,7 +126,7 @@ class DatabaseBackup extends Command
             : '';
             $directoryPath = storage_path('app').$directory.DIRECTORY_SEPARATOR.$driver;
             $filePath = $directoryPath.DIRECTORY_SEPARATOR.$this->getFileName($table, $database);
-  
+
             if (! File::isDirectory($directoryPath)) {
                 File::makeDirectory($directoryPath, 0777, true, true);
             }
@@ -137,12 +138,8 @@ class DatabaseBackup extends Command
             ]);
 
             $this->info('Backup completed');
-
         } catch (\Exception $e) {
-
             throw new \Exception($e->getMessage(), 1);
-
         }
-
     }
 }

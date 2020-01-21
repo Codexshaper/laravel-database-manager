@@ -16,6 +16,7 @@ abstract class Type extends DoctrineType
     {
         return static::NAME;
     }
+
     /**
      * Register Custom type.
      *
@@ -45,6 +46,7 @@ abstract class Type extends DoctrineType
             $platform->registerDoctrineTypeMapping($dbType, $name);
         }
     }
+
     /**
      * Get custom types.
      *
@@ -54,17 +56,18 @@ abstract class Type extends DoctrineType
      */
     protected static function getCustomTypes($platformName)
     {
-        $customPlatformDir = __DIR__ . DIRECTORY_SEPARATOR . $platformName . DIRECTORY_SEPARATOR;
+        $customPlatformDir = __DIR__.DIRECTORY_SEPARATOR.$platformName.DIRECTORY_SEPARATOR;
 
         $customTypes = [];
 
-        foreach (glob($customPlatformDir . '*.php') as $file) {
-            $className = basename($file, ".php");
-            $customTypes[] = __NAMESPACE__ . '\\' . $platformName . '\\' . $className;
+        foreach (glob($customPlatformDir.'*.php') as $file) {
+            $className = basename($file, '.php');
+            $customTypes[] = __NAMESPACE__.'\\'.$platformName.'\\'.$className;
         }
 
         return $customTypes;
     }
+
     /**
      * Get Type categories.
      *
@@ -72,7 +75,6 @@ abstract class Type extends DoctrineType
      */
     public static function getTypeCategories()
     {
-
         return [
             'numbers' => [
                 'boolean',
@@ -187,5 +189,4 @@ abstract class Type extends DoctrineType
     //         }
     //     }
     // }
-
 }

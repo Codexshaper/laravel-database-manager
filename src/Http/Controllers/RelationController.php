@@ -2,7 +2,6 @@
 
 namespace CodexShaper\DBM\Http\Controllers;
 
-use CodexShaper\DBM\Database\Drivers\MongoDB\Type;
 use CodexShaper\DBM\Database\Schema\Table;
 use CodexShaper\DBM\Facades\Driver;
 use CodexShaper\DBM\Facades\Manager as DBM;
@@ -19,7 +18,6 @@ class RelationController extends Controller
     public function get(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('relationship.update')) !== true) {
                 return $response;
             }
@@ -34,6 +32,7 @@ class RelationController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Prepare relationship field.
      *
@@ -44,11 +43,10 @@ class RelationController extends Controller
      */
     public function prepareRelationshipField($fields, $field)
     {
-        $prefix = (Driver::isMongoDB()) ? "_" : "";
+        $prefix = (Driver::isMongoDB()) ? '_' : '';
 
         foreach ($fields as $fld) {
-            if ($fld->id == $field->{$prefix . "id"}) {
-
+            if ($fld->id == $field->{$prefix.'id'}) {
                 $relationship = $fld->settings;
                 $localTable = $relationship['localTable'];
                 $foreignTable = $relationship['foreignTable'];
@@ -63,6 +61,7 @@ class RelationController extends Controller
 
         return $field;
     }
+
     /**
      * Create Relation.
      *
@@ -71,7 +70,6 @@ class RelationController extends Controller
     public function add(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('relationship.create')) !== true) {
                 return $response;
             }
@@ -103,6 +101,7 @@ class RelationController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Check Errors.
      *
@@ -113,18 +112,21 @@ class RelationController extends Controller
         $localModel = $relationship['localModel'];
         $foreignModel = $relationship['foreignModel'];
 
-        if (!class_exists($localModel)) {
+        if (! class_exists($localModel)) {
             $error = "{$localModel} Model not found. Please create the {$localModel} model first";
+
             return $this->generateError([$error]);
         }
 
-        if (!class_exists($foreignModel)) {
+        if (! class_exists($foreignModel)) {
             $error = "{$foreignModel} Model not found. Please create the {$foreignModel} model first";
+
             return $this->generateError([$error]);
         }
 
         return true;
     }
+
     /**
      * Get Field Name.
      *
@@ -140,6 +142,7 @@ class RelationController extends Controller
 
         return strtolower("{$localTable}_{$relationType}_{$foreignTable}_relationship");
     }
+
     /**
      * Prepare Settings.
      *
@@ -163,6 +166,7 @@ class RelationController extends Controller
             'relatedPivotKey' => $relationship['relatedPivotKey'],
         ];
     }
+
     /**
      * Update Relationship.
      *
@@ -171,7 +175,6 @@ class RelationController extends Controller
     public function update(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('relationship.update')) !== true) {
                 return $response;
             }
@@ -194,6 +197,7 @@ class RelationController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Delete Relation.
      *
@@ -202,7 +206,6 @@ class RelationController extends Controller
     public function delete(Request $request)
     {
         if ($request->ajax()) {
-
             if (($response = DBM::authorize('relationship.delete')) !== true) {
                 return $response;
             }
@@ -219,6 +222,7 @@ class RelationController extends Controller
 
         return response()->json(['success' => false]);
     }
+
     /**
      * Get Relation.
      *

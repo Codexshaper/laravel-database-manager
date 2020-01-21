@@ -17,6 +17,7 @@ class SchemaManager
     {
         self::$schemaManager = DB::connection()->getDoctrineSchemaManager();
     }
+
     /**
      * get SchemaManager instance.
      *
@@ -24,7 +25,7 @@ class SchemaManager
      */
     public static function getInstance()
     {
-        if (!self::$schemaManager) {
+        if (! self::$schemaManager) {
             new self();
         }
 

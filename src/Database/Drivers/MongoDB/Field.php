@@ -2,8 +2,6 @@
 
 namespace CodexShaper\DBM\Database\Drivers\MongoDB;
 
-use CodexShaper\DBM\Database\Drivers\MongoDB\Collection;
-
 class Field
 {
     /**

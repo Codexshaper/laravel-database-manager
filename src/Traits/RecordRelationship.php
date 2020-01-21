@@ -2,7 +2,6 @@
 
 namespace CodexShaper\DBM\Traits;
 
-use CodexShaper\DBM\Database\Drivers\MongoDB\Type;
 use CodexShaper\DBM\Facades\Manager as DBM;
 
 trait RecordRelationship
@@ -24,11 +23,8 @@ trait RecordRelationship
     public function prepareRelationshipData($records, $browseFields, $object)
     {
         foreach ($records as $item => $record) {
-
             foreach ($browseFields as $field) {
-
                 if ($field->type == 'relationship') {
-
                     $relationship = $field->settings;
 
                     $findColumn = $object->details['findColumn'];
@@ -41,7 +37,6 @@ trait RecordRelationship
                     $displayLabel = $relationship['displayLabel'];
 
                     if ($relationshipType == 'belongsTo') {
-
                         $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
 
                         $datas = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->belongs_to;
@@ -51,9 +46,7 @@ trait RecordRelationship
                         $field->localKey = $localKey;
                         $field->foreignKey = $foreignKey;
                         $field->relationshipType = $relationshipType;
-
-                    } else if ($relationshipType == 'hasOne') {
-
+                    } elseif ($relationshipType == 'hasOne') {
                         $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
                         $datas = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->has_one;
 
@@ -62,9 +55,7 @@ trait RecordRelationship
                         $field->localKey = $localKey;
                         $field->foreignKey = $foreignKey;
                         $field->relationshipType = $relationshipType;
-
-                    } else if ($relationshipType == 'hasMany') {
-
+                    } elseif ($relationshipType == 'hasMany') {
                         $localObject = $localModel::where($findColumn, $record->{$findColumn})->first();
                         $datas = DBM::Object()->setCommonRelation($localObject, $foreignModel, $foreignKey, $localKey)->has_many;
 
@@ -73,9 +64,7 @@ trait RecordRelationship
                         $field->localKey = $localKey;
                         $field->foreignKey = $foreignKey;
                         $field->relationshipType = $relationshipType;
-
-                    } else if ($relationshipType == 'belongsToMany') {
-
+                    } elseif ($relationshipType == 'belongsToMany') {
                         $pivotTable = $relationship['pivotTable'];
                         $parentPivotKey = $relationship['parentPivotKey'];
                         $relatedPivotKey = $relationship['relatedPivotKey'];
@@ -96,6 +85,7 @@ trait RecordRelationship
 
         return $records;
     }
+
     /**
      * Create new Relationship.
      *
@@ -109,9 +99,7 @@ trait RecordRelationship
     public function storeRelationshipData($fields, $columns, $object, $table)
     {
         foreach ($fields as $field) {
-
-            if (isset($field->relationship) && $field->relationship->relationType == "belongsToMany") {
-
+            if (isset($field->relationship) && $field->relationship->relationType == 'belongsToMany') {
                 $relationship = $field->relationship;
 
                 $localModel = $relationship->localModel;
@@ -138,6 +126,7 @@ trait RecordRelationship
             }
         }
     }
+
     /**
      * Update Relationship.
      *
@@ -151,16 +140,14 @@ trait RecordRelationship
     public function updateRelationshipData($fields, $columns, $object, $table)
     {
         foreach ($fields as $field) {
-
             if (isset($field->relationship)) {
-
                 $relationship = $field->relationship;
 
                 $localModel = $relationship->localModel;
                 $localTable = $relationship->localTable;
                 $foreignModel = $relationship->foreignModel;
 
-                if ($field->relationship->relationType == "belongsToMany") {
+                if ($field->relationship->relationType == 'belongsToMany') {
                     $pivotTable = $relationship->pivotTable;
                     $parentPivotKey = $relationship->parentPivotKey;
                     $relatedPivotKey = $relationship->relatedPivotKey;
@@ -179,10 +166,10 @@ trait RecordRelationship
                         ->belongs_to_many()
                         ->sync($columns->{$relatedPivotKey});
                 }
-
             }
         }
     }
+
     /**
      * Remove Relationship.
      *
@@ -195,7 +182,6 @@ trait RecordRelationship
     public function removeRelationshipData($field, $object, $table)
     {
         if ($field->type == 'relationship') {
-
             $relationship = $field->settings;
 
             $localModel = $relationship->localModel;
@@ -206,7 +192,6 @@ trait RecordRelationship
             $localObject = $localModel::where($findColumn, $table->{$findColumn})->first();
 
             if ($relationship->relationType == 'belongsToMany') {
-
                 $pivotTable = $relationship->pivotTable;
                 $parentPivotKey = $relationship->parentPivotKey;
                 $relatedPivotKey = $relationship->relatedPivotKey;
@@ -221,8 +206,7 @@ trait RecordRelationship
                     )
                     ->belongs_to_many()
                     ->detach();
-            } else if ($relationship->relationType == 'hasMany') {
-
+            } elseif ($relationship->relationType == 'hasMany') {
                 $foreignKey = $relationship->foreignKey;
                 $localKey = $relationship->localKey;
 
@@ -235,7 +219,6 @@ trait RecordRelationship
                     ->has_many()
                     ->delete();
             }
-
         }
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace CodexShaper\DBM\Commands;
 
 use CodexShaper\Dumper\Contracts\Dumper;
@@ -46,6 +47,7 @@ class DatabaseRestore extends Command
         if (file_exists(getcwd().'/composer.phar')) {
             return '"'.PHP_BINARY.'" '.getcwd().'/composer.phar';
         }
+
         return 'composer';
     }
 
@@ -104,11 +106,8 @@ class DatabaseRestore extends Command
                 ->restore();
 
             $this->info('Restored Completed');
-
         } catch (\Exception $e) {
-
             throw new \Exception($e->getMessage(), 1);
-
         }
     }
 }
