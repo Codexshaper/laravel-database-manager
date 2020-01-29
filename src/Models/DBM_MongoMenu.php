@@ -7,7 +7,7 @@ use Jenssegers\Mongodb\Eloquent\Model;
 
 class DBM_MongoMenu extends Model
 {
-	use Relationships;
+    use Relationships;
     //
     protected $collection = 'menus';
 

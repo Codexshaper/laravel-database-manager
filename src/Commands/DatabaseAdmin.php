@@ -1,4 +1,5 @@
 <?php
+
 namespace CodexShaper\DBM\Commands;
 
 use CodexShaper\DBM\Facades\Manager;
@@ -20,8 +21,9 @@ class DatabaseAdmin extends Command
      * @var string
      */
     protected $description = 'Make Database Admin';
+
     /**
-     * Get Option
+     * Get Option.
      *
      * @return array
      */
@@ -39,9 +41,10 @@ class DatabaseAdmin extends Command
      */
     protected function findComposer()
     {
-        if (file_exists(getcwd() . '/composer.phar')) {
-            return '"' . PHP_BINARY . '" ' . getcwd() . '/composer.phar';
+        if (file_exists(getcwd().'/composer.phar')) {
+            return '"'.PHP_BINARY.'" '.getcwd().'/composer.phar';
         }
+
         return 'composer';
     }
 
@@ -54,18 +57,18 @@ class DatabaseAdmin extends Command
      */
     public function handle()
     {
-        $email          = $this->argument('email');
-        $column         = $this->option('column');
-        $permissions    = Manager::Permission()->all();
-        $successMessage = "Admin Created successfully";
+        $email = $this->argument('email');
+        $column = $this->option('column');
+        $permissions = Manager::Permission()->all();
+        $successMessage = 'Admin Created successfully';
 
         if ($this->argument('action') == 'drop') {
-            $permissions    = [];
-            $successMessage = "Admin Deleted successfully";
+            $permissions = [];
+            $successMessage = 'Admin Deleted successfully';
         }
 
-        $userModel   = config('dbm.auth.user.model');
-        $userTable   = config('dbm.auth.user.table');
+        $userModel = config('dbm.auth.user.model');
+        $userTable = config('dbm.auth.user.table');
         $localObject = Manager::model($userModel, $userTable)
             ->where($column, $email)
             ->first();

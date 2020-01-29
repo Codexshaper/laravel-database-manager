@@ -27,7 +27,7 @@ class MenuController extends Controller
     {
         // if ($request->ajax()) {
         try {
-            if($menu = DBM::Menu()->where('slug', 'admin')->first()) {
+            if ($menu = DBM::Menu()->where('slug', 'admin')->first()) {
                 $menus = DBM::MenuItem()::with('childrens')
                     ->where('menu_id', $menu->id)
                     ->whereNull('parent_id')
@@ -39,7 +39,6 @@ class MenuController extends Controller
                     'menus' => $menus,
                 ]);
             }
-            
         } catch (\Exception $e) {
             $this->generateError([$e->getMessage()]);
         }

@@ -135,19 +135,19 @@ class CrudController extends Controller
      */
     public function addMenu($object)
     {
-        $menu = DBM::Menu()::where('slug','admin')->first();
+        $menu = DBM::Menu()::where('slug', 'admin')->first();
 
-        if(! $menu) {
+        if (! $menu) {
             $order = DBM::Menu()::max('order');
             $menu = DBM::Menu();
-            $menu->name = "Admin";
+            $menu->name = 'Admin';
             $menu->slug = Str::slug('Admin');
             $menu->url = '/admin';
-            $menu->order = $order+1;
+            $menu->order = $order + 1;
             $menu->save();
         }
 
-        if(! DBM::MenuItem()::where('slug', Str::slug($object->name))->first()) {
+        if (! DBM::MenuItem()::where('slug', Str::slug($object->name))->first()) {
             $itemOrder = DBM::MenuItem()::max('order');
 
             $menuItem = DBM::MenuItem();
@@ -156,7 +156,7 @@ class CrudController extends Controller
             $menuItem->slug = Str::slug($object->name);
             $menuItem->url = '/database/record/'.$object->name;
             $menuItem->parent_id = null;
-            $menuItem->order = $itemOrder+1;
+            $menuItem->order = $itemOrder + 1;
             $menuItem->route = 'record';
             $menuItem->params = '{"tableName":"'.$object->name.'"}';
             $menuItem->middleware = null;
@@ -165,7 +165,7 @@ class CrudController extends Controller
             $menuItem->icon = null;
             $menuItem->custom_class = null;
 
-            if($menuItem->save()) {
+            if ($menuItem->save()) {
                 return true;
             }
         }
@@ -184,8 +184,9 @@ class CrudController extends Controller
     {
         $menu = Menu::where('slug', 'admin')->first();
 
-        if($menuItem = MenuItem::where(['slug' => $slug, 'menu_id' => $menu->id])->first()) {
+        if ($menuItem = MenuItem::where(['slug' => $slug, 'menu_id' => $menu->id])->first()) {
             $menuItem->delete();
+
             return true;
         }
 
