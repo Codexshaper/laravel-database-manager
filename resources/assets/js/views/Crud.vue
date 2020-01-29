@@ -153,6 +153,8 @@
                         this.$Progress.start()
                         axios.delete('/api/database/crud/'+table).then(res => {
                             if( res.data.success == true ){
+                                // Reload menu
+                                this.$emit('check', 'reloadMenu')
                                 toastr.success("CRUD Deleted Successfully");
                                 self.fetchCrudTables()
                                 this.$Progress.finish()

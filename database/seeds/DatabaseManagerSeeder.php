@@ -15,6 +15,7 @@ class DatabaseManagerSeeder extends Seeder
     {
         $seeds = [
             'DatabasePermissionSeeder',
+            'DatabaseMenuSeeder',
         ];
 
         foreach ($seeds as $class) {

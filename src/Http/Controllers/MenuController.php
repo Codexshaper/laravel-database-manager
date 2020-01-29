@@ -2,7 +2,7 @@
 
 namespace CodexShaper\DBM\Http\Controllers;
 
-use CodexShaper\DBM\Models\MenuItem;
+use CodexShaper\DBM\Facades\Manager as DBM;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Validator;
 
@@ -27,16 +27,19 @@ class MenuController extends Controller
     {
         // if ($request->ajax()) {
         try {
-            $menus = MenuItem::with('childrens')
-                ->where('menu_id', 1)
-                ->whereNull('parent_id')
-                ->orderBy('order', 'asc')
-                ->get();
+            if($menu = DBM::Menu()->where('slug', 'admin')->first()) {
+                $menus = DBM::MenuItem()::with('childrens')
+                    ->where('menu_id', $menu->id)
+                    ->whereNull('parent_id')
+                    ->orderBy('order', 'asc')
+                    ->get();
 
-            return response()->json([
-                'success' => true,
-                'menus' => $menus,
-            ]);
+                return response()->json([
+                    'success' => true,
+                    'menus' => $menus,
+                ]);
+            }
+            
         } catch (\Exception $e) {
             $this->generateError([$e->getMessage()]);
         }

@@ -2,14 +2,24 @@
 
 namespace CodexShaper\DBM\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use CodexShaper\DBM\Traits\Relationships;
+use Jenssegers\Mongodb\Eloquent\Model;
 
-class MenuItem extends Model
+class DBM_MongoMenuItem extends Model
 {
-    protected $table = 'menu_items';
+    use Relationships;
+    
+    protected $collection = 'menu_items';
     //
     protected $fillable = [
-        'title', 'slug', 'order', 'parent_id',
+        'title', 
+        'slug', 
+        'order', 
+        'parent_id',
+    ];
+
+    protected $cast = [
+        'params' => 'array', 
     ];
 
     public function children()

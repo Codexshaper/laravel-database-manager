@@ -4,7 +4,7 @@ namespace CodexShaper\DBM\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Menu extends Model
+class DBM_Menu extends Model
 {
     //
     protected $table = 'menus';

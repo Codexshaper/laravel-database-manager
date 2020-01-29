@@ -163,7 +163,6 @@
         },
         created() {
             toastr.options.closeButton = true;
-            console.log(this.driver)
         },
         beforeMount(){
             axios.defaults.headers.common['Content-Type'] = 'application/json'
@@ -247,7 +246,6 @@
                   responseType: 'json',
                 })
                 .then(res => {
-                    console.log(res.data);
                     if( res.data.success == true ){
                         toastr.success('Table Created Successfully.');
                         self.fetchDatabaseTables();

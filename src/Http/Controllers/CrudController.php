@@ -45,6 +45,7 @@ class CrudController extends Controller
 
             try {
                 if ($object = $this->addOrUpdateObject($table)) {
+                    $this->addMenu($object);
                     foreach ($columns as $column) {
                         $this->addOrUpdateField($column, $object);
                     }
@@ -126,6 +127,72 @@ class CrudController extends Controller
     }
 
     /**
+     * Create Menu.
+     *
+     * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
+     *
+     * @return true|false
+     */
+    public function addMenu($object)
+    {
+        $menu = DBM::Menu()::where('slug','admin')->first();
+
+        if(! $menu) {
+            $order = DBM::Menu()::max('order');
+            $menu = DBM::Menu();
+            $menu->name = "Admin";
+            $menu->slug = Str::slug('Admin');
+            $menu->url = '/admin';
+            $menu->order = $order+1;
+            $menu->save();
+        }
+
+        if(! DBM::MenuItem()::where('slug', Str::slug($object->name))->first()) {
+            $itemOrder = DBM::MenuItem()::max('order');
+
+            $menuItem = DBM::MenuItem();
+            $menuItem->menu_id = $menu->id;
+            $menuItem->title = $object->name;
+            $menuItem->slug = Str::slug($object->name);
+            $menuItem->url = '/database/record/'.$object->name;
+            $menuItem->parent_id = null;
+            $menuItem->order = $itemOrder+1;
+            $menuItem->route = 'record';
+            $menuItem->params = '{"tableName":"'.$object->name.'"}';
+            $menuItem->middleware = null;
+            $menuItem->controller = null;
+            $menuItem->target = '_self';
+            $menuItem->icon = null;
+            $menuItem->custom_class = null;
+
+            if($menuItem->save()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Remove Menu.
+     *
+     * @param \CodexShaper\DBM\Models\DBM_Object|\CodexShaper\DBM\Models\DBM_MongoObject $object
+     *
+     * @return true|false
+     */
+    public function removeMenu($slug)
+    {
+        $menu = Menu::where('slug', 'admin')->first();
+
+        if($menuItem = MenuItem::where(['slug' => $slug, 'menu_id' => $menu->id])->first()) {
+            $menuItem->delete();
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Create|Update Object Field.
      *
      * @param array $column
@@ -176,6 +243,7 @@ class CrudController extends Controller
 
             $object = DBM::Object()->where('name', $request->table)->first();
             if ($object) {
+                $this->removeMenu($object->slug);
                 $object->fields()->delete();
                 $object->delete();
 

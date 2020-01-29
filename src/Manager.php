@@ -8,9 +8,13 @@ use CodexShaper\DBM\Models\DBM_MongoField;
 use CodexShaper\DBM\Models\DBM_MongoObject;
 use CodexShaper\DBM\Models\DBM_MongoPermission;
 use CodexShaper\DBM\Models\DBM_MongoTemplate;
+use CodexShaper\DBM\Models\DBM_MongoMenu;
+use CodexShaper\DBM\Models\DBM_MongoMenuItem;
 use CodexShaper\DBM\Models\DBM_Object;
 use CodexShaper\DBM\Models\DBM_Permission;
 use CodexShaper\DBM\Models\DBM_Template;
+use CodexShaper\DBM\Models\DBM_Menu;
+use CodexShaper\DBM\Models\DBM_MenuItem;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Artisan;
@@ -247,6 +251,34 @@ class Manager
         }
 
         return new DBM_Template;
+    }
+
+    /**
+     * Create new model instance.
+     *
+     * @return \CodexShaper\DBM\Models\DBM_MongoMenu|\CodexShaper\DBM\Models\DBM_Menu
+     */
+    public function Menu()
+    {
+        if (Driver::isMongoDB()) {
+            return new DBM_MongoMenu;
+        }
+
+        return new DBM_Menu;
+    }
+
+    /**
+     * Create new model instance.
+     *
+     * @return \CodexShaper\DBM\Models\DBM_MongoMenuItem|\CodexShaper\DBM\Models\DBM_MenuItem
+     */
+    public function MenuItem()
+    {
+        if (Driver::isMongoDB()) {
+            return new DBM_MongoMenuItem;
+        }
+
+        return new DBM_MenuItem;
     }
 
     /**

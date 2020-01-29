@@ -290,6 +290,8 @@
                       // Refresh
                       this.fetchDatabaseTables();
                       this.$Progress.finish()
+                      //Load Menu
+                      this.$emit('check', 'reloadMenu')
                       // Flash Success message
                       if(this.isCrudExists) {
                         toastr.success("CRUD Edited Successfully.",this.tableName);

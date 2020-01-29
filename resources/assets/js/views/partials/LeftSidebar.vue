@@ -54,9 +54,6 @@
 				
 				return false;
 			}
-		},
-		created(){
-			console.log(this.$route);
 		}
 	}
 </script>

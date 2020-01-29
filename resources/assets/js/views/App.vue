@@ -108,7 +108,6 @@
             getMenus: function() {
                 axios.get(`/api/database/menus`)
                 .then(res => {
-                    console.log(res.data);
                     if( res.data.success == true ){
                         this.menus = res.data.menus;
                     } 
@@ -131,6 +130,9 @@
                         this.isLoaded = false;
                         this.loadComponent();
                         break
+                    case 'reloadMenu':
+                        this.getMenus();
+                        break;
                 }
             },
             logout(){
