@@ -12,31 +12,31 @@ class DatabaseMenuSeeder extends Seeder
      */
     public function run()
     {
-        $menu = DBM::Menu()->where('slug','admin')->first();
+        $menu = DBM::Menu()->where('slug', 'admin')->first();
 
-        if(! $menu) {
+        if (! $menu) {
             $order = DBM::Menu()->max('order');
             $menu = DBM::Menu();
-            $menu->name = "Admin";
+            $menu->name = 'Admin';
             $menu->slug = Str::slug('Admin');
             $menu->url = '/admin';
-            $menu->order = $order+1;
+            $menu->order = $order + 1;
             $menu->save();
         }
 
-        foreach($this->getItems() as $item) {
-            if(! DBM::MenuItem()->where('slug', Str::slug($item['slug']))->first()) {
+        foreach ($this->getItems() as $item) {
+            if (! DBM::MenuItem()->where('slug', Str::slug($item['slug']))->first()) {
                 $itemOrder = DBM::MenuItem()->max('order');
                 $menuItem = DBM::MenuItem();
                 $menuItem->menu_id = $menu->id;
                 $menuItem->title = $item['title'];
                 $menuItem->slug = Str::slug($item['slug']);
                 $menuItem->url = $item['url'];
-                if($item['parent']) {
+                if ($item['parent']) {
                     $parentItem = DBM::MenuItem()->where('slug', $item['parent'])->first();
                     $menuItem->parent_id = $parentItem->id;
                 }
-                $menuItem->order = $itemOrder+1;
+                $menuItem->order = $itemOrder + 1;
                 $menuItem->route = $item['route'];
                 $menuItem->params = $item['params'];
                 $menuItem->middleware = $item['middleware'];
