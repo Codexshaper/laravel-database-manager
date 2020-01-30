@@ -129,7 +129,7 @@
         },
         methods: {
             fetchDatabaseBackups: function(page=1) {
-                axios.get(`/api/database/getBackups?page=${page}&perPage=${this.perPage}&q=${this.search}`)
+                axios.get(`/api${this.prefix}/getBackups?page=${page}&perPage=${this.perPage}&q=${this.search}`)
                 .then(res => {
                     if( res.data.success == true ){
                         this.files = res.data.files;
@@ -150,7 +150,7 @@
             }, 500),
             backup: function(){
                 this.$Progress.start()   
-                var url = '/api'+this.prefix+'/database/backup';
+                var url = '/api'+this.prefix+'/backup';
                 var self = this;
 
                 axios({
@@ -170,7 +170,7 @@
             },
             restore: function(file) {
                 this.$Progress.start()
-                var url = '/api'+this.prefix+'/database/backup';
+                var url = '/api'+this.prefix+'/backup';
                 var self = this;
                 axios({
                   url: url,
@@ -190,7 +190,7 @@
             },
             download: function(file) {
 
-                axios.get('/api'+this.prefix+'/database/download',{
+                axios.get('/api'+this.prefix+'/download',{
                   params: {
                     path: file.info.dirname+'/'+file.info.basename
                   },
@@ -219,7 +219,7 @@
                     if (result.value) {
                         this.$Progress.start()
                         axios({
-                          url: '/api'+this.prefix+'/database/backup',
+                          url: '/api'+this.prefix+'/backup',
                           method: 'DELETE',
                           params: {
                             path: file.info.dirname+'/'+file.info.basename

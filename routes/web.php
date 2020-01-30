@@ -1,6 +1,6 @@
 <?php
 
-Route::group(['prefix' => 'database', 'namespace' => config('dbm.controller_namespace')], function () {
+Route::group(['prefix' => trim(config('dbm.prefix')), 'namespace' => config('dbm.controller_namespace')], function () {
     //Database Table
     Route::get('/', 'DatabaseController@index');
     Route::get('table/builder/{name}', 'DatabaseController@index');

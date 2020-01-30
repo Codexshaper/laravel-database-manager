@@ -40,7 +40,7 @@
                     </div>
                     <div class="col-sm-12 col-md-6">
                         <div id="database-table_filter" class="dataTables_filter search-bar text-right">
-                            <label>Search:<input type="search" v-model="search" @keyup="reload" @keydown="reload" class="form-control form-control-sm"></label>
+                            <label>Search: <input type="search" v-model="search" @keyup="reload" @keydown="reload" class="form-control form-control-sm"></label>
                         </div>
                     </div>
                 </div>
@@ -165,7 +165,7 @@
         },
         methods: {
             fetchDatabaseTables: function(page = 1) {
-                axios.get(`/api/database/table/details/${this.tableName}?page=${page}&perPage=${this.perPage}&q=${this.search}`)
+                axios.get(`/api${this.prefix}/table/details/${this.tableName}?page=${page}&perPage=${this.perPage}&q=${this.search}`)
                 .then(res => {
                     if( res.data.success == true ){
                         this.userPermissions = res.data.userPermissions;
@@ -243,7 +243,7 @@
                     if (result.value) {
                         this.$Progress.start()
                         var record = this.records[index];
-                        var url = '/api/database/record';
+                        var url = '/api'+this.prefix+'/record';
                         
                         axios({
                           method: 'delete',

@@ -12,12 +12,25 @@ import AddEditRecord from './views/record/AddEditRecord.vue'
 import Permission from './views/Permission.vue'
 import Backup from './views/Backup.vue'
 
+let basePath = document.querySelector('#app').getAttribute('base-path').trim().trimRight('/')
+let prefix = document.querySelector('#app').getAttribute('prefix').trim().trimRight('/')
+
+if(basePath.charAt(0) != '/') {
+    basePath = '/' + basePath;
+}
+
+if(prefix.charAt(0) != '/') {
+    prefix = '/' + prefix;
+}
+
+localStorage.setItem('dbm.basePath', basePath)
+localStorage.setItem('dbm.prefix', prefix)
 // Set Routes
-let prefix = '/database';
 
 const router = new VueRouter({
      mode: 'history',
      linkActiveClass: "active",
+     base: basePath,
      routes: [
         {
             path: prefix,

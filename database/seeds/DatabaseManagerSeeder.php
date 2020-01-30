@@ -4,7 +4,7 @@ use Illuminate\Database\Seeder;
 
 class DatabaseManagerSeeder extends Seeder
 {
-    protected $seedersPath = __DIR__.'/../../database/seeds/';
+    protected $seedersPath = __DIR__.DIRECTORY_SEPARATOR;
 
     /**
      * Seed the application's database.

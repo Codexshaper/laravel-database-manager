@@ -274,7 +274,7 @@
             },
 
             getData: function(){
-              return axios.get(`/api/database/crud/details/${this.tableName}`)
+              return axios.get(`/api${this.prefix}/crud/details/${this.tableName}`)
               .then(res => {return res.data})
               .catch(err => this.displayError(err.response));
             },
@@ -284,7 +284,7 @@
                 let object = this.table;
                 let fields = this.items;
 
-                axios.post('/api/database/crud',{isCrudExists, object, fields})
+                axios.post('/api'+this.prefix+'/crud',{isCrudExists, object, fields})
                 .then(res => {
                     if( res.data.success == true){
                       // Refresh

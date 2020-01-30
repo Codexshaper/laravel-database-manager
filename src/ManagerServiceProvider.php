@@ -116,6 +116,9 @@ class ManagerServiceProvider extends ServiceProvider
             'dbm.config' => [
                 __DIR__.'/../config/dbm.php' => config_path('dbm.php'),
             ],
+            'dbm.migrations' => [
+                __DIR__.'/../database/migrations/' => database_path('migrations'),
+            ],
             'dbm.seeds' => [
                 __DIR__.'/../database/seeds/' => database_path('seeds'),
             ],

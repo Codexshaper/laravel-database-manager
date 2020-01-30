@@ -216,7 +216,7 @@
               this.$Progress.start()
               var relationship = this.relationship;
 
-              axios.post('/api/database/relationship',{relationship})
+              axios.post('/api'+this.prefix+'/relationship',{relationship})
               .then(res => {
                   if( res.data.success == true ){
                     toastr.success("Relation Added successfully.",this.tableName);
@@ -236,7 +236,7 @@
             this.action = 'edit';
             var field = this.fields[this.currentIndex];
 
-            axios.get('/api/database/relationship',{
+            axios.get('/api'+this.prefix+'/relationship',{
                 params: {
                   table: this.tableName,
                   field: field
@@ -270,7 +270,7 @@
             let field = this.fields[this.currentIndex];
             let relationship = this.relationship
 
-            axios.put('/api/database/relationship', {field,relationship})
+            axios.put('/api'+this.prefix+'/relationship', {field,relationship})
             .then(res => {
                 if( res.data.success == true ){
                   toastr.success("CRUD Update successfully.",this.tableName);
@@ -299,7 +299,7 @@
                 if (result.value) {
                     var field = this.fields[index];
                     
-                    axios.delete('/api/database/relationship', {
+                    axios.delete('/api'+this.prefix+'/relationship', {
                       params: {
                         table: this.tableName,
                         field: field,
@@ -347,7 +347,7 @@
             });
           },
           getTableColumns: function(table) {
-              return axios.get(`/api/database/table/columns/${table}`)
+              return axios.get(`/api${this.prefix}/table/columns/${table}`)
           },
           fireSettingsToggle: function(field){
             let isSettingsActive = field.isSettingsActive;

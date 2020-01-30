@@ -240,7 +240,7 @@
 
         	    axios({
         	        method: 'post',
-        	        url: '/api/database/record',
+        	        url: '/api'+this.prefix+'/record',
         	        data: formData,
         	        responseType: 'json',
         	    }).then(res => {
@@ -264,7 +264,7 @@
 
                 axios({
                     method: 'post',
-                    url: '/api/database/record',
+                    url: '/api'+this.prefix+'/record',
                     headers: {
                         'Content-Type':'multipart/form-data'
                     },

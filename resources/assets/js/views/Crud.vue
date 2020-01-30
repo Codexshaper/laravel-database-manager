@@ -124,7 +124,7 @@
         },
         methods: {
             fetchCrudTables: function(page = 1) {
-                axios.get(`/api/database/crud/tables?page=${page}&perPage=${this.perPage}&q=${this.search}`)
+                axios.get(`/api${this.prefix}/crud/tables?page=${page}&perPage=${this.perPage}&q=${this.search}`)
                 .then(res => {
                     if( res.data.success == true ){
                         this.tables = res.data.tables;
@@ -151,7 +151,7 @@
                 }).then((result) => {
                     if (result.value) {
                         this.$Progress.start()
-                        axios.delete('/api/database/crud/'+table).then(res => {
+                        axios.delete('/api'+this.prefix+'/crud/'+table).then(res => {
                             if( res.data.success == true ){
                                 // Reload menu
                                 this.$emit('check', 'reloadMenu')

@@ -1,7 +1,7 @@
 <?php
 
 Route::group([
-    'prefix'     => 'database',
+    'prefix'     => trim(config('dbm.prefix')),
     'middleware' => 'auth:api',
     'namespace'  => config('dbm.controller_namespace'),
 ], function () {
@@ -55,7 +55,7 @@ Route::group([
 });
 
 Route::group([
-    'prefix'    => 'database',
+    'prefix'    => trim(config('dbm.prefix')),
     'namespace' => config('dbm.controller_namespace'),
 ], function () {
     // User

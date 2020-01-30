@@ -253,7 +253,7 @@
         },
         methods: {
             fetchTableDetails: function() {
-                axios(`/api/database/table/details/${this.tableName}`,{
+                axios(`/api${this.prefix}/table/details/${this.tableName}`,{
                   params: {
                     findValue: this.action == 'edit' ? this.id : null
                   }
@@ -285,7 +285,7 @@
                 let formData = this.prepareFormData(row, this.createFields);
                 axios({
                     method: 'post',
-                    url: '/api/database/record',
+                    url: '/api'+this.prefix+'/record',
                     headers: {
                         'Content-Type':'multipart/form-data'
                     },
@@ -318,7 +318,7 @@
                 let formData = this.prepareFormData(row, this.editFields, 'update');
                 axios({
                     method: 'post',
-                    url: '/api/database/record',
+                    url: '/api'+this.prefix+'/record',
                     headers: {
                         'Content-Type':'multipart/form-data'
                     },

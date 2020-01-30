@@ -59,7 +59,7 @@
     // Set Default functionality for all vue components
     export default {
 
-        props: ["prefix", "driver"],
+        props: ["driver"],
         components:{
             LeftSidebar
         },
@@ -68,6 +68,8 @@
                 menus: null,
                 name: null,
                 user_type: 0,
+                basePath: localStorage.getItem('dbm.basePath'),
+                prefix: localStorage.getItem('dbm.prefix'),
                 isLoggedIn: localStorage.getItem('dbm.authToken') != null
             }
         },
@@ -77,6 +79,8 @@
                 localStorage.removeItem('dbm.prefix');
                 localStorage.setItem('dbm.prefix', this.prefix);
             }
+            // Set Base URL for axios request
+            axios.defaults.baseURL = this.basePath;
 
             //  [App.vue specific] When App.vue is first loaded start the progress bar
             this.$Progress.start()
@@ -106,7 +110,7 @@
         },
         methods : {
             getMenus: function() {
-                axios.get(`/api/database/menus`)
+                axios.get('/api'+this.prefix+'/menus')
                 .then(res => {
                     if( res.data.success == true ){
                         this.menus = res.data.menus;

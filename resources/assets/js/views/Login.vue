@@ -60,7 +60,7 @@
                 e.preventDefault()
                 this.validation();
                 if (this.password.length > 0) {
-                    axios.post('/api/database/login',{
+                    axios.post('/api'+this.prefix+'/login',{
                       data: {
                         email: this.email,
                         password: this.password

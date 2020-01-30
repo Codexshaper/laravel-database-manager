@@ -174,7 +174,7 @@
         },
         methods: {
             fetchDatabaseTables: function(page=1) {
-                axios.get(`/api/database/tables?page=${page}&perPage=${this.perPage}&q=${this.search}`)
+                axios.get(`/api${this.prefix}/tables?page=${page}&perPage=${this.perPage}&q=${this.search}`)
                 .then(res => {
                     if( res.data.success == true ){
                         this.tables = res.data.tables;
@@ -193,7 +193,7 @@
             }, 500),
             viewTableFields: function(tableName){
                 this.category = tableName;
-                axios.get('/api'+this.prefix+'/database/table/'+tableName)
+                axios.get('/api'+this.prefix+'/table/'+tableName)
                 .then(res => {
                     if( res.data.success == true ){
                       // Set values
@@ -234,7 +234,7 @@
                 });
 
                 this.$Progress.start()
-                let url = '/api'+this.prefix+'/database/table';
+                let url = '/api'+this.prefix+'/table';
                 let self = this;
 
                 axios({
@@ -271,7 +271,7 @@
                 }).then((result) => {
                     if (result.value) {
                         this.$Progress.start()
-                        axios.delete('/api'+this.prefix+'/database/table',{
+                        axios.delete('/api'+this.prefix+'/table',{
                           params: { table: tableName },
                         }).then(res => {
                             if( res.data.success == true ){
@@ -382,7 +382,7 @@
             },
             backupTable: function(table){
                 this.$Progress.start()
-                var url = '/api'+this.prefix+'/database/backup';
+                var url = '/api'+this.prefix+'/backup';
                 var self = this;
 
                 axios({

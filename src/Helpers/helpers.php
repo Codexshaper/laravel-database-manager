@@ -21,6 +21,12 @@ if (! function_exists('dbm_prefix')) {
     }
 }
 
+if(! function_exists('dbm_base_path')) {
+    function dbm_base_path(){
+        return rtrim(config('dbm.base_path'), '/') ?? ''; 
+    }
+}
+
 if (! function_exists('is_json')) {
     function is_json($string)
     {

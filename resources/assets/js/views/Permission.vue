@@ -141,12 +141,12 @@
                                     <div  v-for="(permission,category) in permissions" :key="category" class="col-md-6 permission-available">
                                         <h3 class="title">{{ category }}</h3>
                                         <div v-for="(privilege, index) in permission" :key="privilege.id">
-                                            <label class="checkbox" :for="category+'_'+privilege.slug">
+                                            <label class="checkbox" :for="category+'_'+privilege.slug+'_'+index">
                                                 {{ privilege.slug }}
                                                 <input 
                                                     type="checkbox" 
                                                     :name="category+'_'+privilege.slug+'_'+index" 
-                                                    :id="category+'_'+privilege.slug" 
+                                                    :id="category+'_'+privilege.slug+'_'+index" 
                                                     v-model="privileges" 
                                                     :value="privilege.id">
                                                 <span class="checkmark"></span>
@@ -208,7 +208,7 @@
         methods: {
             fetchDatabasePermissions: function(page=1) {
 
-                let url = `/api/database/permissions?page=${page}&perPage=${this.perPage}&q=${this.search}`;
+                let url = `/api${this.prefix}/permissions?page=${page}&perPage=${this.perPage}&q=${this.search}`;
                 let self = this;
 
                 axios({
@@ -223,6 +223,8 @@
                         this.users = res.data.pagination.data;
                         this.pagination = res.data.pagination;
                         this.databaseErrors = [];
+
+                        console.log(this.all_privileges);
 
                         this.loadComponent();
                     }
@@ -257,7 +259,7 @@
             },
             addUserPermissions: function(privileges){
                 this.$Progress.start()
-                let url = '/api'+this.prefix+'/database/permissions/assignUserPermissions';
+                let url = '/api'+this.prefix+'/permissions/assignUserPermissions';
                 let self = this;
 
                 axios({
@@ -295,7 +297,7 @@
             },
             updateUserPermissions: function(privileges) {
                 this.$Progress.start()
-                let url = '/api'+this.prefix+'/database/permissions/syncUserPermissions';
+                let url = '/api'+this.prefix+'/permissions/syncUserPermissions';
                 let self = this;
 
                 axios({
@@ -333,7 +335,7 @@
                 }).then((result) => {
                     if (result.value) {
                         this.$Progress.start()
-                        var url = '/api'+this.prefix+'/database/permissions/deleteUserPermissions';
+                        var url = '/api'+this.prefix+'/permissions/deleteUserPermissions';
                         
                         axios({
                           method: 'delete',

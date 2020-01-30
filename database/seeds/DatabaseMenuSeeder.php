@@ -51,7 +51,8 @@ class DatabaseMenuSeeder extends Seeder
 
     public function getItems()
     {
-        [
+    
+        return [
             'database' => [
                 'title' => 'Database',
                 'slug' => 'database',

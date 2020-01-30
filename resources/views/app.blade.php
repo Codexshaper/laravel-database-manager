@@ -25,11 +25,11 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500,700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="app">
+    <div id="app" base-path="{{ dbm_base_path() }}" prefix="{{ dbm_prefix() }}">
         <!-- WRAPPER -->
         <div id="wrapper">
             <!-- MAIN -->
-            <database-app prefix="{{ dbm_prefix() }}" driver="{{ dbm_driver() }}"></database-app>
+            <database-app driver="{{ dbm_driver() }}"></database-app>
             <!-- END MAIN -->
         </div>
         <!-- END WRAPPER -->

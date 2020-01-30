@@ -128,7 +128,7 @@
         methods: {
             fetchTableFields: function() {
 
-              axios.get('/api/database/table/'+this.tableName)
+              axios.get('/api'+this.prefix+'/table/'+this.tableName)
               .then(res => {
                   if( res.data.success == true ){
                     // Set values
@@ -173,7 +173,7 @@
                     options: this.options
                 });
                 this.$Progress.start();
-                let url = '/api/database/table';
+                let url = '/api'+this.prefix+'/table';
                 let self = this;
 
                 axios({
@@ -237,7 +237,7 @@
             },
             saveTemplate: function(field) {
 
-              axios.post('/api/database/template', {template: field})
+              axios.post('/api'+this.prefix+'/template', {template: field})
               .then(res =>{
                 if(res.data.success == true) {
                   this.templates = res.data.templates;
@@ -254,7 +254,7 @@
               
             },
             removeTemplate: function(field){
-              axios.delete('/api'+this.prefix+'/database/template',{params: {name: field.name}})
+              axios.delete('/api'+this.prefix+'/template',{params: {name: field.name}})
               .then(res =>{
                 if(res.data.success == true) {
                   this.templates = res.data.templates;
