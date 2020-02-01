@@ -84,6 +84,14 @@ class InstallDatabaseManager extends Command
         $process->setTimeout(null); // Setting timeout to null to prevent installation from stopping at a certain point in time
         $process->setWorkingDirectory(base_path())->run();
 
+        // Modify auth api driver token to passport
+        $auth_config_contents = $filesystem->get(base_path('config/auth.php'));
+        $auth_config_contents = str_replace('\'token\'', '\'passport\'', $auth_config_contents);
+        $filesystem->put(
+            base_path('config/auth.php'), 
+            $auth_config_contents
+        );
+
         // Load Custom Database Manager routes into application's 'routes/web.php'
         $this->info('Adding Database Manager routes');
         $web_routes_contents = $filesystem->get(base_path('routes/web.php'));

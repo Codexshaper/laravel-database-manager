@@ -3,14 +3,14 @@
 if (! function_exists('dbm_asset')) {
     function dbm_asset($path, $secure = null)
     {
-        return route('dbm.asset').'?path='.urlencode($path);
+        return url(config('dbm.prefix').'/assets?path='.urlencode($path));
     }
 }
 
 if (! function_exists('dbm_driver')) {
     function dbm_driver()
     {
-        return (config('database.default') != '') ? config('database.default') : 'mysql';
+        return config('dbm.driver', 'mysql');
     }
 }
 
