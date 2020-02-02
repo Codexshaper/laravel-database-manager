@@ -5,6 +5,7 @@ namespace CodexShaper\DBM;
 use CodexShaper\DBM\Commands\DatabaseAdmin;
 use CodexShaper\DBM\Commands\DatabaseBackup;
 use CodexShaper\DBM\Commands\DatabaseRestore;
+use CodexShaper\DBM\Commands\DatabaseSeed;
 use CodexShaper\DBM\Commands\InstallDatabaseManager;
 use CodexShaper\DBM\MongoDB\Passport\AuthCode;
 use CodexShaper\DBM\MongoDB\Passport\Bridge\RefreshToken;
@@ -146,5 +147,6 @@ class ManagerServiceProvider extends ServiceProvider
         $this->commands(DatabaseAdmin::class);
         $this->commands(DatabaseBackup::class);
         $this->commands(DatabaseRestore::class);
+        $this->commands(DatabaseSeed::class);
     }
 }
