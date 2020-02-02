@@ -94,6 +94,17 @@ return [
 
     /*
     |-------------------------------------------------------------
+    | Migration Path
+    |-------------------------------------------------------------
+    |
+    | Set custom assests path so that you can load your own views
+    |
+     */
+
+    'migrations'            => 'vendor/codexshaper/laravel-database-manager/database/migrations',
+
+    /*
+    |-------------------------------------------------------------
     | Flesystem
     |-------------------------------------------------------------
     |
