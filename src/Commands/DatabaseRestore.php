@@ -62,13 +62,13 @@ class DatabaseRestore extends Command
     {
         $this->info('Restoring Database');
 
-        $hostname = config('database.connections.mysql.host', '127.0.0.1');
-        $port = config('database.connections.mysql.port', '3306');
-        $database = config('database.connections.mysql.database', 'dbm');
-        $username = config('database.connections.mysql.username', 'root');
-        $password = config('database.connections.mysql.password', '');
-
         $driver = dbm_driver();
+        $hostname = config('database.connections.'.$driver.'.host', '127.0.0.1');
+        $port = config('database.connections.'.$driver.'.port', '3306');
+        $database = config('database.connections.'.$driver.'.database', 'dbm');
+        $username = config('database.connections.'.$driver.'.username', 'root');
+        $password = config('database.connections.'.$driver.'.password', '');
+
         $directory = 'backups'.DIRECTORY_SEPARATOR.$driver;
 
         if ($this->option('path') != null) {
@@ -86,6 +86,12 @@ class DatabaseRestore extends Command
         $compressCommand = config('dbm.backup.uncompress_command', 'gunzip');
         $compressExtension = config('dbm.backup.compress_extension', '.gz');
         $dumpBinaryPath = config('dbm.backup.'.$driver.'.binary_path', '');
+
+        $dumper->setHost($hostname)
+            ->setPort($port)
+            ->setDbName($database)
+            ->setUserName($username)
+            ->setPassword($password);
 
         try {
             switch ($driver) {

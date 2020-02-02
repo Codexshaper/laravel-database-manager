@@ -75,6 +75,17 @@ class DatabaseBackup extends Command
         $compressCommand = config('dbm.backup.compress_command', 'gzip');
         $compressExtension = config('dbm.backup.compress_extension', '.gz');
         $dumpBinaryPath = config('dbm.backup.'.$data['driver'].'.binary_path', '');
+        $hostname = config('database.connections.'.$data['driver'].'.host', '127.0.0.1');
+        $port = config('database.connections.'.$data['driver'].'.port', '3306');
+        $database = config('database.connections.'.$data['driver'].'.database', 'dbm');
+        $username = config('database.connections.'.$data['driver'].'.username', 'root');
+        $password = config('database.connections.'.$data['driver'].'.password', '');
+
+        $dumper->setHost($hostname)
+            ->setPort($port)
+            ->setDbName($database)
+            ->setUserName($username)
+            ->setPassword($password);
 
         switch ($data['driver']) {
             case 'mysql':
