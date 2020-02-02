@@ -88,7 +88,7 @@ class InstallDatabaseManager extends Command
         $auth_config_contents = $filesystem->get(base_path('config/auth.php'));
         $auth_config_contents = str_replace('\'token\'', '\'passport\'', $auth_config_contents);
         $filesystem->put(
-            base_path('config/auth.php'), 
+            base_path('config/auth.php'),
             $auth_config_contents
         );
 
