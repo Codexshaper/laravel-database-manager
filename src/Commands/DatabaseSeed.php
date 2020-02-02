@@ -2,11 +2,9 @@
 
 namespace CodexShaper\DBM\Commands;
 
-use CodexShaper\DBM\ManagerServiceProvider;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Process\Process;
 
 class DatabaseSeed extends Command
 {
