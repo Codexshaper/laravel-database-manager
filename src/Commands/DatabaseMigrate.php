@@ -3,7 +3,6 @@
 namespace CodexShaper\DBM\Commands;
 
 use Illuminate\Console\Command;
-use Symfony\Component\Console\Input\InputOption;
 
 class DatabaseMigrate extends Command
 {

@@ -4,7 +4,6 @@ namespace CodexShaper\DBM\Commands;
 
 use CodexShaper\DBM\Facades\Manager;
 use Illuminate\Console\Command;
-use Illuminate\Filesystem\Filesystem;
 use Symfony\Component\Console\Input\InputOption;
 
 class DatabaseAdmin extends Command
