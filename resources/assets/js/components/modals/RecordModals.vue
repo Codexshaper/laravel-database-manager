@@ -36,9 +36,7 @@
 		                            label="name" 
 		                            track-by="name" 
 		                            :preselect-first="false"
-		                            id="update_relation"
-		                          >
-		                          </multiselect>
+		                            id="update_relation"></multiselect>
 		                          <multiselect
 		                        	 v-if="field.relationship.relationType == 'belongsToMany'"
 		                            v-model="newRow[field.relationship.relatedPivotKey]" 
@@ -51,9 +49,7 @@
 		                            label="name" 
 		                            track-by="name" 
 		                            :preselect-first="false"
-		                            id="update_belongs_to_many_relation"
-		                          >
-		                          </multiselect>
+		                            id="update_belongs_to_many_relation"></multiselect>
 		                    </div>
                             <div v-else-if="field.type == 'dropdown' || field.type == 'multiple_dropdown'">
                                   <multiselect
@@ -68,9 +64,7 @@
                                     label="name" 
                                     track-by="name" 
                                     :preselect-first="false"
-                                    id="update_relation"
-                                  >
-                                  </multiselect>
+                                    id="update_relation"></multiselect>
                             </div>
 		                    <div v-else-if="field.type == 'file' || 
 		                    	field.type == 'image' || 

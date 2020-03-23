@@ -28,7 +28,7 @@
             <div class="main-content">
                 <nav aria-label="breadcrumb">
                   <ol class="breadcrumb">
-                    <li class="breadcrumb-item" v-for="(breadcrumb,index) in $route.meta.breadcrumbs">
+                    <li class="breadcrumb-item" v-for="(breadcrumb,index) in $route.meta.breadcrumbs" :key="index">
                         <router-link 
                             :to="{ name: breadcrumb.name }"
                             :class="'crumb-link'" 
